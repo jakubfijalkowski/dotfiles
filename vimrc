@@ -1,0 +1,156 @@
+" Must-have
+set nocompatible
+set encoding=utf-8
+set nobomb
+
+" Pathogen
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+call pathogen#infect('active-bundle/{}')
+filetype plugin indent on
+
+" Syntax & Colors
+syntax enable
+set t_Co=16
+set background=dark
+colorscheme solarized
+
+" Basics
+set clipboard=unnamedplus
+set showmode
+set showcmd
+set noerrorbells
+set nostartofline
+set title
+set scrolloff=4
+set hidden
+set exrc
+set number
+set mouse=a
+set mousehide
+set splitbelow
+set splitright
+set autoread
+set autowrite
+
+set wildmenu
+set wildignore+=.git,.cabal,.cabal-sandbox
+
+set diffopt=filler,vertical
+
+" Gvim options
+if has('gui_running')
+    if has('gui_gtk2')
+        set guifont=Source\ Code\ Pro\ for\ Powerline\ Medium\ 10
+        set guioptions=''
+    endif
+endif
+
+" Rulers and max line length
+set textwidth=80
+set colorcolumn=+1
+set ruler
+set nowrap
+
+" Tabs and autoindentation
+set tabstop=4
+set shiftwidth=4
+set shiftround
+set autoindent
+set expandtab
+
+" Search
+set incsearch
+set ignorecase
+set hlsearch
+set gdefault
+
+" Directories
+set directory=~/.vim/swaps
+set backupdir=~/.vim/backups
+
+" Key bindings
+let mapleader=','
+
+" Remove last-search, works like <C-/> in Terminator
+map <C-_> :let @/=''<CR>
+
+" Plugin configs
+"  CtrlP
+let g:ctrlp_map='<c-p>'
+let g:ctrlp_cmd='CtrlP'
+
+" EasyMotion
+let g:EasyMotion_do_mapping=0
+nmap s <Plug>(easymotion-s)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+hi EasyMotionTarget ctermbg=none ctermfg=green
+hi EasyMotionShade  ctermbg=none ctermfg=blue
+
+" NerdTree
+map <Leader>n <Plug>NERDTreeTabsToggle<CR>
+autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
+let NERDTreeIgnore=['\.git[[dir]]', '\~$\', '\.cabal[[dir]]']
+let NERDTreeDirArrows=1
+
+" Syntastic
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+
+" Airline and statusline
+set laststatus=2
+let g:airline_theme='solarized'
+let g:airline_powerline_fonts=1
+
+" Indent Guides
+let g:indent_guides_guide_size=1
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_exclude_filetypes=['help', 'nerdtree', 'ControlP']
+let g:indent_guides_start_level=2
+
+" Undotree
+nnoremap <F5> :UndotreeToggle<CR>
+
+let g:undotree_WindowLayout=3
+let g:undotree_SetFocusWhenToggle=1
+set undodir=~/.vim/undo
+set undofile
+
+" Tagbar
+nnoremap <F8> :TagbarToggle<CR>
+if executable('hasktags')
+    let g:tagbar_type_haskell = {
+        \ 'ctagsbin'  : 'hasktags',
+        \ 'ctagsargs' : '-x -c -o-',
+        \ 'kinds'     : [
+            \  'm:modules:0:1',
+            \  'd:data: 0:1',
+            \  'd_gadt: data gadt:0:1',
+            \  't:type names:0:1',
+            \  'nt:new types:0:1',
+            \  'c:classes:0:1',
+            \  'cons:constructors:1:1',
+            \  'c_gadt:constructor gadt:1:1',
+            \  'c_a:constructor accessors:1:1',
+            \  'ft:function types:1:1',
+            \  'fi:function implementations:0:1',
+            \  'o:others:0:1'
+        \ ],
+        \ 'sro'        : '.',
+        \ 'kind2scope' : {
+            \ 'm' : 'module',
+            \ 'c' : 'class',
+            \ 'd' : 'data',
+            \ 't' : 'type'
+        \ },
+        \ 'scope2kind' : {
+            \ 'module' : 'm',
+            \ 'class'  : 'c',
+            \ 'data'   : 'd',
+            \ 'type'   : 't'
+        \ }
+    \ }
+endif

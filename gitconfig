@@ -1,0 +1,23 @@
+[core]
+	autocrlf = false
+	editor = "vim"
+
+[user]
+	name = Jakub Fijałkowski
+	email = fiolek94@gmail.com
+
+[alias]
+	br = branch
+	ci = commit
+	co = checkout
+	st = status
+	cim = commit -m
+	ca = commit --all -m
+
+[color]
+	diff = true
+	branch = true
+	status = true
+
+[credential]
+	helper = cache
