@@ -45,7 +45,7 @@ ZSH_CUSTOM=~/.zsh-custom
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sublime zsh-syntax-highlighting ghc cabal)
+plugins=(git sublime zsh-syntax-highlighting ghc_path cabal)
 
 # User configuration
 
@@ -86,4 +86,4 @@ DEFAULT_USER=fiolek
 autoload -U regexp-replace
 
 # Configure GHC and Cabal
-use_stable_ghc
+ghc_path::use_stable_ghc
