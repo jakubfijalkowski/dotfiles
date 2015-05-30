@@ -5,7 +5,7 @@ set nobomb
 
 " Pathogen
 runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect('active-bundle/{}')
+call pathogen#infect()
 filetype plugin indent on
 
 " Syntax & Colors
