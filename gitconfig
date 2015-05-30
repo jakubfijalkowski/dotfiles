@@ -20,4 +20,6 @@
 	status = true
 
 [credential]
-	helper = cache
+	helper = store
+[push]
+	default = matching
