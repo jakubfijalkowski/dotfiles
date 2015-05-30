@@ -33,7 +33,7 @@ set autoread
 set autowrite
 
 set wildmenu
-set wildignore+=.git,.cabal,.cabal-sandbox
+set wildignore+=.git,.cabal,.cabal-sandbox,dist
 
 set diffopt=filler,vertical
 
@@ -96,6 +96,7 @@ nnoremap Y y$
 "  CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_extensions = ['tag', 'buffertag', 'dir'] 
 
 " EasyMotion
 let g:EasyMotion_do_mapping = 0
@@ -202,5 +203,3 @@ let g:haskell_tags_generator = 'hasktags'
 autocmd FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 autocmd FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 
-" Ctags
-let tags="~/.vim/tags"
