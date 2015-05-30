@@ -80,6 +80,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias git="nocorrect git"
 alias ghci="screen -S ghci -s ghci -t ghci"
+vim () { TERM=xterm-256color tmux new-session "vim $*" }
 
 # For agnoster theme
 DEFAULT_USER=fiolek
