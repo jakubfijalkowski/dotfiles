@@ -73,6 +73,7 @@ set backupdir=~/.vim/backups
 autocmd FileType haskell setlocal foldlevel=1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd FileType haskell let b:syntastic_mode='passive'
+autocmd FileType haskell compiler cabal
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
 
 " Key bindings

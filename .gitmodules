@@ -88,3 +88,6 @@
 [submodule "vim/bundle/vim-hdevtools"]
 	path = vim/bundle/vim-hdevtools
 	url = https://github.com/bitc/vim-hdevtools
+[submodule "vim/bundle/vim-dispatch"]
+	path = vim/bundle/vim-dispatch
+	url = https://github.com/tpope/vim-dispatch.git
