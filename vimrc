@@ -68,19 +68,25 @@ set gdefault
 set directory=~/.vim/swaps
 set backupdir=~/.vim/backups
 
+" Per-file settings
+"   Haskell
+autocmd FileType haskell setlocal foldlevel=1
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
+
 " Key bindings
 let mapleader=','
 
 " Remove last-search, works like <C-/> in Terminator
-map <C-_> :let @/=''<CR>
+map <silent> <C-_> :let @/=''<CR>
 
 " Plugin configs
 "  CtrlP
-let g:ctrlp_map='<c-p>'
-let g:ctrlp_cmd='CtrlP'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
 
 " EasyMotion
-let g:EasyMotion_do_mapping=0
+let g:EasyMotion_do_mapping = 0
 nmap s <Plug>(easymotion-s)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
@@ -91,31 +97,31 @@ hi EasyMotionShade  ctermbg=none ctermfg=blue
 " NerdTree
 map <Leader>n <Plug>NERDTreeTabsToggle<CR>
 autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
-let NERDTreeIgnore=['\.git[[dir]]', '\~$\', '\.cabal[[dir]]']
-let NERDTreeDirArrows=1
+let NERDTreeIgnore    = ['\.git[[dir]]', '\~$\', '\.cabal[[dir]]']
+let NERDTreeDirArrows = 1
 
 " Syntastic
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=2
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=0
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 2
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
 
 " Airline and statusline
 set laststatus=2
-let g:airline_theme='solarized'
-let g:airline_powerline_fonts=1
+let g:airline_theme           = 'solarized'
+let g:airline_powerline_fonts = 1
 
 " Indent Guides
-let g:indent_guides_guide_size=1
-let g:indent_guides_enable_on_vim_startup=1
-let g:indent_guides_exclude_filetypes=['help', 'nerdtree', 'ControlP']
-let g:indent_guides_start_level=2
+let g:indent_guides_guide_size            = 1
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_exclude_filetypes     = ['help', 'nerdtree', 'ControlP']
+let g:indent_guides_start_level           = 2
 
 " Undotree
 nnoremap <F5> :UndotreeToggle<CR>
 
-let g:undotree_WindowLayout=3
-let g:undotree_SetFocusWhenToggle=1
+let g:undotree_WindowLayout       = 3
+let g:undotree_SetFocusWhenToggle = 1
 set undodir=~/.vim/undo
 set undofile
 
@@ -156,8 +162,8 @@ if executable('hasktags')
 endif
 
 " Neocomplete
-let g:neocomplete#enable_at_startup=1
-let g:neocomplete#enable_smart_case=1
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
 
 inoremap <silent> <CR> <C-r>=<SID>complete_cr_func()<CR>
 function! s:complete_cr_func()
@@ -173,3 +179,13 @@ inoremap <expr><C-e> neocomplete#cancel_popup()
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+
+" vim2hs
+let g:haskell_conceal        = 0
+let g:haskell_tabuler        = 1
+let g:haskell_autotags       = 1
+let g:haskell_tags_generator = 'hasktags'
+
+" vim-hdevtools
+autocmd FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
+autocmd FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
