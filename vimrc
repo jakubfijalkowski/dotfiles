@@ -82,6 +82,16 @@ let mapleader=','
 " Remove last-search, works like <C-/> in Terminator
 map <silent> <C-_> :let @/=''<CR>
 
+" Easier navigation
+map <C-H> <C-W>h
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+map <C-L> <C-W>l
+map zl zL
+map zH zH
+
+nnoremap Y y$
+
 " Plugin configs
 "  CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -191,3 +201,6 @@ let g:haskell_tags_generator = 'hasktags'
 " vim-hdevtools
 autocmd FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 autocmd FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
+
+" Ctags
+let tags="~/.vim/tags"
