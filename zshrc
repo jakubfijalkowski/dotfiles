@@ -79,6 +79,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias git="nocorrect git"
+alias ghci="screen -S ghci -s ghci -t ghci"
 
 # For agnoster theme
 DEFAULT_USER=fiolek

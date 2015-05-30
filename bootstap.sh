@@ -5,10 +5,9 @@ git submodule init
 git submodule update --recursive
 git submodule sync
 
-OLDFILES=('vimrc' 'vim' 'gitconfig')
+OLDFILES=('vimrc' 'vim' 'gitconfig' 'screenrc')
 
-if hash zsh 2>/dev/null
-then
+if hash zsh 2>/dev/null; then
     echo 'ZSH detected, installing it.'
     OLDFILES+=('zshrc' 'oh-my-zsh' 'zsh-custom')
 else
@@ -17,8 +16,7 @@ fi
 
 for file in "${OLDFILES[@]}"
 do
-    if [ -e "$HOME/.$file" ]
-    then
+    if [ -e "$HOME/.$file" ]; then
         echo "Moving ~/.$file to ~/.${file}.old"
         mv "$HOME/.$file" "$HOME/.${file}.old"
     fi
@@ -28,10 +26,8 @@ done
 
 # Special-case - terminator configuration
 TERMINATOR_CFG='config/terminator/config'
-if hash terminator 2>/dev/null
-then
-    if [ -e "$HOME/.$TERMINATOR_CFG" ]
-    then
+if hash terminator 2>/dev/null; then
+    if [ -e "$HOME/.$TERMINATOR_CFG" ]; then
         echo "Moving ~/.$TERMINATOR_CFG to ~/.${TERMINATOR_CFG}.old"
         mv "$HOME/.$TERMINATOR_CFG" "$HOME/.${TERMINATOR_CFG}.old"
     fi
