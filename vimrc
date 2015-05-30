@@ -72,6 +72,7 @@ set backupdir=~/.vim/backups
 "   Haskell
 autocmd FileType haskell setlocal foldlevel=1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+autocmd FileType haskell let b:syntastic_mode='passive'
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
 
 " Key bindings
@@ -103,7 +104,7 @@ let NERDTreeDirArrows = 1
 " Syntastic
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 2
-let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_open            = 0
 let g:syntastic_check_on_wq              = 0
 
 " Airline and statusline
