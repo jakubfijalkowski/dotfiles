@@ -67,3 +67,12 @@
 [submodule "fonts/powerline"]
 	path = fonts/powerline
 	url = https://github.com/powerline/fonts.git
+[submodule "vim/bundle/neocomplete.vim"]
+	path = vim/bundle/neocomplete.vim
+	url = https://github.com/Shougo/neocomplete.vim
+[submodule "vim/bundle/neosnippet.vim"]
+	path = vim/bundle/neosnippet.vim
+	url = https://github.com/Shougo/neosnippet.vim
+[submodule "vim/bundle/neosnippet-snippets"]
+	path = vim/bundle/neosnippet-snippets
+	url = https://github.com/Shougo/neosnippet-snippets

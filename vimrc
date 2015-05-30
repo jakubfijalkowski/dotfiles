@@ -96,7 +96,7 @@ let NERDTreeDirArrows=1
 
 " Syntastic
 let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=1
+let g:syntastic_auto_loc_list=2
 let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 
@@ -154,3 +154,22 @@ if executable('hasktags')
         \ }
     \ }
 endif
+
+" Neocomplete
+let g:neocomplete#enable_at_startup=1
+let g:neocomplete#enable_smart_case=1
+
+inoremap <silent> <CR> <C-r>=<SID>complete_cr_func()<CR>
+function! s:complete_cr_func()
+    return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y> neocomplete#close_popup()
+inoremap <expr><C-e> neocomplete#cancel_popup()
+
+" Neosnippet
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_or_jump)
