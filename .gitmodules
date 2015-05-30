@@ -85,9 +85,6 @@
 [submodule "vim/bundle/neco-ghc"]
 	path = vim/bundle/neco-ghc
 	url = https://github.com/eagletmt/neco-ghc.git
-[submodule "vim/bundle/vim-hdevtools"]
-	path = vim/bundle/vim-hdevtools
-	url = https://github.com/bitc/vim-hdevtools.git
 [submodule "vim/bundle/ghcmod-vim"]
 	path = vim/bundle/ghcmod-vim
 	url = https://github.com/eagletmt/ghcmod-vim.git
