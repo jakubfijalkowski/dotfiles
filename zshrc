@@ -79,6 +79,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias git="nocorrect git"
+alias cabal="nocorrect cabal"
 alias ghci="screen -S ghci -s ghci -t ghci"
 vim () { TERM=xterm-256color tmux new-session "vim $*" }
 
