@@ -57,12 +57,7 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+export EDITOR='vim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -81,7 +76,6 @@ source $ZSH/oh-my-zsh.sh
 alias git="nocorrect git"
 alias cabal="nocorrect cabal"
 alias ghci="screen -S ghci -s ghci -t ghci"
-vim () { TERM=xterm-256color tmux new-session "vim $*" }
 
 # For agnoster theme
 DEFAULT_USER=fiolek
