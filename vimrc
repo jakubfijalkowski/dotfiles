@@ -105,9 +105,9 @@ nnoremap <F5> :UndotreeToggle<CR>
 nnoremap <silent> <Leader>p :CtrlPTag<CR>
 
 "  EasyMotion
-nnoremap s <Plug>(easymotion-s)
-nnoremap <Leader>j <Plug>(easymotion-j)
-nnoremap <Leader>k <Plug>(easymotion-k)
+map s <Plug>(easymotion-s)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 
 "  Tagbar
 nnoremap <F8> :TagbarToggle<CR>
