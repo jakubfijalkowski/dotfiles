@@ -3,16 +3,27 @@ readonly CABAL_BASE="$HASKELL_BASE/cabal"
 readonly GHC_BASE="$HASKELL_BASE/ghc"
 readonly CABAL_LOCAL="$HOME/.cabal/bin"
 
+if [ -d $GHC_BASE ] && [ -d $CABAL_BASE ]; then
+    readonly HAS_HASKELL=true
+else
+    readonly HAS_HASKELL=false
+fi
+
 if [ ! -n "${GHC_STABLE_VERSION+1}" ]; then
-    readonly GHC_STABLE_VERSION=7.8.4
+    readonly GHC_STABLE_VERSION=7.10.1
 fi
 
 if [ ! -n "${CABAL_STABLE_VERSION+1}" ]; then
-    readonly CABAL_STABLE_VERSION=1.20
+    readonly CABAL_STABLE_VERSION=1.22
 fi
 
-readonly GHC_LATEST_VERSION=$(ls -rv $GHC_BASE | head -n 1)
-readonly CABAL_LATEST_VERSION=$(ls -rv $CABAL_BASE | head -n 1)
+ghc_path::_init() {
+    if [ "$HAS_HASKELL" = false ]; then
+        return
+    fi
+    readonly GHC_LATEST_VERSION=$(ls -rv $GHC_BASE | head -n 1)
+    readonly CABAL_LATEST_VERSION=$(ls -rv $CABAL_BASE | head -n 1)
+}
 
 ghc_path::_get_path_entry() {
     local arg1=$1
@@ -22,6 +33,9 @@ ghc_path::_get_path_entry() {
 }
 
 ghc_path::use_ghc() {
+    if [ "$HAS_HASKELL" = false ]; then
+        return
+    fi
     local VERSION_REGEX='[0-9]{1,2}\.[0-9]{1,2}\.?[0-9]{0,2}'
     local ghc_ver=$1
     local cabal_ver=$2
