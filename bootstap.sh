@@ -39,3 +39,6 @@ echo 'Installing fonts...'
 fonts/powerline/install.sh
 echo 'Updating font cache...'
 fc-cache -f
+
+echo 'Building vim bundles...'
+make --directory=vim/bundle/vimproc.vim
