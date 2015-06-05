@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 echo 'Syncing git submodules...'
 git submodule init

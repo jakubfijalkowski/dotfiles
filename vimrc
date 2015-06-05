@@ -217,7 +217,7 @@ let g:haskell_tabuler        = 1
 let g:haskell_autotags       = 1
 let g:haskell_tags_generator = 'hasktags'
 
-" vim-hdevtools
+" ghcmod-vim
 autocmd FileType haskell nnoremap <buffer> <F1> :GhcModType<CR>
 autocmd FileType haskell nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 
