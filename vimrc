@@ -89,20 +89,20 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 map zl zL
-map zH zH
+map zh zH
 
 nnoremap Y y$
 
 " Plugins
 "  NERDTree
-nnoremap <Leader>n <Plug>NERDTreeTabsToggle<CR>
+nmap <Leader>n <Plug>NERDTreeTabsToggle<CR>
 
 "  Undotree
-nnoremap <F5> :UndotreeToggle<CR>
+nnoremap <F10> :UndotreeToggle<CR>
 
 "  CtrlP
 "nmap <silent> <C-P> :CtrlP<CR> - default, do not uncomment
-nnoremap <silent> <Leader>p :CtrlPTag<CR>
+nmap <silent> <Leader>p :CtrlPTag<CR>
 
 "  EasyMotion
 map s <Plug>(easymotion-s)
@@ -110,7 +110,7 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
 "  Tagbar
-nnoremap <F8> :TagbarToggle<CR>
+nnoremap <silent> <F9> :TagbarToggle<CR>
 
 "  Neosnippet
 inoremap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -123,10 +123,7 @@ function! s:complete_cr_func()
     return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y> neocomplete#close_popup()
-inoremap <expr><C-e> neocomplete#cancel_popup()
 
 " Plugin configs
 "  CtrlP
@@ -173,6 +170,7 @@ set undodir=~/.vim/undo
 set undofile
 
 " Tagbar
+let g:tagbar_autofocus = 1
 if executable('hasktags')
     let g:tagbar_type_haskell = {
         \ 'ctagsbin'  : 'hasktags',
