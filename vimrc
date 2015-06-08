@@ -70,12 +70,17 @@ set backupdir=~/.vim/backups
 
 " Per-file settings
 "   Haskell
-autocmd FileType haskell setlocal foldlevel=1
+autocmd FileType haskell setlocal foldlevel=2
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd FileType haskell let b:syntastic_mode='passive'
 autocmd FileType haskell compiler cabal
 autocmd FileType haskell setlocal textwidth=80
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
+
+"   Cabal
+autocmd FileType cabal setlocal foldlevel=2
+autocmd FileType cabal setlocal tabstop=2
+autocmd FileType cabal setlocal shiftwidth=2
 
 " Key bindings
 let mapleader=','
@@ -113,17 +118,17 @@ map <Leader>k <Plug>(easymotion-k)
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
 "  Neosnippet
-inoremap <C-k> <Plug>(neosnippet_expand_or_jump)
-snoremap <C-k> <Plug>(neosnippet_expand_or_jump)
-xnoremap <C-k> <Plug>(neosnippet_expand_or_jump)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_or_jump)
 
 "  Neocomplete
-inoremap <silent> <CR> <C-r>=<SID>complete_cr_func()<CR>
+imap <silent> <CR> <C-r>=<SID>complete_cr_func()<CR>
 function! s:complete_cr_func()
     return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+imap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " Plugin configs
 "  CtrlP
@@ -216,6 +221,6 @@ let g:haskell_autotags       = 1
 let g:haskell_tags_generator = 'hasktags'
 
 " ghcmod-vim
-autocmd FileType haskell nnoremap <buffer> <F1> :GhcModType<CR>
-autocmd FileType haskell nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+autocmd FileType haskell nmap <buffer> <F1> :GhcModType<CR>
+autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 
