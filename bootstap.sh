@@ -35,10 +35,16 @@ if hash terminator 2>/dev/null; then
     ln -s $(pwd)/$TERMINATOR_CFG $HOME/.$TERMINATOR_CFG
 fi
 
-echo 'Installing fonts...'
-fonts/powerline/install.sh
-echo 'Updating font cache...'
-fc-cache -f
+if [ $OS != "Windows_NT" ]; then
+    echo 'Installing fonts...'
+    fonts/powerline/install.sh
+    echo 'Updating font cache...'
+    fc-cache -f
+fi
 
 echo 'Building vim bundles...'
-make --directory=vim/bundle/vimproc.vim
+if [ $OS != "Windows_NT" ]; then
+    make --directory=vim/bundle/vimproc.vim
+else
+    make --directory=vim/bundle/vimproc.vim -f make_cygwin.mak
+fi
