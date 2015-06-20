@@ -1,4 +1,4 @@
-if [ $OS != "Windows_NT" ]; then
+if [[ $OS != "Windows_NT" ]]; then
     DEFAULT_USER=fiolek
     export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
     plugins=(git sublime zsh-syntax-highlighting ghc_path cabal)
