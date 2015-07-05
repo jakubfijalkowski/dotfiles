@@ -91,9 +91,6 @@
 [submodule "vim/bundle/vim-slime"]
 	path = vim/bundle/vim-slime
 	url = https://github.com/jpalardy/vim-slime.git
-[submodule "vim/bundle/vim-hoogle"]
-	path = vim/bundle/vim-hoogle
-	url = https://github.com/Twinside/vim-hoogle.git
 [submodule "vim/bundle/ghcmod-vim"]
 	path = vim/bundle/ghcmod-vim
 	url = https://github.com/eagletmt/ghcmod-vim.git
