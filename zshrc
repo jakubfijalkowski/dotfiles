@@ -14,6 +14,7 @@ else
 fi
 
 export ZSH="/home/${DEFAULT_USER}/.oh-my-zsh"
+export PATH="/home/${DEFAULT_USER}/.cabal/bin:$PATH"
 
 # Autoloads - for plugins (mostly)
 autoload -U regexp-replace
@@ -36,4 +37,5 @@ alias cabal="nocorrect cabal"
 
 # Custom initialization
 #  Configure GHC and Cabal
-ghc_path::use_stable_ghc
+# On Arch, we use default GHC that installs in /usr/bin.
+# ghc_path::use_stable_ghc
