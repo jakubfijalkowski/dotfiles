@@ -34,8 +34,5 @@ source $ZSH/oh-my-zsh.sh
 
 alias git="nocorrect git"
 alias cabal="nocorrect cabal"
-
-# Custom initialization
-#  Configure GHC and Cabal
-# On Arch, we use default GHC that installs in /usr/bin.
-# ghc_path::use_stable_ghc
+alias stack="nocorrect stack"
+alias pacaur="pacaur --domain aur4.archlinux.org"
