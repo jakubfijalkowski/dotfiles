@@ -98,7 +98,13 @@ map zh zH
 
 nnoremap Y y$
 
+" Stylish-haskell
+nmap <silent> <Leader>sh :%!stylish-haskell<CR>
+
 " Plugins
+"  Syntastic
+nmap <silent> <F5> :SyntasticCheck<CR>
+
 "  NERDTree
 nmap <Leader>n <Plug>NERDTreeTabsToggle<CR>
 
@@ -214,11 +220,10 @@ endif
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 
-" vim2hs
-let g:haskell_conceal        = 0
-let g:haskell_tabuler        = 1
-let g:haskell_autotags       = 1
-let g:haskell_tags_generator = 'hasktags'
+" haskell-vim
+let g:haskell_enable_quantification   = 1
+let g:haskell_enable_pattern_synonyms = 1
+hi link haskellType Statement
 
 " ghcmod-vim
 autocmd FileType haskell nmap <buffer> <F1> :GhcModType<CR>
