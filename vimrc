@@ -114,6 +114,7 @@ nnoremap <F10> :UndotreeToggle<CR>
 "  CtrlP
 "nmap <silent> <C-P> :CtrlP<CR> - default, do not uncomment
 nmap <silent> <Leader>p :CtrlPTag<CR>
+nmap <silent> <Leader>P :CtrlPBufTagAll<CR>
 
 "  EasyMotion
 map s <Plug>(easymotion-s)
@@ -140,6 +141,12 @@ imap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 "  CtrlP
 let g:ctrlp_map = '<C-P>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_buftag_types = {
+    \ 'haskell': {
+        \ 'bin': 'hasktags',
+        \ 'args': '-x -c --ignore-close-implementation --file=-'
+        \ }
+    \ }
 let g:ctrlp_extensions = ['tag', 'buffertag', 'dir']
 
 " EasyMotion
@@ -229,3 +236,6 @@ hi link haskellType Statement
 autocmd FileType haskell nmap <buffer> <F1> :GhcModType<CR>
 autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 
+" Gutentags
+let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
+let g:gutentags_cache_dir                = '~/.vim/tags'
