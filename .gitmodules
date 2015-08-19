@@ -96,4 +96,4 @@
 	url = https://github.com/avakhov/vim-yaml
 [submodule "vim/bundle/haskell-vim"]
 	path = vim/bundle/haskell-vim
-	url = https://github.com/raichoo/haskell-vim.git
+	url = https://github.com/neovimhaskell/haskell-vim.git
