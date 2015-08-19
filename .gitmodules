@@ -94,3 +94,6 @@
 [submodule "vim/bundle/haskell-vim"]
 	path = vim/bundle/haskell-vim
 	url = https://github.com/neovimhaskell/haskell-vim.git
+[submodule "vim/bundle/ctrlp.vim"]
+	path = vim/bundle/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim.git
