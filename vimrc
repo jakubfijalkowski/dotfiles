@@ -224,8 +224,9 @@ if executable('hasktags')
 endif
 
 " Neocomplete
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_at_startup  = 1
+let g:neocomplete#enable_smart_case  = 1
+let g:necoghc_enable_detailed_browse = 1
 
 " haskell-vim
 let g:haskell_enable_quantification   = 1
