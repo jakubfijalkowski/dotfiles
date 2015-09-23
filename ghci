@@ -1,0 +1,20 @@
+import Control.Applicative
+import Control.Monad
+
+import Data.Monoid
+import Data.Maybe
+import Data.Either
+
+:def hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+:def pf \s -> return $ ":! pointfree \"" ++ s ++ "\""
+
+:set prompt "\ESC[0;34mλ> \ESC[m"
+:set editor vim
+
+:set -Wall
+:set -fno-warn-missing-signatures
+:set -fno-warn-type-defaults
+:set -fno-warn-name-shadowing
+:set -fno-warn-unused-do-bind
+
+:set -XOverloadedStrings

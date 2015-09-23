@@ -5,7 +5,7 @@ git submodule init
 git submodule update --recursive
 git submodule sync
 
-OLDFILES=('vimrc' 'vim' 'gitconfig' 'screenrc')
+OLDFILES=('vimrc' 'vim' 'gitconfig' 'screenrc' 'ghci')
 
 if hash zsh 2>/dev/null; then
     echo 'ZSH detected, installing oh-my-zsh and .zshrc.'
