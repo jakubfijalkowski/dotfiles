@@ -18,8 +18,10 @@ export EDITOR="vim"
 
 source $ZSH/oh-my-zsh.sh
 
-# Aliases
+# Completions
+autoload -U +X bashcompinit && bashcompinit
+eval "$(stack --bash-completion-script "$(which stack)")"
 
+# Aliases
 alias git="nocorrect git"
-alias stack="nocorrect stack"
 alias pacaur="pacaur --domain aur4.archlinux.org"
