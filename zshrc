@@ -19,8 +19,10 @@ export EDITOR="vim"
 source $ZSH/oh-my-zsh.sh
 
 # Completions
-autoload -U +X bashcompinit && bashcompinit
-eval "$(stack --bash-completion-script "$(which stack)")"
+if hash stack 2>/dev/null; then
+    autoload -U +X bashcompinit && bashcompinit
+    eval "$(stack --bash-completion-script "$(which stack)")"
+fi
 
 # Aliases
 alias git="nocorrect git"
