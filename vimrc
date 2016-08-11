@@ -231,14 +231,6 @@ let g:neocomplete#enable_at_startup  = 1
 let g:neocomplete#enable_smart_case  = 1
 let g:necoghc_enable_detailed_browse = 1
 
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.c =
-        \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.cpp =
-        \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-
 " haskell-vim
 let g:haskell_enable_quantification   = 1
 let g:haskell_enable_pattern_synonyms = 1
@@ -251,6 +243,3 @@ autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 " Gutentags
 let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
 let g:gutentags_cache_dir                = '~/.vim/tags'
-
-" vim-clang
-let g:clang_auto = 0

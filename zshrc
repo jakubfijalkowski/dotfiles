@@ -26,4 +26,3 @@ fi
 
 # Aliases
 alias git="nocorrect git"
-alias pacaur="pacaur --domain aur4.archlinux.org"
