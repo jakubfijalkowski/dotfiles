@@ -25,4 +25,12 @@ if hash stack 2>/dev/null; then
 fi
 
 # Aliases
-alias git="nocorrect git"
+alias git="nocorrect noglob git"
+alias yo="nocorrect yo"
+alias stack="nocorrect stack"
+alias dotnet="nocorrect dotnet"
+
+# Per-machine config
+if [ -e ~/.local/zshrc ]; then
+    source ~/.local/zshrc
+fi
