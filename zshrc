@@ -29,6 +29,8 @@ alias git="nocorrect noglob git"
 alias yo="nocorrect yo"
 alias stack="nocorrect stack"
 alias dotnet="nocorrect dotnet"
+alias whatismyip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias az="nocorrect az"
 
 # Per-machine config
 if [ -e ~/.local/zshrc ]; then

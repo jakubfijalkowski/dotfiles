@@ -33,7 +33,10 @@ set autoread
 set autowrite
 
 set wildmenu
-set wildignore+=.git,.cabal,.cabal-sandbox,dist
+set wildignore+=.git " Common
+set wildignore+=.cabal,.cabal-sandbox,dist " Haskell
+set wildignore+=bin,obj,node_modules,packages,deploy,lib,css " Web projects
+set wildignore+=*.lock.json
 
 set diffopt=filler,vertical
 
@@ -73,7 +76,6 @@ set backupdir=~/.vim/backups
 autocmd FileType haskell setlocal foldlevel=2
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd FileType haskell let b:syntastic_mode='passive'
-autocmd FileType haskell compiler cabal
 autocmd FileType haskell setlocal textwidth=80
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
 
@@ -82,8 +84,8 @@ autocmd FileType cabal setlocal foldlevel=2
 autocmd FileType cabal setlocal tabstop=2
 autocmd FileType cabal setlocal shiftwidth=2
 
-"   C/C++
-autocmd FileType c setlocal tags+=~/.vim/tags/usr-include-tags
+"   CSharp
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 
 " Key bindings
 let mapleader=','
@@ -231,6 +233,14 @@ let g:neocomplete#enable_at_startup  = 1
 let g:neocomplete#enable_smart_case  = 1
 let g:necoghc_enable_detailed_browse = 1
 
+let g:neocomplete#sources#omni#input_patterns = {}
+let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.typescript = '[^. *\t]\.\w*\|\h\w*::'
+
 " haskell-vim
 let g:haskell_enable_quantification   = 1
 let g:haskell_enable_pattern_synonyms = 1
@@ -243,3 +253,10 @@ autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 " Gutentags
 let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
 let g:gutentags_cache_dir                = '~/.vim/tags'
+
+" Omnisharp
+let g:OmniSharp_server_type = 'roslyn'
+let g:OmniSharp_server_path = '/opt/omnisharp/OmniSharp'
+
+autocmd FileType cs nmap <buffer> <F1> :OmniSharpDocumentation<CR>
+autocmd FileType cs nmap <buffer> <Leader>p :OmniSharpFindSymbol<CR>
