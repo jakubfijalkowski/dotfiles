@@ -19,8 +19,12 @@ export EDITOR="vim"
 source $ZSH/oh-my-zsh.sh
 
 # Completions
+autoload -U +X bashcompinit && bashcompinit
+
+if hash az 2>/dev/null; then
+    source "$HOME/.local/lib/azure-cli/az.completion"
+fi
 if hash stack 2>/dev/null; then
-    autoload -U +X bashcompinit && bashcompinit
     eval "$(stack --bash-completion-script "$(which stack)")"
 fi
 
