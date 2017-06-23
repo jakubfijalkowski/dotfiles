@@ -14,6 +14,7 @@
 	cim = commit -m
 	ca = commit --all -m
 	undo = "!f() { \\\n    git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
+    update = "!f() { \\\n git fetch origin ${1}:${1}; \\\n}; f"
 
 [color]
 	diff = true
