@@ -2,17 +2,13 @@
 set nocompatible
 set encoding=utf-8
 set nobomb
-
-" Pathogen
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
 filetype plugin indent on
 
 " Syntax & Colors
 syntax enable
-set t_Co=16
+set termguicolors
 set background=dark
-colorscheme solarized
+colorscheme NeoSolarized
 
 " Basics
 set clipboard=unnamedplus
@@ -40,14 +36,6 @@ set wildignore+=*.lock.json
 
 set diffopt=filler,vertical
 
-" Gvim options
-if has('gui_running')
-    if has('gui_gtk2')
-        set guifont=Source\ Code\ Pro\ for\ Powerline\ Medium\ 10
-        set guioptions=''
-    endif
-endif
-
 " Rulers and max line length
 set textwidth=80
 set colorcolumn=+1
@@ -70,6 +58,7 @@ set gdefault
 " Directories
 set directory=~/.vim/swaps
 set backupdir=~/.vim/backups
+set tags=tags;/,codex.tags;/
 
 " Per-file settings
 "   Haskell
@@ -83,9 +72,6 @@ let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
 autocmd FileType cabal setlocal foldlevel=2
 autocmd FileType cabal setlocal tabstop=2
 autocmd FileType cabal setlocal shiftwidth=2
-
-"   CSharp
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 
 " Key bindings
 let mapleader=','
@@ -107,9 +93,6 @@ nnoremap Y y$
 nmap <silent> <Leader>sh :%!stylish-haskell<CR>
 
 " Plugins
-"  Syntastic
-nmap <silent> <F5> :SyntasticCheck<CR>
-
 "  NERDTree
 nmap <Leader>n <Plug>NERDTreeTabsToggle<CR>
 
@@ -163,12 +146,6 @@ hi EasyMotionShade  ctermbg=none ctermfg=blue
 autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
 let NERDTreeIgnore    = ['\.git[[dir]]', '\~$\', '\.cabal[[dir]]', 'dist[[dir]]']
 let NERDTreeDirArrows = 1
-
-" Syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list            = 2
-let g:syntastic_check_on_open            = 0
-let g:syntastic_check_on_wq              = 0
 
 " Airline and statusline
 set laststatus=2
@@ -246,3 +223,11 @@ autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
 let g:gutentags_cache_dir                = '~/.vim/tags'
 
+" Tabular
+let g:haskell_tabular = 1
+
+" Codex
+map <leader>tg :!codex update --force<CR>
+
+" GitGutter
+let g:gitgutter_override_sign_column_highlight = 0
