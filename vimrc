@@ -233,14 +233,6 @@ let g:neocomplete#enable_at_startup  = 1
 let g:neocomplete#enable_smart_case  = 1
 let g:necoghc_enable_detailed_browse = 1
 
-let g:neocomplete#sources#omni#input_patterns = {}
-let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.typescript = '[^. *\t]\.\w*\|\h\w*::'
-
 " haskell-vim
 let g:haskell_enable_quantification   = 1
 let g:haskell_enable_pattern_synonyms = 1
@@ -254,9 +246,3 @@ autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
 let g:gutentags_cache_dir                = '~/.vim/tags'
 
-" Omnisharp
-let g:OmniSharp_server_type = 'roslyn'
-let g:OmniSharp_server_path = '/opt/omnisharp/OmniSharp'
-
-autocmd FileType cs nmap <buffer> <F1> :OmniSharpDocumentation<CR>
-autocmd FileType cs nmap <buffer> <Leader>p :OmniSharpFindSymbol<CR>
