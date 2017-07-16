@@ -1,16 +1,18 @@
-" Must-have
+" Basic configuration
+" {{{
+" Compat
 set nocompatible
 set encoding=utf-8
 set nobomb
 filetype plugin indent on
 
-" Syntax & Colors
+" Color
 syntax enable
 set termguicolors
 set background=dark
 colorscheme NeoSolarized
 
-" Basics
+" Basic
 set clipboard=unnamedplus
 set showmode
 set showcmd
@@ -31,12 +33,11 @@ set autowrite
 set wildmenu
 set wildignore+=.git " Common
 set wildignore+=.cabal,.cabal-sandbox,dist " Haskell
-set wildignore+=bin,obj,node_modules,packages,deploy,lib,css " Web projects
 set wildignore+=*.lock.json
 
 set diffopt=filler,vertical
 
-" Rulers and max line length
+" Rulers
 set textwidth=80
 set colorcolumn=+1
 set ruler
@@ -54,26 +55,22 @@ set incsearch
 set ignorecase
 set hlsearch
 set gdefault
-
+"
 " Directories
 set directory=~/.vim/swaps
 set backupdir=~/.vim/backups
 set tags=tags;/,codex.tags;/
 
-" Per-file settings
-"   Haskell
-autocmd FileType haskell setlocal foldlevel=2
-autocmd FileType haskell setlocal textwidth=80
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+set foldmethod=marker
 
-"   Cabal
-autocmd FileType cabal setlocal foldlevel=2
-autocmd FileType cabal setlocal tabstop=2
-autocmd FileType cabal setlocal shiftwidth=2
+let mapleader=','
+" }}}
 
 " Key bindings
-let mapleader=','
+" {{{
 
+" Navigation, rebinds, helpers
+" {{{
 " Remove last-search, works like <C-/> in Terminator
 map <silent> <C-_> :let @/=''<CR>
 
@@ -87,13 +84,15 @@ map zh zH
 
 nnoremap Y y$
 tnoremap <Esc> <C-\><C-n>
-
-" Stylish-haskell
-nmap <silent> <Leader>sh :%!stylish-haskell<CR>
+" }}}
 
 " Plugins
+" {{{
+"  Tagbar
+nmap <silent> <F9> :TagbarToggle<CR>
+
 "  Undotree
-nnoremap <F10> :UndotreeToggle<CR>
+nmap <F10> :UndotreeToggle<CR>
 
 "  CtrlP
 nmap <silent> <Leader>p :CtrlPTag<CR>
@@ -104,18 +103,36 @@ map s <Plug>(easymotion-s)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
-"  Tagbar
-nnoremap <silent> <F9> :TagbarToggle<CR>
-
 "  Neosnippet
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+" }}}
 
-"  Codex
-map <leader>tg :!codex update --force<CR>
+" Haskell
+" {{{
+augroup haskell_bindings
+    autocmd!
+
+    autocmd FileType haskell setlocal foldlevel=2
+    autocmd FileType haskell setlocal textwidth=80
+    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
+    autocmd FileType cabal setlocal foldlevel=2
+    autocmd FileType cabal setlocal tabstop=2
+    autocmd FileType cabal setlocal shiftwidth=2
+
+    autocmd FileType haskell nnoremap <silent> <Leader>hs :%!stylish-haskell<CR>
+    autocmd FileType haskell nnoremap <silent> <leader>hc :!codex update --force<CR>
+    autocmd FileType haskell map <silent> <leader>ht <Plug>InteroGenericType
+    autocmd FileType haskell map <silent> <leader>hT <Plug>InteroType
+    autocmd FileType haskell nnoremap <silent> <leader>hit :InteroTypeInsert<CR>
+augroup END
+" }}}
+" }}}
 
 " Plugin configs
+" {{{
 "  CtrlP
 let g:ctrlp_map = '<C-P>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -219,3 +236,5 @@ let g:gitgutter_override_sign_column_highlight = 0
 
 " Intero
 let g:intero_prompt_regex = '.\{-}> \e[0m'
+autocmd BufWritePost *.hs InteroReload
+" }}}
