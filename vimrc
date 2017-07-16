@@ -63,10 +63,8 @@ set tags=tags;/,codex.tags;/
 " Per-file settings
 "   Haskell
 autocmd FileType haskell setlocal foldlevel=2
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-autocmd FileType haskell let b:syntastic_mode='passive'
 autocmd FileType haskell setlocal textwidth=80
-let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 "   Cabal
 autocmd FileType cabal setlocal foldlevel=2
@@ -88,19 +86,16 @@ map zl zL
 map zh zH
 
 nnoremap Y y$
+tnoremap <Esc> <C-\><C-n>
 
 " Stylish-haskell
 nmap <silent> <Leader>sh :%!stylish-haskell<CR>
 
 " Plugins
-"  NERDTree
-nmap <Leader>n <Plug>NERDTreeTabsToggle<CR>
-
 "  Undotree
 nnoremap <F10> :UndotreeToggle<CR>
 
 "  CtrlP
-"nmap <silent> <C-P> :CtrlP<CR> - default, do not uncomment
 nmap <silent> <Leader>p :CtrlPTag<CR>
 nmap <silent> <Leader>P :CtrlPBufTagAll<CR>
 
@@ -117,13 +112,8 @@ imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_or_jump)
 
-"  Neocomplete
-imap <silent> <CR> <C-r>=<SID>complete_cr_func()<CR>
-function! s:complete_cr_func()
-    return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-imap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-imap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+"  Codex
+map <leader>tg :!codex update --force<CR>
 
 " Plugin configs
 "  CtrlP
@@ -205,19 +195,17 @@ if executable('hasktags')
     \ }
 endif
 
-" Neocomplete
-let g:neocomplete#enable_at_startup  = 1
-let g:neocomplete#enable_smart_case  = 1
+"  Neomake
+autocmd! BufWritePost * Neomake
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
 let g:necoghc_enable_detailed_browse = 1
 
 " haskell-vim
 let g:haskell_enable_quantification   = 1
 let g:haskell_enable_pattern_synonyms = 1
 hi link haskellType Statement
-
-" ghcmod-vim
-autocmd FileType haskell nmap <buffer> <F1> :GhcModType<CR>
-autocmd FileType haskell nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
 
 " Gutentags
 let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
@@ -226,8 +214,8 @@ let g:gutentags_cache_dir                = '~/.vim/tags'
 " Tabular
 let g:haskell_tabular = 1
 
-" Codex
-map <leader>tg :!codex update --force<CR>
-
 " GitGutter
 let g:gitgutter_override_sign_column_highlight = 0
+
+" Intero
+let g:intero_prompt_regex = '.\{-}> \e[0m'

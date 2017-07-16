@@ -8,7 +8,7 @@ import Data.Either
 :def hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
 :def pf \s -> return $ ":! pointfree \"" ++ s ++ "\""
 
-:set prompt "\ESC[0;34mλ> \ESC[m"
+:set prompt "\ESC[1;34mλ> \ESC[0m\STX"
 :set editor vim
 
 :set -Wall
