@@ -82,3 +82,6 @@
 [submodule "vim/pack/main/start/intero-neovim"]
 	path = vim/pack/main/start/intero-neovim
 	url = https://github.com/parsonsmatt/intero-neovim.git
+[submodule "vim/pack/main/start/vim-terraform"]
+	path = vim/pack/main/start/vim-terraform
+	url = https://github.com/hashivim/vim-terraform.git
