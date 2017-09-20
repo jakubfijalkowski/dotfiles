@@ -6,12 +6,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # Autoloads - for plugins (mostly)
 autoload -U regexp-replace
 
-source ~/.local/share/fonts/*.sh
-
-# Oh-my-zsh configuration
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator history)
+# Oh-my-zsh & powerlevel9k configuration
 POWERLEVEL9K_MODE='awesome-fontconfig'
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time history)
+POWERLEVEL9K_SHOW_CHANGESET=true
 ZSH_THEME="powerlevel9k/powerlevel9k"
 ENABLE_CORRECTION="true"
 ZSH_CUSTOM=~/.zsh-custom
