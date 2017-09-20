@@ -1,27 +1,27 @@
 [core]
-	autocrlf = false
-	editor = "vim"
+  autocrlf = input
+  editor = "vim"
 
 [user]
-	name = Jakub Fijałkowski
-	email = fiolek94@gmail.com
+  name = Jakub Fijałkowski
+  email = fiolek94@gmail.com
 
 [alias]
-	br = branch
-	ci = commit
-	co = checkout
-	st = status
-	cim = commit -m
-	ca = commit --all -m
-	undo = "!f() { \\\n    git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
-    update = "!f() { \\\n git fetch origin ${1}:${1}; \\\n}; f"
+  br = branch
+  ci = commit
+  co = checkout
+  st = status
+  cim = commit -m
+  ca = commit --all -m
+  undo = "!f() { \\\n    git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
+  update = "!f() { \\\n git fetch origin ${1}:${1}; \\\n}; f"
 
 [color]
-	diff = true
-	branch = true
-	status = true
+  diff = true
+  branch = true
+  status = true
 
 [credential]
-	helper = store
+  helper = store
 [push]
-	default = matching
+  default = matching

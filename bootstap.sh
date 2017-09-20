@@ -5,13 +5,13 @@ git submodule init
 git submodule update --recursive
 git submodule sync
 
-OLDFILES=('vimrc' 'vim' 'gitconfig' 'screenrc' 'ghci')
+OLDFILES=('vimrc' 'vim' 'gitconfig' 'ghci')
 
 if hash zsh 2>/dev/null; then
     echo 'ZSH detected, installing oh-my-zsh and .zshrc.'
     OLDFILES+=('zshrc' 'oh-my-zsh' 'zsh-custom')
 else
-    echo 'ZSH not detected, installing oh-my-zsh and .zshrc.'
+    echo 'ZSH not detected, skipping installation of oh-my-zsh and .zshrc.'
 fi
 
 for file in "${OLDFILES[@]}"
@@ -35,10 +35,3 @@ if hash terminator 2>/dev/null; then
     ln -s $(pwd)/$TERMINATOR_CFG $HOME/.$TERMINATOR_CFG
 fi
 
-echo 'Installing fonts...'
-fonts/powerline/install.sh
-echo 'Updating font cache...'
-fc-cache -f
-
-echo 'Building vim bundles...'
-make --directory=vim/bundle/vimproc.vim

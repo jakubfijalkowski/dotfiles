@@ -43,9 +43,6 @@
 [submodule "vim/bundle/vim-surround"]
 	path = vim/pack/main/start/vim-surround
 	url = https://github.com/tpope/vim-surround.git
-[submodule "fonts/powerline"]
-	path = fonts/powerline
-	url = https://github.com/powerline/fonts.git
 [submodule "vim/bundle/neosnippet.vim"]
 	path = vim/pack/main/start/neosnippet.vim
 	url = https://github.com/Shougo/neosnippet.vim
@@ -85,3 +82,6 @@
 [submodule "vim/pack/main/start/vim-terraform"]
 	path = vim/pack/main/start/vim-terraform
 	url = https://github.com/hashivim/vim-terraform.git
+[submodule "zsh-custom/themes/powerlevel9k"]
+	path = zsh-custom/themes/powerlevel9k
+	url = https://github.com/bhilburn/powerlevel9k.git
