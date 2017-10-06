@@ -11,7 +11,7 @@ statusline-music() {
         if [ -z "$playback" ]; then
             playback='stopped'
         else
-            playback=$(echo $playback | sed -E 's/\[(.+)\]/\1/')
+            playback=${playback:1:-1}
         fi
     elif pidof -x spotify > /dev/null; then
         local metadata=$(dbus-send \
@@ -40,8 +40,7 @@ statusline-music() {
 
 statusline-azure-profile() {
     if [ -f $HOME/.azure/azureProfile.json ]; then
-        local pname=$(cat $HOME/.azure/azureProfile.json | \
-            jq '.subscriptions[] | select(.isDefault) | .name' -r)
-        echo -n "\uf0c2  $pname"
+        echo -n "\uf0c2  $(jq '.subscriptions[] | select(.isDefault) | .name' \
+            -r $HOME/.azure/azureProfile.json)"
     fi
 }
