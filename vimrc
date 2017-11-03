@@ -10,7 +10,7 @@ filetype plugin indent on
 syntax enable
 set termguicolors
 set background=dark
-colorscheme NeoSolarized
+colorscheme gruvbox
 
 " Basic
 set clipboard=unnamedplus
@@ -156,9 +156,8 @@ let NERDTreeDirArrows = 1
 
 " Airline and statusline
 set laststatus=2
-let g:airline_theme                         = 'solarized'
+let g:airline_theme                         = 'gruvbox'
 let g:airline_powerline_fonts               = 1
-let g:airline#extensions#syntastic#enabled  = 1
 let g:airline#extensions#tagbar#enabled     = 1
 let g:airline#extensions#hunks#enabled      = 1
 let g:airline#extensions#whitespace#enabled = 1

@@ -1,4 +1,4 @@
-plugins=(git zsh-syntax-highlighting debian archlinux hab)
+plugins=(gitfast zsh-syntax-highlighting)
 
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/.local/bin:$PATH"
