@@ -14,6 +14,8 @@
   layout_launcher = <Primary><Alt>l
   next_tab = <Primary>Tab
   prev_tab = <Primary><Shift>Tab
+  zoom_in = None
+  zoom_out = None
 [layouts]
   [[default]]
     [[[child1]]]

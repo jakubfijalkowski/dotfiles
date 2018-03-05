@@ -82,9 +82,16 @@ map <C-L> <C-W>l
 map zl zL
 map zh zH
 
+" Split management
+nnoremap <silent> <S-Up> :resize +1<CR>
+nnoremap <silent> <S-Down> :resize -1<CR>
+nnoremap <silent> <S-Left> :vertical :resize -1<CR>
+nnoremap <silent> <S-Right> :vertical :resize +1<CR>
+
 nnoremap Y y$
 tnoremap <Esc> <C-\><C-n>
 " }}}
+
 
 " Plugins
 " {{{
