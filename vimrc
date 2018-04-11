@@ -114,6 +114,10 @@ map <Leader>k <Plug>(easymotion-k)
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+
+"  Neoterm
+nmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
+xmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
 " }}}
 
 " Haskell
@@ -243,4 +247,7 @@ let g:gitgutter_override_sign_column_highlight = 0
 " Intero
 let g:intero_prompt_regex = '.\{-}> \e[0m'
 autocmd BufWritePost *.hs InteroReload
+
+" Neoterm
+let g:neoterm_automap_keys = ''
 " }}}
