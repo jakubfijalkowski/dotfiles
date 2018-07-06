@@ -226,7 +226,7 @@ endif
 autocmd! BufWritePost * Neomake
 
 " Deoplete
-let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_at_startup = 0
 let g:necoghc_enable_detailed_browse = 1
 
 " haskell-vim
