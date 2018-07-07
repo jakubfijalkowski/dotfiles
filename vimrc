@@ -1,3 +1,46 @@
+" Plugins
+" {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+call plug#begin('~/.local/share/nvim/plugged')
+
+Plug 'morhetz/gruvbox' " Theme
+
+Plug 'ctrlpvim/ctrlp.vim' " The mighty CtrlP
+Plug 'mbbill/undotree' " The migthy undo
+Plug 'scrooloose/nerdtree' " Treeview of files (not that migthy as CtrlP ;) )
+Plug 'vim-airline/vim-airline' " Bottom bar ;)
+Plug 'vim-airline/vim-airline-themes' " Bottom bar themes
+
+Plug 'neomake/neomake' " :make and syntastic in one plugin
+Plug 'kassio/neoterm' " :terminal helpers
+Plug 'scrooloose/nerdcommenter' " Comments, the <leader>c* keys
+Plug 'godlygeek/tabular' " Align lines
+Plug 'easymotion/vim-easymotion' " ,s hotkey
+Plug 'airblade/vim-gitgutter' " The git changes in gutter
+Plug 'nathanaelkane/vim-indent-guides' " Well...
+Plug 'sheerun/vim-polyglot' " Lang packs
+Plug 'tpope/vim-repeat' " Fixup the . command
+Plug 'tpope/vim-surround' " Fixup the . command
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Autocomplete
+Plug 'Shougo/neosnippet.vim' " Snippets
+Plug 'Shougo/neosnippet-snippets' " Snippets pack
+Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
+
+Plug 'parsonsmatt/intero-neovim' " Intero (Haskell)
+Plug 'eagletmt/neco-ghc' " GHC-Mod
+
+" Consider deletion:
+Plug 'majutsushi/tagbar' " The mighty TagBar
+Plug 'terryma/vim-multiple-cursors' " Never used, but maybe...
+
+call plug#end()
+" }}}
+
 " Basic configuration
 " {{{
 " Compat
@@ -64,6 +107,11 @@ set tags=tags;/,codex.tags;/
 set foldmethod=marker
 
 let mapleader=','
+
+" Fixups
+let g:python_host_prog = "/usr/bin/python2"
+let g:python3_host_prog = "/usr/bin/python3"
+
 " }}}
 
 " Key bindings
@@ -226,7 +274,7 @@ endif
 autocmd! BufWritePost * Neomake
 
 " Deoplete
-let g:deoplete#enable_at_startup = 0
+let g:deoplete#enable_at_startup = 1
 let g:necoghc_enable_detailed_browse = 1
 
 " haskell-vim
