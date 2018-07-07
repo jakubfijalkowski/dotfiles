@@ -16,7 +16,7 @@ autoload -U +X bashcompinit && bashcompinit
 source ~/.zsh-custom/statusline.zsh
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-POWERLEVEL9K_SHORTEN_STRATEGY='truncate_from_right'
+POWERLEVEL9K_SHORTEN_STRATEGY='truncate_to_unique'
 POWERLEVEL9K_SHORTEN_DELIMITER=''
 
 POWERLEVEL9K_MODE='awesome-fontconfig'

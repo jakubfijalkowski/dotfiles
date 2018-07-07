@@ -25,3 +25,6 @@
   helper = store
 [push]
   default = matching
+
+[include]
+  path = "~/.local/gitconfig"
