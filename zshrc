@@ -15,11 +15,12 @@ autoload -U +X bashcompinit && bashcompinit
 # Oh-my-zsh & powerlevel9k configuration
 source ~/.zsh-custom/statusline.zsh
 
+POWERLEVEL9K_MODE='nerdfont-complete'
+
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY='truncate_to_unique'
 POWERLEVEL9K_SHORTEN_DELIMITER=''
 
-POWERLEVEL9K_MODE='awesome-fontconfig'
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
@@ -30,7 +31,9 @@ ZSH_CUSTOM=~/.zsh-custom
 ENABLE_CORRECTION="true"
 
 # Shell configuraion
-export LANG="en_US.UTF-8"
+export LANG="en_US.utf8"
+export LC_ALL="en_US.utf8"
+
 export EDITOR="vim"
 
 source $ZSH/oh-my-zsh.sh
