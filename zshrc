@@ -12,7 +12,8 @@ export PATH="$HOME/.local/bin:$PATH"
 autoload -U regexp-replace
 autoload -U +X bashcompinit && bashcompinit
 
-# Oh-my-zsh & powerlevel9k configuration
+# Oh-my-zsh & powerlevel9k configuration & helper functions
+source ~/.zsh-custom/music.zsh
 source ~/.zsh-custom/statusline.zsh
 
 POWERLEVEL9K_MODE='nerdfont-complete'
