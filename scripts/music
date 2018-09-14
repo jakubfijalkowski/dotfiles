@@ -1,0 +1,11 @@
+#!/bin/sh
+if [[ $1 = "stop" ]]; then
+    systemctl --user stop mpd
+else
+    isActive=$(systemctl --user is-active mpd)
+    if [[ $isActive = "inactive" ]]; then
+        systemctl --user start mpd
+    fi
+    $TERMINAL --title 'Music' --class 'ncmpcpp-player' -e 'ncmpcpp' 
+    systemctl --user stop mpd
+fi

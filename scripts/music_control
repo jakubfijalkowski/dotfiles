@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+isActive=$(systemctl --user is-active mpd)
+
+if [[ $isActive = "inactive" ]]; then
+    if [[ $1 == "toggle" ]]; then
+        cmd='org.mpris.MediaPlayer2.Player.PlayPause'
+    elif [[ $1 == "next" ]]; then
+        cmd='org.mpris.MediaPlayer2.Player.Next'
+    elif [[ $1 == "prev" ]]; then
+        cmd='org.mpris.MediaPlayer2.Player.Previous'
+    fi
+    dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify \
+        /org/mpris/MediaPlayer2 $cmd
+else
+    mpc $1
+fi

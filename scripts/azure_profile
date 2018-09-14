@@ -1,0 +1,9 @@
+#!/bin/bash
+
+file=$HOME/.azure/azureProfile.json
+
+echo "$(jq '.subscriptions[] | select(.isDefault) | .name' -r $file)"
+inotifywait -q -m -e close_write $file |
+    while read -r filename event; do
+        echo "$(jq '.subscriptions[] | select(.isDefault) | .name' -r $file)"
+    done

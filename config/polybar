@@ -1,0 +1,245 @@
+[colors]
+background_dark = #f01d1f21
+text_lightbg = #2d2d2d 
+text_darkbg = #dadada 
+
+tint1 = #7fd2ff
+tint2 = #6cb3d8
+tint3 = #4c7e99
+tint4 = #2d4d5e
+
+icons_bright = ${colors.tint1}
+icons = ${colors.tint2}
+icons_dimmed = ${colors.tint3}
+
+main_bg = ${colors.background_dark}
+main_fg = ${colors.text_darkbg}
+
+[bar/main]
+monitor = DP-1
+fallback-monitor = eDP-1
+
+width = 100%
+height = 45
+radius = 0.0
+fixed-center = true
+
+background = ${colors.main_bg}
+foreground = ${colors.main_fg}
+
+line-size = 0
+border-bottom-size = 0
+padding-left = 1
+padding-right = 1
+
+module-margin-left = 1
+module-margin-right = 0
+
+locale = pl_PL.UTF-8
+
+font-0 = Source Code Pro:size=16;3
+font-1 = Font Awesome 5 Free:style=Solid:size=17;4
+font-2 = Material Icons:size=18;4
+font-3 = material\-wifi:size=18;4
+; Volume controls fixes
+font-4 = Material Icons:size=22;7
+font-5 = Material Icons:size=22;8
+; Fallback for missing icons
+font-6 = Font Awesome 5 Brands:style=Solid:size=17;4
+
+modules-left = i3 xwindow
+modules-center = music
+modules-right = azure separator date space cpu space wlan battery audio space powermenu
+
+tray-position = right
+tray-padding = 2
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[module/space]
+type = custom/text
+content = "  "
+
+[module/separator]
+type = custom/text
+content = "|"
+content-padding = 3
+content-foreground = ${colors.icons}
+
+[module/azure]
+type = custom/script
+exec-if = test -f ~/.azure/azureProfile.json
+exec = ~/.local/bin/scripts/azure_profile
+tail = true
+interval = 60
+
+format-prefix = " "
+format-prefix-foreground = ${colors.icons}
+format-foreground = ${colors.main_fg}
+
+[module/music]
+type = custom/script
+exec = ~/.local/bin/scripts/current_track
+tail = true
+interval = 10
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:50:...%
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = true
+enable-click = true
+
+label-font = 2
+
+label-mode-padding = 1
+label-mode-foreground = ${colors.main_fg}
+
+; focused = Active workspace on focused monitor
+label-focused = %name%
+label-focused-foreground = ${colors.text_darkbg}
+label-focused-background = ${colors.tint2}
+label-focused-padding = 1
+
+; visible = Active workspace on unfocused monitor
+label-visible = %name%
+label-visible-foreground = ${colors.text_darkbg}
+label-visible-background = ${colors.tint3}
+label-visible-padding = 1
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %name%
+label-unfocused-foreground = ${colors.text_darkbg}
+label-unfocused-background = ${colors.tint4}
+label-unfocused-padding = 1
+
+; urgent = Workspace with urgency hint set
+label-urgent = %name%
+label-urgent-foreground = ${colors.text_lightbg}
+label-urgent-background = ${colors.tint1}
+label-urgent-padding = 1
+
+[module/mpd]
+type = internal/mpd
+format-online = <label-song>
+
+label-song-maxlen = 25
+label-song-ellipsis = true
+
+[module/cpu]
+type = internal/cpu
+interval = 5
+
+format-prefix-foreground = ${colors.icons}
+format-prefix = ""
+
+label = %percentage:3%%
+
+[module/wlan]
+type = internal/network
+interface = wlp2s0
+interval = 5.0
+
+format-connected = <ramp-signal>
+format-disconnected = 
+format-disconnected-foreground = ${colors.icons_dimmed}
+format-disconnected-font = 3
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-foreground = ${colors.icons}
+ramp-signal-font = 4
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = "%A, %e %B,"
+date-alt = "%Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M
+
+label = %date% %time%
+
+[module/audio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-foreground = ${colors.icons}
+format-muted = "%{T6}%{T-} mute"
+format-muted-foreground = ${colors.icons_dimmed}
+
+label-volume = %percentage:3%%
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-3 = 
+ramp-volume-3-foreground = ${colors.icons_bright}
+ramp-volume-font = 5
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+
+format-full = 
+format-full-foreground = ${colors.icons_bright}
+
+format-charging = <animation-charging>
+format-charging-foreground = ${colors.icons}
+
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-foreground = ${colors.icons_dimmed}
+label-discharging = %percentage:2%%
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.icons_dimmed}
+label-close = 
+label-close-foreground = ${colors.icons_bright}
+label-separator = "|"
+label-separator-foreground = ${colors.icons_dimmed}
+
+menu-0-0 = 
+menu-0-0-exec = "~/.local/bin/scripts/i3exit shutdown"
+menu-0-1 = 
+menu-0-1-exec = "~/.local/bin/scripts/i3exit restart"
+menu-0-2 = 
+menu-0-2-exec = "~/.local/bin/scripts/i3exit logout"
+
+; vim:ft=dosini

@@ -1,5 +1,4 @@
 " Plugins
-" {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -37,12 +36,13 @@ Plug 'eagletmt/neco-ghc' " GHC-Mod
 " Consider deletion:
 Plug 'majutsushi/tagbar' " The mighty TagBar
 Plug 'terryma/vim-multiple-cursors' " Never used, but maybe...
+Plug 'zchee/deoplete-jedi'
 
 call plug#end()
-" }}}
+" 
 
 " Basic configuration
-" {{{
+" 
 " Compat
 set nocompatible
 set encoding=utf-8
@@ -112,13 +112,11 @@ let mapleader=','
 let g:python_host_prog = "/usr/bin/python2"
 let g:python3_host_prog = "/usr/bin/python3"
 
-" }}}
-
 " Key bindings
-" {{{
+" 
 
 " Navigation, rebinds, helpers
-" {{{
+" 
 " Remove last-search, works like <C-/> in Terminator
 map <silent> <C-_> :let @/=''<CR>
 
@@ -138,11 +136,11 @@ nnoremap <silent> <S-Right> :vertical :resize +1<CR>
 
 nnoremap Y y$
 tnoremap <Esc> <C-\><C-n>
-" }}}
+" 
 
 
 " Plugins
-" {{{
+" 
 "  Tagbar
 nmap <silent> <F9> :TagbarToggle<CR>
 
@@ -166,10 +164,10 @@ xmap <C-k> <Plug>(neosnippet_expand_or_jump)
 "  Neoterm
 nmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
 xmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
-" }}}
+" 
 
 " Haskell
-" {{{
+" 
 augroup haskell_bindings
     autocmd!
 
@@ -187,11 +185,11 @@ augroup haskell_bindings
     autocmd FileType haskell map <silent> <leader>hT <Plug>InteroType
     autocmd FileType haskell nnoremap <silent> <leader>hit :InteroTypeInsert<CR>
 augroup END
-" }}}
-" }}}
+" 
+" 
 
 " Plugin configs
-" {{{
+" 
 "  CtrlP
 let g:ctrlp_map = '<C-P>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -276,6 +274,8 @@ autocmd! BufWritePost * Neomake
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 let g:necoghc_enable_detailed_browse = 1
+let g:deoplete#sources#jedi#python_path = 'python'
+let g:deoplete#sources#jedi#show_docstring = 1
 
 " haskell-vim
 let g:haskell_enable_quantification   = 1
@@ -298,4 +298,4 @@ autocmd BufWritePost *.hs InteroReload
 
 " Neoterm
 let g:neoterm_automap_keys = ''
-" }}}
+" 

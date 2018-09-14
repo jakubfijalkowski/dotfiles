@@ -1,0 +1,44 @@
+#!/bin/sh
+lock() {
+    # https://www.reddit.com/r/i3wm/comments/8a7kl3/my_i3lockcolor_theme/
+    local bg=191314
+    local ring=9e5c967f
+    local inside=591c547f
+    local ringver=3841a17f
+    local insidever=403e637f
+    local ringwrong=9f202d7f
+    local insidewrong=6134327f
+    local keyhl=e77cdb7f
+    local bshl=582da37f
+    i3lock --clock --indicator \
+        --veriftext="" --wrongtext="" --noinputtext="" \
+        --insidecolor=$inside --ringcolor=$ring \
+        --insidevercolor=$insidever --ringvercolor=$ringver \
+        --insidewrongcolor=$insidewrong --ringwrongcolor=$ringwrong \
+        --keyhlcolor=$keyhl --bshlcolor=$bshl \
+        --linecolor=${bg}ff --separatorcolor=${bg}7f \
+        --radius 130 --ring-width 10
+}
+
+case "$1" in
+    lock)
+        lock
+        ;;
+    logout)
+        i3-msg exit
+        ;;
+    suspend)
+        systemctl suspend
+        ;;
+    reboot)
+        systemctl reboot
+        ;;
+    shutdown)
+        systemctl poweroff
+        ;;
+    *)
+        echo "Usage: $0 {lock|logout|suspend|hibernate|reboot|shutdown}"
+        exit 2
+esac
+
+exit 0

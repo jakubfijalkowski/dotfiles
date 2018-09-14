@@ -1,0 +1,10 @@
+#!/bin/bash
+
+device="DLL07BE:01 06CB:7A13 Touchpad"
+is_disabled=$(xinput list-props "DLL07BE:01 06CB:7A13 Touchpad" | grep -E '^.+Device Enabled.+0$')
+
+if [[ "$is_disabled" == "" ]]; then
+    xinput disable "$device"
+else
+    xinput enable "$device"
+fi

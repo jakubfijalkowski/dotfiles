@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ -e ~/Pictures/wallpapers ]; then
+    feh --randomize --bg-fill ~/Pictures/wallpapers
+fi
