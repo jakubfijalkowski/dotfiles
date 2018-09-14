@@ -238,7 +238,7 @@ label-separator-foreground = ${colors.icons_dimmed}
 menu-0-0 = 
 menu-0-0-exec = "~/.local/bin/scripts/i3exit shutdown"
 menu-0-1 = 
-menu-0-1-exec = "~/.local/bin/scripts/i3exit restart"
+menu-0-1-exec = "~/.local/bin/scripts/i3exit reboot"
 menu-0-2 = 
 menu-0-2-exec = "~/.local/bin/scripts/i3exit logout"
 
