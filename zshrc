@@ -6,7 +6,6 @@ fi
 plugins=(gitfast zsh-syntax-highlighting)
 
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$HOME/.local/bin:$PATH"
 
 # Autoloads - for plugins (mostly)
 autoload -U regexp-replace
@@ -18,10 +17,10 @@ source ~/.zsh-custom/statusline.zsh
 
 POWERLEVEL9K_MODE='nerdfont-complete'
 
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY='truncate_with_folder_marker'
 POWERLEVEL9K_SHORTEN_DELIMITER=''
 POWERLEVEL9K_SHORTEN_FOLDER_MARKER='.git'
+POWERLEVEL9K_DIR_PATH_ABSOLUTE=true
 
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 
@@ -49,6 +48,7 @@ alias az="nocorrect az"
 # Utils
 alias whatismyip="drill A myip.opendns.com @resolver1.opendns.com | grep IN | tac | head -n 1 | cut -d $'\t' -f5"
 alias whatismyipv6="drill -6 AAAA myip.opendns.com @resolver1.opendns.com | grep IN | tac | head -n 1 | cut -d $'\t' -f5"
+alias open=xdg-open
 
 # Per-machine config
 if [ -e ~/.local/zshrc ]; then
