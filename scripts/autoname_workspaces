@@ -124,7 +124,8 @@ WINDOW_ICONS = {
     'zenity': fa.icons['window-maximize'],
     'wavebox': fa.icons['envelope'],
     'nautilus': fa.icons['files-o'],
-    'ncmpcpp-player': fa.icons['play']
+    'ncmpcpp-player': fa.icons['play'],
+    'gnome-calculator': fa.icons['calculator']
 }
 
 # This icon is used for any application not in the list above

@@ -8,13 +8,17 @@ else
     DEFAULT_MODE='ext-on-top'
 fi
 
-has_external=$(xrandr | grep "^$EXTERNAL connected \(primary \)\?3840x2160" 2>/dev/null || true)
+has_external=$(xrandr | grep "^$EXTERNAL connected" 2>/dev/null || true)
 
 if [[ $has_external != "" ]]; then
     if [[ "$DEFAULT_MODE" == "ext-on-top" ]]; then
-        xrandr --output $EXTERNAL --primary --above $MAIN
+        xrandr --output $EXTERNAL --primary --auto --above $MAIN
+        i3-msg restart
     else
         echo "Unknown mode: $DEFAULT_MODE"
         exit 1
     fi
+else
+    xrandr --output $MAIN --primary
+    xrandr --auto
 fi
