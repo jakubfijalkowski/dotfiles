@@ -152,8 +152,8 @@ type = internal/network
 interface = wlp2s0
 interval = 5.0
 
-format-connected = <ramp-signal>
-format-disconnected = 
+format-connected = %{A1:networkmanager_dmenu:}<ramp-signal>%{A}
+format-disconnected = %{A1:networkmanager_dmenu:}%{A}
 format-disconnected-foreground = ${colors.icons_dimmed}
 format-disconnected-font = 3
 

@@ -18,10 +18,11 @@ configuration {
 }
 
 * {
-    maincolor:        #7fd2ff;
+    maincolor:        #6BAED2;
     highlight:        bold #7fd2ff;
     urgentcolor:      #e53714;
     
+    highlightcolor:   #7fd2ff;
     fgwhite:          #d6d9da;
     blackdarkest:     #1d1d1d;
     blackwidget:      #262626;
@@ -93,12 +94,12 @@ element selected.normal {
 
 element selected.urgent {
     background-color: @urgentcolor;
-    text-color:       @blackdarkest;
+    text-color:       @highlightcolor;
 }
 
 element selected.active {
-    background-color: @maincolor;
-    text-color:       @blackdarkest;
+    background-color: @blackselected;
+    text-color:       @highlightcolor;
 }
 
 element alternate.normal {
