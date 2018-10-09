@@ -145,11 +145,13 @@ mode "$mode_actions" {
 }
 
 for_window [window_role="pop-up"] floating enable
+for_window [instance="calc"] floating enable
 for_window [class="calc"] floating enable
 for_window [instance="nm-connection-editor"] floating enable
 
 assign [class="wavebox"] workspace number 10
 
+for_window [instance="spotify"] move to workspace number 9
 for_window [class="spotify"] move to workspace number 9
 assign [instance="ncmpcpp-player"] workspace number 9
 
@@ -166,6 +168,7 @@ workspace 8 output $secondary
 exec --no-startup-id compton -b; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
+exec --no-startup-id $scripts/configure_displays
 exec_always --no-startup-id "killall -q polybar; polybar main &"
 exec_always --no-startup-id $scripts/autoname_workspaces
 

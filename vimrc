@@ -14,7 +14,6 @@ Plug 'scrooloose/nerdtree' " Treeview of files (not that migthy as CtrlP ;) )
 Plug 'vim-airline/vim-airline' " Bottom bar ;)
 Plug 'vim-airline/vim-airline-themes' " Bottom bar themes
 
-Plug 'neomake/neomake' " :make and syntastic in one plugin
 Plug 'kassio/neoterm' " :terminal helpers
 Plug 'scrooloose/nerdcommenter' " Comments, the <leader>c* keys
 Plug 'godlygeek/tabular' " Align lines
@@ -23,20 +22,33 @@ Plug 'airblade/vim-gitgutter' " The git changes in gutter
 Plug 'nathanaelkane/vim-indent-guides' " Well...
 Plug 'sheerun/vim-polyglot' " Lang packs
 Plug 'tpope/vim-repeat' " Fixup the . command
-Plug 'tpope/vim-surround' " Fixup the . command
-
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Autocomplete
-Plug 'Shougo/neosnippet.vim' " Snippets
-Plug 'Shougo/neosnippet-snippets' " Snippets pack
-Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
+Plug 'tpope/vim-surround' " Take a textobj and change the quotes :D
+Plug 'majutsushi/tagbar' " The mighty TagBar
 
 Plug 'parsonsmatt/intero-neovim' " Intero (Haskell)
-Plug 'eagletmt/neco-ghc' " GHC-Mod
 
 " Consider deletion:
-Plug 'majutsushi/tagbar' " The mighty TagBar
-Plug 'terryma/vim-multiple-cursors' " Never used, but maybe...
-Plug 'zchee/deoplete-jedi'
+Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
+
+" In-testing
+Plug 'junegunn/fzf'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': './install.sh'
+    \ }
+Plug 'Shougo/echodoc.vim'
+
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'Shougo/neco-vim' | Plug 'ncm2/ncm2-vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'ncm2/ncm2-ultisnips'
+
+" To be restored?
+"Plug 'neomake/neomake' " :make and syntastic in one plugin
 
 call plug#end()
 " 
@@ -72,6 +84,8 @@ set splitbelow
 set splitright
 set autoread
 set autowrite
+set signcolumn=yes
+set lazyredraw
 
 set wildmenu
 set wildignore+=.git " Common
@@ -118,7 +132,7 @@ let g:python3_host_prog = "/usr/bin/python3"
 " Navigation, rebinds, helpers
 " 
 " Remove last-search, works like <C-/> in Terminator
-map <silent> <C-_> :let @/=''<CR>
+map <silent> <C-_> :nohlsearch<CR>
 
 " Easier navigation
 map <C-H> <C-W>h
@@ -136,16 +150,23 @@ nnoremap <silent> <S-Right> :vertical :resize +1<CR>
 
 nnoremap Y y$
 tnoremap <Esc> <C-\><C-n>
-" 
-
 
 " Plugins
-" 
+
+" NCM2, UltiSnips
+au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+au User Ncm2PopupClose set completeopt=menuone
+
+autocmd BufEnter * call ncm2#enable_for_buffer()
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+inoremap <expr> <Tab> (pumvisible() ? "\<C-n>" : "\<Tab>")
+inoremap <expr> <S-Tab> (pumvisible() ? "\<C-p>" : "\<S-Tab>")
+
 "  Tagbar
 nmap <silent> <F9> :TagbarToggle<CR>
 
 "  Undotree
-nmap <F10> :UndotreeToggle<CR>
+nmap <silent> <F10> :UndotreeToggle<CR>
 
 "  CtrlP
 nmap <silent> <Leader>p :CtrlPTag<CR>
@@ -155,11 +176,6 @@ nmap <silent> <Leader>P :CtrlPBufTagAll<CR>
 map s <Plug>(easymotion-s)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
-
-"  Neosnippet
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_or_jump)
 
 "  Neoterm
 nmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
@@ -173,7 +189,6 @@ augroup haskell_bindings
 
     autocmd FileType haskell setlocal foldlevel=2
     autocmd FileType haskell setlocal textwidth=80
-    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
     autocmd FileType cabal setlocal foldlevel=2
     autocmd FileType cabal setlocal tabstop=2
@@ -200,6 +215,7 @@ let g:ctrlp_buftag_types = {
         \ }
     \ }
 let g:ctrlp_extensions = ['tag', 'buffertag', 'dir']
+let g:ctrlp_root_markers = ['.ctrlp']
 
 " EasyMotion
 let g:EasyMotion_do_mapping = 0
@@ -269,13 +285,7 @@ if executable('hasktags')
 endif
 
 "  Neomake
-autocmd! BufWritePost * Neomake
-
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-let g:necoghc_enable_detailed_browse = 1
-let g:deoplete#sources#jedi#python_path = 'python'
-let g:deoplete#sources#jedi#show_docstring = 1
+"autocmd! BufWritePost * Neomake
 
 " haskell-vim
 let g:haskell_enable_quantification   = 1
@@ -293,9 +303,17 @@ let g:haskell_tabular = 1
 let g:gitgutter_override_sign_column_highlight = 0
 
 " Intero
-let g:intero_prompt_regex = '.\{-}> \e[0m'
 autocmd BufWritePost *.hs InteroReload
 
 " Neoterm
 let g:neoterm_automap_keys = ''
-" 
+
+" LanguageClient & NCM2
+let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
+let g:LanguageClient_changeThrottle = 1
+let g:LanguageClient_loggingLevel = 'INFO'
+
+" UltiSnips
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0

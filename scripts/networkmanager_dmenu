@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding:utf8
+# author: firecat53
+# source: https://github.com/firecat53/networkmanager-dmenu
 """NetworkManager command line dmenu script.
 
 To add new connections or enable/disable networking requires policykit
