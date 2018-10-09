@@ -3,7 +3,7 @@ if [ -e ~/.local/zshrc-override ]; then
     return 0
 fi
 
-plugins=(gitfast zsh-syntax-highlighting)
+plugins=(gitfast docker zsh-syntax-highlighting)
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -11,10 +11,7 @@ export ZSH="$HOME/.oh-my-zsh"
 autoload -U regexp-replace
 autoload -U +X bashcompinit && bashcompinit
 
-# Oh-my-zsh & powerlevel9k configuration & helper functions
-source ~/.zsh-custom/music.zsh
-source ~/.zsh-custom/statusline.zsh
-
+# Oh-my-zsh & powerlevel9k configuration
 POWERLEVEL9K_MODE='nerdfont-complete'
 
 POWERLEVEL9K_SHORTEN_STRATEGY='truncate_with_folder_marker'
@@ -25,7 +22,7 @@ POWERLEVEL9K_DIR_PATH_ABSOLUTE=true
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-refresh-right-statusline
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
 
 ZSH_THEME="powerlevel9k/powerlevel9k"
 ZSH_CUSTOM=~/.zsh-custom
