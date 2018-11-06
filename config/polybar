@@ -49,7 +49,7 @@ font-6 = Font Awesome 5 Brands:style=Solid:size=17;4
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = azure separator date space cpu space wlan battery audio space powermenu
+modules-right = kubernetes separator azure separator date space cpu space wlan battery audio space powermenu
 
 tray-position = right
 tray-padding = 2
@@ -82,6 +82,17 @@ tail = true
 interval = 60
 
 format-prefix = " "
+format-prefix-foreground = ${colors.icons}
+format-foreground = ${colors.main_fg}
+
+[module/kubernetes]
+type = custom/script
+exec-if = test -f ~/.kube/config
+exec = ~/.local/bin/scripts/kubectl_context
+tail = true
+interval = 60
+
+format-prefix = " "
 format-prefix-foreground = ${colors.icons}
 format-foreground = ${colors.main_fg}
 

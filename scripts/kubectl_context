@@ -1,0 +1,20 @@
+#!/bin/bash
+
+format_ctx() {
+    local curr_ct="$(kubectl config view -o=jsonpath='{.current-context}')"
+    local curr_ns="$(kubectl config view -o=jsonpath="{.contexts[?(@.name==\"${curr_ct}\")].context.namespace}")"
+
+    if [[ "$curr_ns" == "" || "$curr_ns" == "$curr_ct" || "$curr_ns" == "default" ]]; then
+        echo $curr_ct
+    else
+        echo "$curr_ct/$curr_ns"
+    fi
+}
+
+file=$HOME/.kube/config
+format_ctx
+inotifywait -q -m -e close_write $file |
+    while read -r filename event; do
+        format_ctx
+    done
+

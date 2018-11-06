@@ -71,15 +71,16 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
-selection:
-  semantic_escape_chars: ",│`|:\"' ()[]{}<>"
+  selection:
+    semantic_escape_chars: ",│`|:\"' ()[]{}<>"
+    save_to_clipboard: false
 
 dynamic_title: true
 hide_cursor_when_typing: false
 
 cursor_style: Block
 unfocused_hollow_cursor: true
-live_config_reload: true
+live_config_reload: false
 
 # Key bindings
 #
