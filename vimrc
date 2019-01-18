@@ -199,6 +199,10 @@ augroup haskell_bindings
     autocmd FileType haskell map <silent> <leader>ht <Plug>InteroGenericType
     autocmd FileType haskell map <silent> <leader>hT <Plug>InteroType
     autocmd FileType haskell nnoremap <silent> <leader>hit :InteroTypeInsert<CR>
+    autocmd FileType haskell map <silent> <leader>ho :InteroOpen<CR>
+    autocmd FileType haskell map <silent> <leader>hr :InteroReload<CR>
+    autocmd FileType haskell map <silent> <leader>hcf :InteroLoadCurrentFile<CR>
+    autocmd FileType haskell map <silent> <leader>hcm :InteroLoadCurrentModule<CR>
 augroup END
 " 
 " 

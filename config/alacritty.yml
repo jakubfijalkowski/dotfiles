@@ -8,7 +8,7 @@ window:
   padding:
     x: 2
     y: 2
-  decorations: false
+  decorations: none
 
 scrolling:
   history: 10000
@@ -30,10 +30,8 @@ font:
     family: SauceCodePro Nerd Font
     style: Italic
   size: 20.0
-  scale_with_dpi: false
 
 render_timer: false
-custom_cursor_colors: false
 
 # Gruvbox dark
 colors:
@@ -71,15 +69,21 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
+  hide_when_typing: false
+
   selection:
     semantic_escape_chars: ",│`|:\"' ()[]{}<>"
     save_to_clipboard: false
 
-dynamic_title: true
-hide_cursor_when_typing: false
+  url:
+    launcher: xdg-open
+    modifiers: Control
 
-cursor_style: Block
-unfocused_hollow_cursor: true
+cursor:
+  style: Block
+  unfocused_hollow: true
+
+dynamic_title: true
 live_config_reload: false
 
 # Key bindings
