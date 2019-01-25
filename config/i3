@@ -180,3 +180,5 @@ exec_always --no-startup-id $scripts/autoname_workspaces
 
 # Utils
 exec --no-startup-id wavebox&
+
+# vim:filetype=i3config

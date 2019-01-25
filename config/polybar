@@ -7,6 +7,7 @@ tint1 = #7fd2ff
 tint2 = #6cb3d8
 tint3 = #4c7e99
 tint4 = #2d4d5e
+tint_urgent = #fabd2f
 
 icons_bright = ${colors.tint1}
 icons = ${colors.tint2}
@@ -44,12 +45,14 @@ font-3 = material\-wifi:size=18;4
 ; Volume controls fixes
 font-4 = Material Icons:size=22;7
 font-5 = Material Icons:size=22;8
+; Arch icon
+font-6 = font\-logos:style=logos:size=18;4
 ; Fallback for missing icons
-font-6 = Font Awesome 5 Brands:style=Solid:size=17;4
+font-7 = Font Awesome 5 Brands:style=Solid:size=17;4
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = kubernetes separator azure separator date space cpu space wlan battery audio space powermenu
+modules-right = kubernetes separator azure separator arch-updates wlan battery audio separator date
 
 tray-position = right
 tray-padding = 2
@@ -64,14 +67,24 @@ screenchange-reload = true
 margin-top = 0
 margin-bottom = 0
 
+[module/arch-updates]
+type = custom/script
+tail = true
+exec = ~/.local/bin/scripts/check_updates
+; Arch icon
+format = %{T7}%{T-}
+format-foreground = ${colors.tint_urgent}
+
+click-left = alacritty -e yay &
+
 [module/space]
 type = custom/text
-content = "  "
+content = " "
 
 [module/separator]
 type = custom/text
 content = "|"
-content-padding = 3
+content-padding = 1
 content-foreground = ${colors.icons}
 
 [module/azure]
@@ -92,7 +105,7 @@ exec = ~/.local/bin/scripts/kubectl_context
 tail = true
 interval = 60
 
-format-prefix = " "
+format-prefix = " "
 format-prefix-foreground = ${colors.icons}
 format-foreground = ${colors.main_fg}
 
@@ -139,7 +152,7 @@ label-unfocused-padding = 1
 ; urgent = Workspace with urgency hint set
 label-urgent = %name%
 label-urgent-foreground = ${colors.text_lightbg}
-label-urgent-background = ${colors.tint1}
+label-urgent-background = ${colors.tint_urgent}
 label-urgent-padding = 1
 
 [module/mpd]
@@ -179,13 +192,16 @@ ramp-signal-font = 4
 type = internal/date
 interval = 5
 
-date = "%A, %e %B,"
-date-alt = "%Y-%m-%d"
-
+date = "%a, %e %b"
 time = %H:%M
-time-alt = %H:%M
+
+format = %{A1:gsimplecal:} <label>%{A}
+format-foreground = ${colors.icons}
 
 label = %date% %time%
+label-foreground = ${colors.main_fg}
+
+click-left=gsimplecal
 
 [module/audio]
 type = internal/pulseaudio

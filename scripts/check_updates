@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+PIDFILE=~/.cache/check_updates.pid
+
+trap 'print_updates' USR1
+trap 'rm -f $PIDFILE; exit 0' EXIT INT TERM KILL
+
+echo $$ > $PIDFILE
+
+updates="0"
+function print_updates() {
+    if [[ "$updates" != "0" ]]; then
+        echo $updates
+    else
+        echo ""
+    fi
+}
+
+while true; do
+    updates=$(yay -Quq | wc -l)
+    print_updates
+
+    sleep 1200 &
+    wait $!
+done
+
+rm -f $PIDFILE

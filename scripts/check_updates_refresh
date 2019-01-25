@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+[ -f $1/.cache/check_updates.pid ] && kill -USR1 $(cat $1/.cache/check_updates.pid)
