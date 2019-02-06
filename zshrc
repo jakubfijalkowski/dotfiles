@@ -12,28 +12,23 @@ autoload -U regexp-replace
 autoload -U +X bashcompinit && bashcompinit
 
 # Oh-my-zsh & powerlevel9k configuration
-POWERLEVEL9K_MODE='nerdfont-complete'
+P9K_MODE='nerdfont-complete'
 
-POWERLEVEL9K_SHORTEN_STRATEGY='truncate_with_folder_marker'
-POWERLEVEL9K_SHORTEN_DELIMITER=''
-POWERLEVEL9K_SHORTEN_FOLDER_MARKER='.git'
-POWERLEVEL9K_DIR_PATH_ABSOLUTE=true
+P9K_DIR_SHORTEN_STRATEGY='truncate_with_folder_marker'
+P9K_DIR_SHORTEN_DELIMITER=''
+P9K_DIR_SHORTEN_FOLDER_MARKER='.git'
+P9K_DIR_PATH_ABSOLUTE=false
 
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+P9K_PROMPT_ON_NEWLINE=true
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
+P9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+P9K_RIGHT_PROMPT_ELEMENTS=(status time)
 
 ZSH_THEME="powerlevel9k/powerlevel9k"
 ZSH_CUSTOM=~/.zsh-custom
 ENABLE_CORRECTION="true"
 
 # Shell configuraion
-export LANG="en_US.utf8"
-export LC_ALL="en_US.utf8"
-
-export EDITOR="vim"
-
 source $ZSH/oh-my-zsh.sh
 
 # Disable corrections/globs (missing completions)
