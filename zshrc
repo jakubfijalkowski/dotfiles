@@ -3,7 +3,11 @@ if [ -e ~/.local/zshrc-override ]; then
     return 0
 fi
 
-plugins=(gitfast docker zsh-syntax-highlighting)
+plugins=(gitfast zsh-syntax-highlighting pj)
+
+if [ -e ~/.local/zshrc.early ]; then
+    source ~/.local/zshrc.early
+fi
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -12,11 +16,11 @@ autoload -U regexp-replace
 autoload -U +X bashcompinit && bashcompinit
 
 # Oh-my-zsh & powerlevel9k configuration
-P9K_MODE='nerdfont-complete'
+P9K_MODE="nerdfont-complete"
 
-P9K_DIR_SHORTEN_STRATEGY='truncate_with_folder_marker'
+P9K_DIR_SHORTEN_STRATEGY="truncate_with_folder_marker"
 P9K_DIR_SHORTEN_DELIMITER=''
-P9K_DIR_SHORTEN_FOLDER_MARKER='.git'
+P9K_DIR_SHORTEN_FOLDER_MARKER=".git"
 P9K_DIR_PATH_ABSOLUTE=false
 
 P9K_PROMPT_ON_NEWLINE=true
@@ -28,11 +32,12 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 ZSH_CUSTOM=~/.zsh-custom
 ENABLE_CORRECTION="true"
 
+KEYTIMEOUT=1
+
 # Shell configuraion
 source $ZSH/oh-my-zsh.sh
 
 # Disable corrections/globs (missing completions)
-alias git="nocorrect noglob git"
 alias stack="nocorrect stack"
 alias dotnet="nocorrect dotnet"
 alias az="nocorrect az"

@@ -52,7 +52,7 @@ font-7 = Font Awesome 5 Brands:style=Solid:size=17;4
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = kubernetes separator azure separator arch-updates wlan battery audio separator date
+modules-right = kubernetes separator azure separator yubikey arch-updates wlan battery audio separator date
 
 tray-position = right
 tray-padding = 2
@@ -70,12 +70,22 @@ margin-bottom = 0
 [module/arch-updates]
 type = custom/script
 tail = true
+interval = 3600
 exec = ~/.local/bin/scripts/check_updates
 ; Arch icon
 format = %{T7}%{T-}
 format-foreground = ${colors.tint_urgent}
 
 click-left = alacritty -e yay &
+
+[module/yubikey]
+type = custom/script
+tail = true
+interval = 30
+exec = ~/.local/bin/scripts/yubikey-touch-status
+
+format = 
+format-foreground = ${colors.tint_urgent}
 
 [module/space]
 type = custom/text
@@ -113,7 +123,7 @@ format-foreground = ${colors.main_fg}
 type = custom/script
 exec = ~/.local/bin/scripts/current_track
 tail = true
-interval = 10
+interval = 30
 
 [module/xwindow]
 type = internal/xwindow

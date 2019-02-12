@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Based on https://github.com/ultrabug/py3status/blob/master/py3status/modules/yubikey.py
+"""
+
+import time
+import os
+import socket
+import signal
+import sys
+
+import gi
+gi.require_version('Notify', '0.7')
+from gi.repository import Notify
+
+class PolybarTouchDetector:
+    socket_path = "$XDG_RUNTIME_DIR/yubikey-touch-detector.socket"
+
+    def __init__(self):
+        self.socket_path = os.path.expanduser(self.socket_path)
+        self.socket_path = os.path.expandvars(self.socket_path)
+
+        self.is_gpg = False
+        self.is_u2f = False
+
+        Notify.init("yubikey-touch-status")
+
+    def _connect_socket(self):
+        try:
+            self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            self.socket.connect(self.socket_path)
+        except:
+            self.socket = None
+            Notify.Notification.new("YubiKey",
+                                    "Cannot connect to yubikey-touch-detector",
+                                    "error").show()
+
+    def _print_status(self):
+        if self.is_gpg or self.is_u2f:
+            self._report('TOUCH')
+        else:
+            self._report('')
+
+    def _report(self, status):
+        print(status, end='\n', flush=True)
+
+    def run(self):
+        try:
+            self._run()
+        except:
+            pass
+
+    def _run(self):
+        while True:
+            self._connect_socket()
+
+            if self.socket is None:
+                # Socket is not available, try again soon
+                time.sleep(60)
+                continue
+
+            while True:
+                data = self.socket.recv(5)
+                if not data:
+                    # Connection dropped, need to reconnect
+                    break
+                elif data == b"GPG_1":
+                    self.is_gpg = True
+                elif data == b"GPG_0":
+                    self.is_gpg = False
+                elif data == b"U2F_1":
+                    self.is_u2f = True
+                elif data == b"U2F_0":
+                    self.is_u2f = False
+
+                self._print_status()
+
+if __name__ == "__main__":
+    PolybarTouchDetector().run()
