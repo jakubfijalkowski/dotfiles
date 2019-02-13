@@ -4,7 +4,7 @@
 
 [user]
   name = Jakub Fijałkowski
-  email = fiolek94@gmail.com
+  email = kuba@codinginfinity.me
 
 [alias]
   br = branch
@@ -21,10 +21,11 @@
   branch = true
   status = true
 
-[credential]
-  helper = store
 [push]
   default = matching
+
+[commit]
+  gpgsign = true
 
 [include]
   path = "~/.local/gitconfig"
