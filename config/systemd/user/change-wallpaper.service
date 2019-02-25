@@ -1,0 +1,9 @@
+[Unit]
+Description=Sets a new wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/scripts/wallpaper
+
+[Install]
+WantedBy=default.target

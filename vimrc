@@ -37,6 +37,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': './install.sh'
     \ }
 Plug 'Shougo/echodoc.vim'
+Plug 'sgur/vim-editorconfig'
 
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
@@ -321,3 +322,4 @@ let g:LanguageClient_loggingLevel = 'INFO'
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
+

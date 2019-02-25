@@ -1,0 +1,8 @@
+"/home/fiolek/.local/bin/music-control next"
+   XF86AudioNext
+
+"/home/fiolek/.local/bin/music-control prev"
+   XF86AudioPrev
+
+"/home/fiolek/.local/bin/music-control playpause"
+   XF86AudioPlay

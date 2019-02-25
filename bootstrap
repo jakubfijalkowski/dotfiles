@@ -1,0 +1,267 @@
+#!/usr/bin/env zsh
+set -e -o pipefail
+
+script_name="$(basename "$0")"
+dotfiles_dir="$(cd "$(dirname "$0")"; pwd)"
+cd "$dotfiles_dir"
+
+GPGKEY="0x7896A8C7E3283895"
+
+##### Helpers
+
+function section() {
+  echo ""
+  echo "#############################"
+  echo $1
+  echo "#############################"
+}
+
+# Shamelessly stolen from https://github.com/maximbaz/dotfiles/blob/master/setup
+# :)
+function assign() {
+  op="$1"
+  if [[ "$op" != "link" && "$op" != "copy" ]]; then
+    echo "Unknown operation: $op"
+    exit 1
+  fi
+
+  orig_file="$2"
+  dest_file="$3"
+
+  mkdir -p "$(dirname "$orig_file")"
+  mkdir -p "$(dirname "$dest_file")"
+
+  rm -rf "$dest_file"
+
+  if [[ "$op" == "link" ]]; then
+    ln -s "$orig_file" "$dest_file"
+    echo "$dest_file -> $orig_file"
+  else
+    cp -R "$orig_file" "$dest_file"
+    echo "$dest_file <= $orig_file"
+  fi
+}
+
+function link() {
+  from="$1"
+  to="$2"
+  if [[ -z "$to" ]]; then
+    to="$HOME/.$1"
+  fi
+  assign "link" "$dotfiles_dir/$from" "$to"
+}
+
+function copy() {
+  assign "copy" "$dotfiles_dir/$1" "/$1"
+}
+
+function service() {
+  target="$1"
+  name="$2"
+  if [[ "$target" == "user" ]]; then
+    echo "Enabling user service $name"
+    systemctl --user enable --now $target
+  elif [[ "$target" == "system" ]]; then
+    echo "Enabling system service $name"
+    systemctl --system enable --now $target
+  else
+    echo "Unknown service target"
+    exit 1
+  fi
+}
+
+##### Actions
+
+function install_yay() {
+  section "Installing yay"
+  sudo pacman -S git
+  git clone https://aur.archlinux.org/yay.git /tmp/yay
+  cd /tmp/yay
+  makepkg -si
+  rm -r /tmp/yay
+}
+
+function install_packages() {
+  yay -S --needed - < $dotfiles_dir/pkglist.txt
+}
+
+function install_fonts() {
+  section "Installing fonts"
+  mkdir -p ~/.local/share/fonts
+  pushd ~/.local/share/fonts
+
+    echo "SourceCodePro"
+    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf\?raw\=true -o sauce-regular.ttf
+    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete.ttf\?raw\=true -o sauce-medium.ttf
+    echo "Hack"
+    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete.ttf\?raw\=true -o hack-regular.ttf
+    echo "Material icons"
+    curl -sL https://github.com/google/material-design-icons/blob/master/iconfont/MaterialIcons-Regular.ttf\?raw\=true -o materialicons-regular.ttf
+    echo "Material wifi"
+    curl -sL https://github.com/dcousens/material-wifi-icons/blob/master/material-wifi.ttf\?raw\=true -o materialewifi.ttf
+    echo "Logos"
+    curl -sL https://github.com/lukas-w/font-logos/blob/master/assets/font-logos.ttf\?raw\=true -o font-logos.ttf
+
+    echo "Font Awesome"
+    fa_version="5.7.2"
+    curl -sL https://use.fontawesome.com/releases/v$fa_version/fontawesome-free-$fa_version-desktop.zip -o /tmp/font-awesome.zip
+    unzip -q /tmp/font-awesome.zip -d /tmp/font-awesome
+    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Regular-400.otf" fontawesome-regular.otf
+    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Solid-900.otf" fontawesome-solid.otf
+    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Brands-Regular-400.otf" fontawesome-brands.otf
+    rm -r /tmp/font-awesome.zip /tmp/font-awesome
+    unset fa_version
+
+  popd
+  fc-cache -frv ~/.local/share/fonts
+  echo "Done"
+}
+
+function configure_user() {
+  section "Configuring user dotfiles"
+  link "zsh"
+  link "zshrc"
+  link "vim"
+  link "vimrc"
+  link "gitconfig"
+
+  link "gtkrc-2.0"
+  link "xbindkeysrc"
+  link "Xresources"
+
+  link "gnupg/gpg-agent.conf"
+  link "gnupg/gpg.conf"
+  link "gnupg/pinentry-dmenu.conf"
+
+  link "config/alacritty/alacritty.yml"
+  link "config/compton/compton.conf"
+  link "config/dunst/dunstrc"
+  link "config/gsimplecal/config"
+  link "config/gtk-3.0/settings.ini"
+  link "config/networkmanager-dmenu/config.ini"
+  link "config/nvim/init.vim"
+  link "config/polybar/config"
+  link "config/redshift/redshift.conf"
+  link "config/rofi/config.rasi"
+  link "config/systemd/user/change-wallpaper.timer"
+  link "config/systemd/user/change-wallpaper.service"
+  link "config/chromium-flags.conf"
+
+  link "scripts" "$HOME/.local/bin/scripts"
+
+  section "Importing GPG key"
+  mkdir -p ~/.gnupg
+  chmod 0700 ~/.gnupg
+  curl -s https://keybase.io/jakubfijalkowski/pgp_keys.asc | gpg --import
+  gpg --trusted-key "$GPGKEY"
+
+  section "User services"
+  systemctl --user daemon-reload
+  service "user" "greenclip.service"
+  service "user" "redshift.service"
+  service "user" "yubikey-touch-detector.service"
+  service "user" "dirmngr.service"
+  service "user" "change-wallpaper.timer"
+  service "user" "keybase.service"
+  service "user" "xdg-user-dirs-update.service"
+}
+
+function configure_yubikey() {
+  if [[ "$NO_YUBIKEY" != "1" ]]; then
+    section "Configuring YubiKey for sudo access"
+    mkdir -p "$HOME/.config/Yubico"
+    pamu2fcfg -ufiolek > "$HOME/.config/Yubico/u2f_keys"
+    echo "Switch to the backup and touch it"
+    pamu2fcfg -ufiolek -n >> "$HOME/.config/Yubico/u2f_keys"
+  fi
+}
+
+function configure_root() {
+  section "Configuring system files"
+  copy "etc/environment"
+  copy "etc/lightdm/lightdm.conf"
+  copy "etc/lightdm/lightdm-webkit2-greeter.conf"
+  copy "etc/mpd.conf"
+  copy "etc/NetworkManager/NetworkManager.conf"
+  copy "etc/pacman.conf"
+  copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
+  copy "etc/pam.d/sudo"
+  copy "etc/profile.d/zz_custom.sh"
+  copy "etc/udev/rules.d/10-displays.rules"
+  copy "etc/udev/rules.d/20-backlight.rules"
+  copy "etc/udev/rules.d/30-security-key.rules"
+  copy "etc/X11/xorg.conf.d/10-intel.conf"
+  copy "etc/X11/xorg.conf.d/20-nvidia.conf"
+  copy "etc/X11/xorg.conf.d/30-touchpad.conf"
+  copy "etc/sysctl.d/99-inotify.conf"
+
+  copy "usr/local/bin/configure_displays"
+
+  chattr -i "/etc/resolv.conf"
+  copy "etc/resolv.conf"
+  chattr +i "/etc/resolv.conf"
+
+  section "System services"
+  systemctl daemon-reload
+  service "system" "lightdm.service"
+  service "system" "pcscd.service"
+  service "system" "ufw.service"
+  service "system" "ufw.service"
+
+  section "Misc config"
+  echo "Firewall"
+  ufw --force reset >/dev/null
+  ufw default allow outgoing
+  ufw default deny incoming
+  ufw enable
+  find /etc/ufw -type f -name '*.rules.*' -delete
+
+  echo "Enabling infinality aliases"
+  ln -sf /etc/fonts/conf.avail/30-infinality-aliases.conf /etc/fonts/conf.d/30-infinality-aliases.conf
+
+  echo "Reload udev rules"
+  udevadm control --reload
+  udevadm trigger
+}
+
+function run_root_config() {
+  section "Switching to root and running config"
+  sudo -s "$dotfiles_dir/$script_name"
+}
+
+function configure_optimus_user() {
+  if [[ "$(lspci)" == *"NVIDIA"* ]]; then
+    section "Configuring Nvidia Optimus & Bluetooth"
+    yay -S nvidia nvidia-settings nvidia-utls bbswitch bumblebee-git primus
+    service "system" "bumblebeed.service"
+  fi
+}
+
+function configure_optimus_root() {
+  if [[ "$(lspci)" == *"NVIDIA"* ]]; then
+    section "Configuring Nvidia Optimus & Bluetooth"
+    service "system" "bumblebeed.service"
+  fi
+}
+
+function configure_power_save() {
+  if [[ "$NO_POWER_SAVE" != "1" ]]; then
+    section "Configuring power save"
+    yay -S tlp-git tlp-rdw-git
+  fi
+}
+
+if [[ "$(whoami)" == "root" ]]; then
+  configure_root
+  configure_optimus_root
+else
+  install_yay
+  install_packages
+  install_fonts
+  configure_user
+  configure_yubikey
+  configure_optimus_user
+  configure_power_save
+  run_root_config
+fi
+
