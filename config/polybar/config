@@ -82,7 +82,7 @@ click-left = alacritty -e yay &
 type = custom/script
 tail = true
 interval = 30
-exec = ~/.local/bin/scripts/yubikey-touch-status
+exec = ~/.local/bin/scripts/yubikey_touch_status
 
 format = 
 format-foreground = ${colors.tint_urgent}

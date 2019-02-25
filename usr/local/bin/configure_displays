@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+export DISPLAY=:0
+sudo -Hu fiolek $HOME/.local/bin/scripts/configure_displays

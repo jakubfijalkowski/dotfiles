@@ -1,5 +1,0 @@
-#!/bin/sh
-devid=$(xinput list | awk -F '=|[[:space:]]*' '/Touchpad/{print $7}')
-xinput set-prop $devid "libinput Click Method Enabled" 0 1
-xinput set-prop $devid "libinput Tapping Enabled" 1
-xinput set-prop $devid "libinput Natural Scrolling Enabled" 0

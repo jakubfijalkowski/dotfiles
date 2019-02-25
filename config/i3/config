@@ -174,7 +174,6 @@ exec --no-startup-id compton -b; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays
-exec --no-startup-id $scripts/configure_touchpad
 exec_always --no-startup-id "killall -q polybar; polybar main &"
 exec_always --no-startup-id $scripts/autoname_workspaces
 

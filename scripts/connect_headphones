@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+rfkill unblock bluetooth
+bluetoothctl disconnect $HEADPHONES_MAC
+bluetoothctl power off
+bluetoothctl power on
+bluetoothctl connect $HEADPHONES_MAC
+
+sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
+if [[ "$sink" == "" ]]; then
+    notify-send -u critical -a Headphones Headphones 'Connection failed'
+else
+    pacmd set-default-sink $sink
+fi
