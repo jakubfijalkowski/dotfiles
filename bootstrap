@@ -82,7 +82,9 @@ function install_yay() {
 }
 
 function install_packages() {
-  yay -S --needed - < $dotfiles_dir/pkglist.txt
+  cat $dotfiles_dir/*.txt > /tmp/pkglist.txt
+  yay -S --needed - < /tmp/pkglist.txt
+  rm /tmp/pkglist.txt
 }
 
 function install_fonts() {

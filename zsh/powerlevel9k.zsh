@@ -12,4 +12,4 @@ P9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 P9K_RIGHT_PROMPT_ELEMENTS=(status time)
 
 zplugin ice ver"next"
-zplugin load bhilburn/powerlevel9k
+zplugin light bhilburn/powerlevel9k

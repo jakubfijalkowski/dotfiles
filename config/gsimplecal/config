@@ -2,3 +2,4 @@ close_on_unfocus=1
 mainwindow_position=mouse
 mainwindow_xoffset=-60
 mainwindow_skip_taskbar=1
+force_lang=pl_PL.utf8

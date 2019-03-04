@@ -1,4 +1,3 @@
-# Init
 setopt promptsubst
 setopt interactivecomments
 setopt long_list_jobs

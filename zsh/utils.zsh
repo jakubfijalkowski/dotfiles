@@ -3,8 +3,8 @@ alias whatismyipv6="drill -6 AAAA myip.opendns.com @resolver1.opendns.com | grep
 alias open=xdg-open
 
 if type exa &> /dev/null; then
-    alias ls='exa -lh --git'
-    alias lsa='exa -lah --git'
-    alias lst='exa --tree -L2'
-    alias lsT='exa --tree -L'
+    alias ls="exa -lh --git"
+    alias lsa="exa -lah --git"
+    alias lst="exa --tree -L2"
+    alias lsT="exa --tree -L"
 fi
