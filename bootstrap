@@ -154,7 +154,6 @@ function configure_user() {
   mkdir -p ~/.gnupg
   chmod 0700 ~/.gnupg
   curl -s https://keybase.io/jakubfijalkowski/pgp_keys.asc | gpg --import
-  gpg --trusted-key "$GPGKEY"
 
   section "User services"
   systemctl --user daemon-reload
