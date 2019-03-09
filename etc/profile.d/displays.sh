@@ -1,0 +1,3 @@
+export DISPLAY_CONFIG_MAIN='DP-1'
+export DISPLAY_CONFIG_ALTERNATIVE='eDP-1'
+export DISPLAY_MODE='main-on-top'

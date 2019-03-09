@@ -12,7 +12,6 @@ dialog
 exa
 fwupd
 git
-gksu
 intel-ucode
 iw
 linux-headers
@@ -47,7 +46,11 @@ unrar
 vulkan-intel
 wget
 wpa_supplicant
-xorg
+xorg-xdpyinfo
+xorg-xinit
+xorg-xinput
+xorg-xprop
+xorg-xrandr
 yay
 yubikey-manager
 yubikey-touch-detector

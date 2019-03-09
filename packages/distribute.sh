@@ -2,7 +2,7 @@
 
 files=($(ls *.txt))
 lines=($(pacman -Qqe))
-excludes="$(pacman -Qqg base base-devel xorg | tr '\n' ' ')"
+excludes="$(pacman -Qqg base base-devel | tr '\n' ' ')"
 
 function _print_help() {
   local f
@@ -79,7 +79,6 @@ function _run() {
 function _prepare() {
   echo 'base' >> base.txt
   echo 'base-devel' >> base.txt
-  echo 'xorg' >> base.txt
 }
 
 _cleanup

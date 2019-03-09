@@ -1,3 +1,4 @@
+adobe-source-code-pro-fonts
 compton-git
 dunst
 eog
@@ -5,7 +6,6 @@ evince
 feh
 fonts-meta-extended-lt
 gedit
-gnome-backgrounds
 gnome-calculator
 gnome-font-viewer
 gnome-keyring
@@ -28,7 +28,6 @@ i3status
 lightdm
 lightdm-webkit-theme-litarvan
 nautilus
-network-manager-applet
 paper-gtk-theme-git
 paper-icon-theme-git
 pinentry-dmenu

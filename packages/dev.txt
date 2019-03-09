@@ -1,4 +1,3 @@
-adobe-source-code-pro-fonts
 azuredatastudio
 clang
 cmake

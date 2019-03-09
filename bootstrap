@@ -60,10 +60,10 @@ function service() {
   name="$2"
   if [[ "$target" == "user" ]]; then
     echo "Enabling user service $name"
-    systemctl --user enable --now $target
+    systemctl --user enable --now $name
   elif [[ "$target" == "system" ]]; then
     echo "Enabling system service $name"
-    systemctl --system enable --now $target
+    systemctl --system enable --now $name
   else
     echo "Unknown service target"
     exit 1
@@ -78,19 +78,19 @@ function install_yay() {
   git clone https://aur.archlinux.org/yay.git /tmp/yay
   cd /tmp/yay
   makepkg -si
-  rm -r /tmp/yay
+  rm -rf /tmp/yay
 }
 
 function install_packages() {
-  cat $dotfiles_dir/*.txt > /tmp/pkglist.txt
+  cat $dotfiles_dir/packages/*.txt > /tmp/pkglist.txt
   yay -S --needed - < /tmp/pkglist.txt
-  rm /tmp/pkglist.txt
+  rm -rf /tmp/pkglist.txt
 }
 
 function install_fonts() {
   section "Installing fonts"
   mkdir -p ~/.local/share/fonts
-  pushd ~/.local/share/fonts
+  cd ~/.local/share/fonts
 
     echo "SourceCodePro"
     curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf\?raw\=true -o sauce-regular.ttf
@@ -111,10 +111,9 @@ function install_fonts() {
     cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Regular-400.otf" fontawesome-regular.otf
     cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Solid-900.otf" fontawesome-solid.otf
     cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Brands-Regular-400.otf" fontawesome-brands.otf
-    rm -r /tmp/font-awesome.zip /tmp/font-awesome
+    rm -rf /tmp/font-awesome.zip /tmp/font-awesome
     unset fa_version
 
-  popd
   fc-cache -frv ~/.local/share/fonts
   echo "Done"
 }
@@ -173,8 +172,7 @@ function configure_yubikey() {
     section "Configuring YubiKey for sudo access"
     mkdir -p "$HOME/.config/Yubico"
     pamu2fcfg -ufiolek > "$HOME/.config/Yubico/u2f_keys"
-    echo "Switch to the backup and touch it"
-    pamu2fcfg -ufiolek -n >> "$HOME/.config/Yubico/u2f_keys"
+    echo "To add backup execute 'pamu2fcfg -ufiolek -n >> ~/.config/Yubico/u2f_keys'"
   fi
 }
 
@@ -188,7 +186,11 @@ function configure_root() {
   copy "etc/pacman.conf"
   copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
   copy "etc/pam.d/sudo"
-  copy "etc/profile.d/zz_custom.sh"
+  copy "etc/pam.d/lightdm"
+  copy "etc/pam.d/i3lock"
+  copy "etc/profile.d/displays.sh"
+  copy "etc/profile.d/headphones.sh"
+  copy "etc/profile.d/z_user_config.sh"
   copy "etc/udev/rules.d/10-displays.rules"
   copy "etc/udev/rules.d/20-backlight.rules"
   copy "etc/udev/rules.d/30-security-key.rules"
@@ -205,7 +207,7 @@ function configure_root() {
 
   section "System services"
   systemctl daemon-reload
-  service "system" "lightdm.service"
+  service "system" "NetworkManager.service"
   service "system" "pcscd.service"
   service "system" "ufw.service"
   service "system" "ufw.service"
@@ -253,9 +255,14 @@ function configure_power_save() {
   fi
 }
 
+function enable_lightdm() {
+  service "system" "lightdm.service"
+}
+
 if [[ "$(whoami)" == "root" ]]; then
   configure_root
   configure_optimus_root
+  enable_lightdm
 else
   install_yay
   install_packages

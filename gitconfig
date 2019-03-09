@@ -25,7 +25,7 @@
   default = matching
 
 [commit]
-  gpgsign = true
+	gpgsign = true
 
 [include]
   path = "~/.local/gitconfig"
