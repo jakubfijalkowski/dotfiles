@@ -268,6 +268,12 @@ function enable_lightdm() {
   service "system" "lightdm.service"
 }
 
+function prepare_default_dirs() {
+  mkdir -p ~/Work
+  mkdir -p ~/Documents/GDrive
+  mkdir -p ~/Pictures/Screenshots
+}
+
 if [[ "$(whoami)" == "root" ]]; then
   configure_root
   configure_optimus_root
@@ -281,6 +287,7 @@ else
   configure_yubikey
   configure_optimus_user
   configure_power_save
+  prepare_default_dirs
   run_root_config
 fi
 
