@@ -1,0 +1,7 @@
+playlist_show_mpd_host=no
+playlist_separate_albums=yes
+playlist_display_mode=columns
+user_interface=alternative
+follow_now_playing_lyrics=yes
+fetch_lyrics_for_current_song_in_background=yes
+autocenter_mode=yes

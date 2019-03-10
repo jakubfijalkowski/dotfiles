@@ -83,8 +83,12 @@ function install_yay() {
 
 function install_packages() {
   cat $dotfiles_dir/packages/*.txt > /tmp/pkglist.txt
-  yay -S --needed - < /tmp/pkglist.txt
+  yay --editmenu -S --needed - < /tmp/pkglist.txt
   rm -rf /tmp/pkglist.txt
+}
+
+function install_python_packages() {
+  pip install --user i3ipc fontawesome
 }
 
 function install_fonts() {
@@ -147,6 +151,8 @@ function configure_user() {
   link "config/systemd/user/change-wallpaper.timer"
   link "config/systemd/user/change-wallpaper.service"
   link "config/chromium-flags.conf"
+  link "config/i3/config"
+  link "config/ncmpcpp/config"
 
   link "scripts" "$HOME/.local/bin/scripts"
 
@@ -265,6 +271,7 @@ if [[ "$(whoami)" == "root" ]]; then
 else
   install_yay
   install_packages
+  install_python_packages
   install_fonts
   configure_user
   configure_yubikey

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -e /etc/profile.d/displays.sh ]; then
+    source /etc/profile.d/displays.sh
+fi
+
 has_main=$(xrandr | grep "^$DISPLAY_CONFIG_MAIN connected" 2>/dev/null || true)
 
 if [[ $has_main != "" ]]; then

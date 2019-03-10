@@ -46,6 +46,7 @@ unrar
 vulkan-intel
 wget
 wpa_supplicant
+xorg-server
 xorg-xdpyinfo
 xorg-xinit
 xorg-xinput

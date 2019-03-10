@@ -27,8 +27,8 @@ i3lock-color
 i3status
 lightdm
 lightdm-webkit-theme-litarvan
+matcha-gtk-theme-git
 nautilus
-paper-gtk-theme-git
 paper-icon-theme-git
 pinentry-dmenu
 polybar
