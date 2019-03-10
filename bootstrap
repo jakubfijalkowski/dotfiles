@@ -154,6 +154,10 @@ function configure_user() {
   link "config/i3/config"
   link "config/ncmpcpp/config"
 
+  link "config/Code/User/settings.json"
+  link "config/Code/User/locale.json"
+  link "config/Code/User/snippets"
+
   link "scripts" "$HOME/.local/bin/scripts"
 
   section "Importing GPG key"

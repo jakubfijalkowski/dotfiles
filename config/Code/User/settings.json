@@ -1,0 +1,86 @@
+{
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "Dracula",
+    "editor.fontFamily": "'Source Code Variable', 'Source Code Pro', Consolas, 'Courier New', monospace",
+    "editor.rulers": [
+        100
+    ],
+
+    "explorer.openEditors.visible": 0,
+    "explorer.autoReveal": false,
+    "explorer.confirmDragAndDrop": false,
+    "extensions.ignoreRecommendations": false,
+    "files.eol": "\n",
+
+    "window.zoomLevel": 0,
+    "window.menuBarVisibility": "toggle",
+
+    "gitlens.hovers.currentLine.enabled": false,
+    "gitlens.currentLine.enabled": false,
+    "gitlens.hovers.currentLine.over": "line",
+    "gitlens.blame.highlight.locations": [
+        "overview",
+        "gutter",
+        "line"
+    ],
+    "gitlens.recentChanges.highlight.locations": [
+        "gutter",
+        "overview"
+    ],
+    "gitlens.codeLens.scopes": [
+        "blocks",
+        "containers"
+    ],
+    "gitlens.advanced.messages": {
+        "suppressCommitHasNoPreviousCommitWarning": false, "suppressCommitNotFoundWarning": true, "suppressFileNotUnderSourceControlWarning": false,
+        "suppressGitVersionWarning": false,
+        "suppressLineUncommittedWarning": false,
+        "suppressNoRepositoryWarning": false,
+        "suppressResultsExplorerNotice": false,
+        "suppressShowKeyBindingsNotice": true,
+        "suppressUpdateNotice": true,
+        "suppressWelcomeNotice": false
+    },
+    "gitlens.strings.codeLens.unsavedChanges.recentChangeAndAuthors": "",
+    "gitlens.strings.codeLens.unsavedChanges.recentChangeOnly": "",
+    "gitlens.strings.codeLens.unsavedChanges.authorsOnly": "",
+    "gitlens.keymap": "chorded",
+    "gitlens.views.repositories.enabled": false,
+    "gitlens.views.fileHistory.enabled": true,
+    "gitlens.views.lineHistory.enabled": true,
+
+    "omnisharp.path": "latest",
+
+    "terraform.format": {
+        "enable": true,
+        "ignoreExtensionsOnSave": [
+            ".tfsmurf",
+            ".tfvars"
+        ],
+        "formatOnSave": false
+    },
+
+    "typescript.check.npmIsInstalled": false,
+
+    "vim.useSystemClipboard": true,
+    "vim.foldfix": true,
+    "vim.leader": ",",
+    "vim.easymotion": true,
+    "vim.sneak": true,
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [ "g", "r" ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.files.action.showActiveFileInExplorer",
+                    "args": []
+                }
+            ]
+        }
+    ],
+    "breadcrumbs.enabled": true,
+    "msbuildProjectTools.nuget.includePreRelease": true,
+    "msbuildProjectTools.nuget.newestVersionsFirst": true,
+    "razor.disabled": true,
+}

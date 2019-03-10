@@ -1,0 +1,12 @@
+dracula-theme.theme-dracula
+eamodio.gitlens
+editorconfig.editorconfig
+heaths.vscode-guid
+jchannon.csharpextensions
+mauve.terraform
+ms-vscode.csharp
+peterjausovec.vscode-docker
+robertohuertasm.vscode-icons
+tintoy.msbuild-project-tools
+vscodevim.vim
+wayou.vscode-todo-highlight
