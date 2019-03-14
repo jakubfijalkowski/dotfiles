@@ -1,11 +1,30 @@
-#!/bin/sh
-if [[ $1 = "stop" ]]; then
-    systemctl --user stop mpd
+#!/usr/bin/env zsh
+function start_player() {
+  systemctl --user start mopidy
+}
+
+function stop_player() {
+  systemctl --user stop mopidy
+}
+
+function player_running() {
+  systemctl --user is-active mopidy
+}
+
+function run_control() {
+  $TERMINAL --title 'Music' --class 'ncmpcpp-player' -e 'ncmpcpp'
+}
+
+if [[ "$1" == "stop" ]]; then
+  stop_player
+elif [[ "$1" == "iris" ]]; then
+  start_player
+  xdg-open "http://localhost:6680/iris/"
+elif [[ "$(player_running)" == "active" ]]; then
+  run_control
 else
-    isActive=$(systemctl --user is-active mpd)
-    if [[ $isActive = "inactive" ]]; then
-        systemctl --user start mpd
-    fi
-    $TERMINAL --title 'Music' --class 'ncmpcpp-player' -e 'ncmpcpp' 
-    systemctl --user stop mpd
+  start_player
+  run_control
+  stop_player
 fi
+

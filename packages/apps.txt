@@ -12,7 +12,6 @@ libva-intel-driver
 libva-utils
 libva-vdpau-driver-chromium
 mpc
-mpd
 ncmpcpp
 remmina
 spotify

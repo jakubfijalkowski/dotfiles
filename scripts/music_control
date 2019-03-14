@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-isActive=$(systemctl --user is-active mpd)
+isActive=$(systemctl --user is-active mopidy)
 
 if [[ $isActive = "inactive" ]]; then
     if [[ $1 == "toggle" ]]; then

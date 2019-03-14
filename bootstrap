@@ -89,6 +89,12 @@ function install_packages() {
 
 function install_python_packages() {
   pip install --user i3ipc fontawesome
+  pip2 install --user \
+    mopidy \
+    mopidy-spotify \
+    mopidy-iris \
+    mopidy-local-sqlite \
+    dbus-python
 }
 
 function install_fonts() {
@@ -150,9 +156,11 @@ function configure_user() {
   link "config/rofi/config.rasi"
   link "config/systemd/user/change-wallpaper.timer"
   link "config/systemd/user/change-wallpaper.service"
+  link "config/systemd/user/mopidy.service"
   link "config/chromium-flags.conf"
   link "config/i3/config"
   link "config/ncmpcpp/config"
+  link "config/mopidy/mopidy.conf"
 
   link "config/Code/User/settings.json"
   link "config/Code/User/locale.json"
@@ -174,6 +182,7 @@ function configure_user() {
   service "user" "change-wallpaper.timer"
   service "user" "keybase.service"
   service "user" "xdg-user-dirs-update.service"
+  service "user" "mopidy"
 }
 
 function configure_yubikey() {
@@ -190,7 +199,6 @@ function configure_root() {
   copy "etc/environment"
   copy "etc/lightdm/lightdm.conf"
   copy "etc/lightdm/lightdm-webkit2-greeter.conf"
-  copy "etc/mpd.conf"
   copy "etc/NetworkManager/NetworkManager.conf"
   copy "etc/pacman.conf"
   copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
