@@ -20,6 +20,8 @@ if [[ "$1" == "stop" ]]; then
 elif [[ "$1" == "iris" ]]; then
   start_player
   xdg-open "http://localhost:6680/iris/"
+elif [[ "$1" == "bg" ]]; then
+  start_player
 elif [[ "$(player_running)" == "active" ]]; then
   run_control
 else

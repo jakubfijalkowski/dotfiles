@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+function test_headphones() {
+  local has_headphones=$(pactl info | grep 'bluez')
+  if [[ "$has_headphones" != "" ]]; then
+    echo ''
+  else
+    echo ''
+  fi
+}
+
+test_headphones
+
+while read -r event; do
+  is_card=$(echo $event | grep "card")
+  if [[ "$is_card" != "" ]]; then
+    test_headphones
+  fi
+done < <(pactl subscribe 2>/dev/null)
