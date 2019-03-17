@@ -156,6 +156,8 @@ WINDOW_ICONS = {
     'gnome-calculator': fa.icons['calculator'],
     'calc': fa.icons['calculator'],
     'gedit': fa.icons['file'],
+    'code': fa.icons['code'],
+    'vscode': fa.icons['code'],
 }
 
 # This icon is used for any application not in the list above
