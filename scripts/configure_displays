@@ -1,21 +1,31 @@
 #!/bin/sh
 
-if [ -e /etc/profile.d/displays.sh ]; then
-    source /etc/profile.d/displays.sh
-fi
+function get_xrdb() {
+  xrdb -q | grep "$1" | cut -d: -f2 | tr -d '[:space:]'
+}
 
-has_main=$(xrandr | grep "^$DISPLAY_CONFIG_MAIN connected" 2>/dev/null || true)
+primary=$(get_xrdb 'screens.primary')
+secondary=$(get_xrdb 'screens.secondary')
+mode=$(get_xrdb 'screens.mode')
 
-if [[ $has_main != "" ]]; then
-    if [[ "$DISPLAY_MODE" == "main-on-top" ]]; then
-        xrandr --output $DISPLAY_CONFIG_MAIN --primary --auto \
-          --above $DISPLAY_CONFIG_ALTERNATIVE
-        i3-msg restart
-    else
-        echo "Unknown mode: $DEFAULT_MODE"
-        exit 1
-    fi
+has_primary=$(xrandr | grep "^$primary connected" 2>/dev/null || true)
+has_secondary=$(xrandr | grep "^$secondary connected" 2>/dev/null || true)
+
+if [[ "$has_primary" != "" && "$has_secondary" != "" ]]; then
+  if [[ "$mode" == "main-on-top" ]]; then
+    xrandr --output $primary --primary --auto --above $secondary
+    i3-msg restart
+  elif [[ "$mode" == "main-to-right" ]]; then
+    xrandr --output $primary --primary --auto --right-of $secondary
+    i3-msg restart
+  else
+    echo "Unknown mode: $mode"
+    exit 1
+  fi
+elif [[ "$has_primary" != "" ]]; then
+  xrandr --output $primary --primary
+  xrandr --auto
 else
-    xrandr --output $DISPLAY_CONFIG_ALTERNATIVE --primary
-    xrandr --auto
+  xrandr --output $secondary --primary
+  xrandr --auto
 fi

@@ -33,6 +33,7 @@ powertop
 pulseaudio-modules-bt-git
 python-neovim
 python-pip
+python2-pip
 refind-efi
 reflector
 strace

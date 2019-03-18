@@ -17,11 +17,11 @@ main_bg = ${colors.background_dark}
 main_fg = ${colors.text_darkbg}
 
 [bar/main]
-monitor = ${env:DISPLAY_CONFIG_MAIN:DP-1}
-monitor-fallback = ${env:DISPLAY_CONFIG_ALTERNATIVE:eDP-1}
+monitor = ${xrdb:screens.primary:DP-1}
+monitor-fallback = ${env:screens.secondary:eDP-1}
 
 width = 100%
-height = 45
+height = ${xrdb:polybar.height:45}
 radius = 0.0
 fixed-center = true
 
@@ -38,17 +38,17 @@ module-margin-right = 0
 
 locale = pl_PL.UTF-8
 
-font-0 = Source Code Pro:size=16;3
-font-1 = Font Awesome 5 Free:style=Solid:size=17;4
-font-2 = Material Icons:size=18;4
-font-3 = material\-wifi:size=18;4
+font-0 = ${xrdb:polybar.font.main:Source Code Pro:size=16;3}
+font-1 = ${xrdb:polybar.font.icons1:Font Awesome 5 Free:style=Solid:size=17;4}
+font-2 = ${xrdb:polybar.font.icons2:Material Icons:size=18;4}
+font-3 = ${xrdb:polybar.font.wifi:material\-wifi:size=18;4}
 ; Volume controls fixes
-font-4 = Material Icons:size=22;7
-font-5 = Material Icons:size=22;8
+font-4 = ${xrdb:polybar.font.volume1:Material Icons:size=22;7}
+font-5 = ${xrdb:polybar.font.volume2:Material Icons:size=22;8}
 ; Arch icon
-font-6 = font\-logos:style=logos:size=18;4
+font-6 = ${xrdb:polybar.font.arch:font\-logos:style=logos:size=18;4}
 ; Fallback for missing icons
-font-7 = Font Awesome 5 Brands:style=Solid:size=17;4
+font-7 = ${xrdb:polybar.font.fallback:Font Awesome 5 Brands:style=Solid:size=17;4}
 
 modules-left = i3 xwindow
 modules-center = mpd

@@ -208,7 +208,6 @@ function configure_root() {
   copy "etc/pam.d/sudo"
   copy "etc/pam.d/lightdm"
   copy "etc/pam.d/i3lock"
-  copy "etc/profile.d/displays.sh"
   copy "etc/profile.d/headphones.sh"
   copy "etc/profile.d/z_user_config.sh"
   copy "etc/udev/rules.d/10-displays.rules"
