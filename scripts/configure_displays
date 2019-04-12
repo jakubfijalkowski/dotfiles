@@ -18,6 +18,9 @@ if [[ "$has_primary" != "" && "$has_secondary" != "" ]]; then
   elif [[ "$mode" == "main-to-right" ]]; then
     xrandr --output $primary --primary --auto --right-of $secondary
     i3-msg restart
+  elif [[ "$mode" == "main-to-left" ]]; then
+    xrandr --output $primary --primary --auto --left-of $secondary
+    i3-msg restart
   else
     echo "Unknown mode: $mode"
     exit 1

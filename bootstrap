@@ -164,6 +164,7 @@ function configure_user() {
   link "config/i3/config"
   link "config/ncmpcpp/config"
   link "config/mopidy/mopidy.conf"
+  link "config/Dharkael/flameshot.ini"
 
   link "config/Code/User/settings.json"
   link "config/Code/User/locale.json"

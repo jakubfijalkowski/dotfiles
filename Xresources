@@ -8,7 +8,7 @@ Xft.dpi: 192
 
 screens.primary: DP-1
 screens.secondary: eDP-1
-screens.mode: main-on-top
+screens.mode: main-to-left
 
 i3.font: Source Code Pro 10
 i3.inner_gaps: 1
