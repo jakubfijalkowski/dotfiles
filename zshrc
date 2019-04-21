@@ -8,6 +8,7 @@ source "$HOME/.zsh/completions.zsh"
 source "$HOME/.zsh/functions.zsh"
 source "$HOME/.zsh/utils.zsh"
 source "$HOME/.zsh/alias.zsh"
+source "$HOME/.zsh/fzf.zsh"
 
 source "$HOME/.zsh/machine.zsh"
 
