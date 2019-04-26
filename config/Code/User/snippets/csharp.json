@@ -1,2 +1,9 @@
 {
+    "Insert Serilog logger": {
+        "prefix": "serilog",
+        "body": [
+            "private readonly Serilog.ILogger logger = Serilog.Log.ForContext<${1:TypeName}>();$0"
+        ],
+        "description": "Inserts new Serilog's logger for current context"
+    }
 }

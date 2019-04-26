@@ -83,4 +83,14 @@
     "msbuildProjectTools.nuget.includePreRelease": true,
     "msbuildProjectTools.nuget.newestVersionsFirst": true,
     "razor.disabled": true,
+
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

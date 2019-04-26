@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+sudo ufw allow in on $(ip link | grep '^[0-9]*: br-' | awk -F':' '{print $2}')

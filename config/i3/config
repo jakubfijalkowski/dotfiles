@@ -148,7 +148,7 @@ mode "$mode_actions" {
     bindsym e exec nautilus; mode "default"
     bindsym w workspace number 10; exec wavebox; mode "default"
 
-    bindsym l exec $scripts/i3exit lock
+    bindsym l exec $scripts/i3exit lock; mode "default"
     bindsym r reload; mode "default"
 
     bindsym Return mode "default"

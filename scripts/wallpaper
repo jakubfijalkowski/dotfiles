@@ -1,5 +1,5 @@
 #!/bin/sh
 WALLPAPERS=~/Documents/GDrive/Wallpapers
 if [ -e $WALLPAPERS ]; then
-    feh --randomize --bg-fill $WALLPAPERS
+    feh --randomize --bg-fill $WALLPAPERS/*
 fi
