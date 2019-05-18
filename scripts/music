@@ -15,6 +15,30 @@ function run_control() {
   $TERMINAL --title 'Music' --class 'ncmpcpp-player' -e 'ncmpcpp'
 }
 
+function wait_for_mopidy() {
+  echo "Waiting for Mopidy"
+  local ret=1
+  while [[ $ret > 0 ]]; do
+    mpc >/dev/null 2&>1
+    ret=$?
+  done
+  echo "Running"
+}
+
+function start_random() {
+  all_files="$(mktemp -t music.XXXXXX)"
+  trap "rm -f '$all_files'" 0               # EXIT
+  trap "rm -f '$all_files'; exit 1" 2       # INT
+  trap "rm -f '$all_files'; exit 1" 1 15    # HUP TERM
+
+  echo "Clearing current playlist"
+  mpc clear
+  mpc ls "Local media/Tracks" > $all_files
+  echo "Starting ashuffle"
+  mpc consume on
+  ashuffle -f $all_files
+}
+
 if [[ "$1" == "stop" ]]; then
   stop_player
 elif [[ "$1" == "iris" ]]; then
@@ -22,8 +46,12 @@ elif [[ "$1" == "iris" ]]; then
   xdg-open "http://localhost:6680/iris/"
 elif [[ "$1" == "bg" ]]; then
   start_player
-elif [[ "$(player_running)" == "active" ]]; then
+elif [[ "$1" == "shuffle" ]]; then
+  start_player
+  wait_for_mopidy
+  start_random &
   run_control
+  stop_player
 else
   start_player
   run_control

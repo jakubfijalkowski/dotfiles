@@ -138,7 +138,8 @@ bindcode 191 exec --no-startup-id $scripts/connect_headphones
 bindcode 192 exec --no-startup-id /usr/bin/bluetoothctl disconnect
 
 bindcode 194 exec --no-startup-id $scripts/music iris
-bindcode 195 exec --no-startup-id $scripts/music
+bindcode 195 exec --no-startup-id $scripts/music shuffle
+bindcode 196 exec --no-startup-id $scripts/music
 
 set $mode_actions Actions: (w)avebox (c)hrome co(d)e fil(e)s (l)ock (r)eload
 bindsym $mod+a mode "$mode_actions"

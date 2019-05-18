@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 rfkill unblock bluetooth
 bluetoothctl disconnect $HEADPHONES_MAC
@@ -10,10 +10,5 @@ sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
 if [[ "$sink" == "" ]]; then
   notify-send -u critical -a Headphones Headphones 'Connection failed'
 else
-  pacmd set-default-sink $sink
-  pactl set-default-sink $sink
-  existing_inputs=($(pacmd list-sink-inputs | grep 'index' | cut -f6 -d' '))
-  for i in ${existing_inputs[@]}; do
-    pacmd move-sink-input $i $sink
-  done
+  headphones audio
 fi

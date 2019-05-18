@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+function _select_profile() {
+  card=$(pactl list short cards | grep 'bluez' | awk -F' ' '{print $1}')
+  pactl set-card-profile $card $1
+  pacmd set-card-profile $card $1
+}
+
+function _select_sink() {
+  sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
+  pacmd set-default-sink $sink
+  pactl set-default-sink $sink
+  existing_inputs=($(pacmd list-sink-inputs | grep 'index' | cut -f6 -d' '))
+  for i in ${existing_inputs[@]}; do
+    pacmd move-sink-input $i $sink
+  done
+}
+
+function _select_source() {
+  src=$(pactl list short sources | grep 'bluez_source' | awk -F' ' '{print $1}')
+  pacmd set-default-source $src
+  pactl set-default-source $src
+  existing_inputs=($(pacmd list-source-outputs | grep 'index' | cut -f6 -d' '))
+  for i in ${existing_inputs[@]}; do
+    pacmd move-source-output $i $src
+  done
+
+}
+
+if [[ "$1" == "audio" ]]; then
+  _select_profile a2dp_sink_ldac
+  _select_sink
+elif [[ "$1" == "speech" ]]; then
+  _select_profile headset_head_unit
+  _select_sink
+  _select_source
+else
+  notify-send -u critical -a Headphones Headphones 'Invalid parameter'
+  echo "Unknown parameter, valid values: audio speech"
+fi
+
