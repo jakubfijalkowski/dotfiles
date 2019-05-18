@@ -169,10 +169,11 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap <silent> <C-P> :Files<CR>
 nnoremap <silent> <leader>p :BTags<CR>
 nnoremap <silent> <leader><S-P> :Tags<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
 
-nmap <silent> <F8> :NERDTreeToggle<CR>
-nmap <silent> <F9> :TagbarToggle<CR>
-nmap <silent> <F10> :UndotreeToggle<CR>
+nmap <silent> <F9> :NERDTreeToggle<CR>
+nmap <silent> <F10> :TagbarToggle<CR>
+nmap <silent> <F11> :UndotreeToggle<CR>
 
 " NCM2, UltiSnips
 autocmd User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
@@ -182,15 +183,16 @@ autocmd BufEnter * call ncm2#enable_for_buffer()
 
 "  LanguageClient
 nnoremap <silent> gd :call GoToDefinition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> <F3> :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent> <F4> :call LanguageClient_textDocument_references()<CR>
+nnoremap <silent> <F3> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> <F4> :call LanguageClient_textDocument_definition(()<CR>
+nnoremap <silent> <F5> :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> <leader>= :call LanguageClient_textDocument_formatting()<CR>
 vnoremap <silent> <leader>= :call LanguageClient_textDocument_rangeFormatting()<CR>
 
-map s <Plug>(easymotion-s)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+map s <Plug>(easymotion-bd-f)
+nmap s <Plug>(easymotion-overwin-f)
+map <Leader>j <Plug>(easymotion-jk)
+map <Leader>k <Plug>(easymotion-jk)
 
 "  Neoterm
 nmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
@@ -233,8 +235,7 @@ autocmd  FileType fzf set laststatus=0 noshowmode noruler
 
 " EasyMotion
 let g:EasyMotion_do_mapping = 0
-hi EasyMotionTarget ctermbg=none ctermfg=green
-hi EasyMotionShade  ctermbg=none ctermfg=blue
+hi EasyMotionShade ctermbg=none ctermfg=blue
 
 " NerdTree
 autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
