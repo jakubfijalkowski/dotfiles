@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+PROPERTY=_FORCE_OPAQUE
+
+active_window=$(xprop -root _NET_ACTIVE_WINDOW | awk '{ print $5 }')
+function _set_active() {
+  xprop -id $active_window -f $PROPERTY 8s -set $PROPERTY "$1"
+}
+
+is_active=$(xprop -id $active_window $PROPERTY | grep yes)
+if [[ "$is_active" == "" ]]; then
+  _set_active yes
+else
+  _set_active no
+fi

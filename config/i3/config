@@ -141,14 +141,13 @@ bindcode 194 exec --no-startup-id $scripts/music iris
 bindcode 195 exec --no-startup-id $scripts/music shuffle
 bindcode 196 exec --no-startup-id $scripts/music
 
-set $mode_actions Actions: (w)avebox (c)hrome co(d)e fil(e)s (l)ock (r)eload
+set $mode_actions Actions: (c)hrome fil(e)s (o)paque (l)ock (r)eload
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
     bindsym c workspace number 1; exec chromium; mode "default"
-    bindsym d workspace number 3; exec code; mode "default"
     bindsym e exec nautilus; mode "default"
-    bindsym w workspace number 10; exec wavebox; mode "default"
 
+    bindsym o exec $scripts/toggle_opaque; mode "default"
     bindsym l exec $scripts/i3exit lock; mode "default"
     bindsym r reload; mode "default"
 
