@@ -1,19 +1,41 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env python3
 
-function test_headphones() {
-  local has_headphones=$(pactl info | grep 'bluez')
-  if [[ "$has_headphones" != "" ]]; then
-    echo ''
-  else
-    echo ''
-  fi
-}
+import sys
+import os
+import pulsectl
 
-test_headphones
+HEADPHONES_NAME = os.environ['HEADPHONES_MAC'].replace(':', '_')
+CARD_NAME = 'bluez_card.' + HEADPHONES_NAME
 
-while read -r event; do
-  is_card=$(echo $event | grep "card")
-  if [[ "$is_card" != "" ]]; then
-    test_headphones
-  fi
-done < <(pactl subscribe 2>/dev/null)
+def _find(f, lst):
+  for el in filter(f, lst):
+    return el
+  return None
+
+def _find_headphones(pulse):
+  return _find(lambda x: x.name == CARD_NAME, pulse.card_list())
+
+def _has_headphones(pulse):
+  return _find_headphones(pulse) != None
+
+def watch_action(pulse):
+  if _has_headphones(pulse):
+    print('')
+  else:
+    print('')
+  sys.stdout.flush()
+
+def main():
+  with pulsectl.Pulse('headphones_watcher') as pulse:
+    watch_action(pulse)
+
+    def handle_event(ev):
+      raise pulsectl.PulseLoopStop()
+    pulse.event_mask_set('card')
+    pulse.event_callback_set(handle_event)
+    while True:
+      pulse.event_listen()
+      watch_action(pulse)
+
+if __name__ == '__main__':
+  main()

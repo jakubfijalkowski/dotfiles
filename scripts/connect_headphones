@@ -9,6 +9,4 @@ bluetoothctl connect $HEADPHONES_MAC
 sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
 if [[ "$sink" == "" ]]; then
   notify-send -u critical -a Headphones Headphones 'Connection failed'
-else
-  headphones audio
 fi

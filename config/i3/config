@@ -144,11 +144,11 @@ bindcode 196 exec --no-startup-id $scripts/music
 set $mode_actions Actions: (c)hrome fil(e)s (o)paque (l)ock (r)eload
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
-    bindsym c workspace number 1; exec chromium; mode "default"
-    bindsym e exec nautilus; mode "default"
+    bindsym c workspace number 1; exec --no-startup-id chromium; mode "default"
+    bindsym e exec --no-startup-id nautilus; mode "default"
 
-    bindsym o exec $scripts/toggle_opaque; mode "default"
-    bindsym l exec $scripts/i3exit lock; mode "default"
+    bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
+    bindsym l exec --no-startup-id $scripts/i3exit lock; mode "default"
     bindsym r reload; mode "default"
 
     bindsym Return mode "default"
@@ -182,7 +182,8 @@ exec --no-startup-id compton -b; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays
-exec_always --no-startup-id "killall -q polybar; polybar main &"
+exec --no-startup-id $scripts/headphones watch&
+exec_always --no-startup-id "killall -q polybar; polybar main&"
 exec_always --no-startup-id $scripts/autoname_workspaces
 
 # Utils

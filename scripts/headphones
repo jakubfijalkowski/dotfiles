@@ -1,41 +1,167 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env python3
 
-function _select_profile() {
-  card=$(pactl list short cards | grep 'bluez' | awk -F' ' '{print $1}')
-  pactl set-card-profile $card $1
-  pacmd set-card-profile $card $1
-}
+import os
+import sys
+import time
+import pulsectl
 
-function _select_sink() {
-  sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
-  pacmd set-default-sink $sink
-  pactl set-default-sink $sink
-  existing_inputs=($(pacmd list-sink-inputs | grep 'index' | cut -f6 -d' '))
-  for i in ${existing_inputs[@]}; do
-    pacmd move-sink-input $i $sink
-  done
-}
+HEADPHONES_NAME = os.environ['HEADPHONES_MAC'].replace(':', '_')
+CARD_NAME = 'bluez_card.' + HEADPHONES_NAME
+LDAC_SINK = 'bluez_sink.' + HEADPHONES_NAME + '.a2dp_sink'
+HEADSET_SINK = 'bluez_sink.' + HEADPHONES_NAME + '.headset_head_unit'
+HEADSET_SOURCE = 'bluez_source.' + HEADPHONES_NAME + '.headset_head_unit'
 
-function _select_source() {
-  src=$(pactl list short sources | grep 'bluez_source' | awk -F' ' '{print $1}')
-  pacmd set-default-source $src
-  pactl set-default-source $src
-  existing_inputs=($(pacmd list-source-outputs | grep 'index' | cut -f6 -d' '))
-  for i in ${existing_inputs[@]}; do
-    pacmd move-source-output $i $src
-  done
+AUDIO_PROFILE = 'a2dp_sink_ldac'
+SPEECH_PROFILE = 'headset_head_unit'
 
-}
+def _find(f, lst):
+  for el in filter(f, lst):
+    return el
+  return None
 
-if [[ "$1" == "audio" ]]; then
-  _select_profile a2dp_sink_ldac
-  _select_sink
-elif [[ "$1" == "speech" ]]; then
-  _select_profile headset_head_unit
-  _select_sink
-  _select_source
-else
-  notify-send -u critical -a Headphones Headphones 'Invalid parameter'
-  echo "Unknown parameter, valid values: audio speech"
-fi
+def _find_headphones(pulse):
+  return _find(lambda x: x.name == CARD_NAME, pulse.card_list())
 
+def _has_headphones(pulse):
+  return _find_headphones(pulse) != None
+
+def _find_sink(pulse, name):
+  return _find(lambda x: x.name == name, pulse.sink_list())
+
+def _find_source(pulse, name):
+  return _find(lambda x: x.name == name, pulse.source_list())
+
+def _use_profile(pulse, profile_name):
+  card = _find_headphones(pulse)
+  pulse.card_profile_set(card, profile_name)
+
+def _select_sink(pulse, name):
+  print('Selecting {:s} as default sink'.format(name))
+  sink = _find_sink(pulse, name)
+  inputs = pulse.sink_input_list()
+  pulse.sink_default_set(sink)
+  for i in inputs:
+    pulse.sink_input_move(i.index, sink.index)
+
+def _select_source(pulse, name):
+  print('Selecting {:s} as default source'.format(name))
+  source = _find_source(pulse, name)
+  outputs = pulse.source_output_list()
+  pulse.source_default_set(source)
+  for o in outputs:
+    pulse.source_output_move(o.index, source.index)
+
+def _use_audio_profile(pulse):
+  print('Using audio profile')
+  _mute_sink(pulse, HEADSET_SINK)
+  _use_profile(pulse, AUDIO_PROFILE)
+  _select_sink(pulse, LDAC_SINK)
+  _unmute_sink(pulse, LDAC_SINK)
+
+def _use_speech_profile(pulse):
+  print('Using speech profile')
+  _mute_sink(pulse, LDAC_SINK)
+  _use_profile(pulse, SPEECH_PROFILE)
+  _select_sink(pulse, HEADSET_SINK)
+  _select_source(pulse, HEADSET_SOURCE)
+  _unmute_sink(pulse, HEADSET_SINK)
+
+def _mute_sink(pulse, name, mute=True):
+  sink = _find_sink(pulse, name)
+  if sink != None:
+    if mute:
+      print('Muting {:s}'.format(sink.name))
+    else:
+      print('Unmuting {:s}'.format(sink.name))
+    pulse.mute(sink, mute)
+  else:
+    print('Cannot (un)mute sink {:s}'.format(name))
+
+def _unmute_sink(pulse, name):
+  _mute_sink(pulse, name, False)
+
+def _mute_all_except_headphones(pulse, mute=True):
+  sinks = pulse.sink_list()
+  for s in sinks:
+    if s.name != LDAC_SINK and s.name != HEADSET_SINK:
+      if mute:
+        print('Muting {:s}'.format(s.name))
+      else:
+        print('Unmuting {:s}'.format(s.name))
+      pulse.mute(s, mute)
+
+def _unmute_all_except_headphones(pulse):
+  _mute_all_except_headphones(pulse, False)
+
+def _outputs_present(pulse):
+  return not not pulse.source_output_list()
+
+def _try_toggling_output(pulse, is_in_speech):
+  if is_in_speech:
+    print("We've already switched to speech, so letting everything calm down")
+    time.sleep(2)
+
+  if _outputs_present(pulse):
+    _use_speech_profile(pulse)
+    return True
+  else:
+    _use_audio_profile(pulse)
+    return False
+
+def toggle_to_audio():
+  with pulsectl.Pulse('headphones_toggler') as pulse:
+      _use_audio_profile(pulse)
+
+def toggle_to_speech():
+  with pulsectl.Pulse('headphones_toggler') as pulse:
+      _use_speech_profile(pulse)
+
+def watch_action(pulse, is_in_speech):
+  print('Reacting...')
+  if _has_headphones(pulse):
+      _mute_all_except_headphones(pulse)
+      res = _try_toggling_output(pulse, is_in_speech)
+      print()
+      return res
+  else:
+      _unmute_all_except_headphones(pulse)
+      print()
+      return False
+
+def watch():
+  is_in_speech = False
+  with pulsectl.Pulse('mic_watcher') as pulse:
+    is_in_speech = watch_action(pulse, is_in_speech)
+
+    def handle_event(ev):
+      if ev.facility == 'source_output':
+        raise pulsectl.PulseLoopStop()
+      elif ev.facility == 'card' and (ev.t == 'new' or ev.t == 'remove'):
+        raise pulsectl.PulseLoopStop()
+    pulse.event_mask_set('source_output', 'card')
+    pulse.event_callback_set(handle_event)
+    while True:
+      pulse.event_listen()
+      is_in_speech = watch_action(pulse, is_in_speech)
+
+def usage():
+  print('Usage: {:s} audio|speech|watch'.format(sys.argv[0]))
+  return 1
+
+def main():
+  if len(sys.argv) != 2:
+    return usage()
+  elif sys.argv[1] == 'audio':
+    toggle_to_audio()
+    return 0
+  elif sys.argv[1] == 'speech':
+    toggle_to_speech()
+    return 0
+  elif sys.argv[1] == 'watch':
+    watch()
+    return 0
+  else:
+    return usage()
+
+if __name__ == '__main__':
+  exit(main())
