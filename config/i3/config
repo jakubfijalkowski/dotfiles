@@ -178,15 +178,12 @@ workspace 9 output $secondary
 workspace 10 output $secondary
 
 # Required or configuration-related apps
-exec --no-startup-id compton -b; sleep 1; $scripts/wallpaper
+exec --no-startup-id compton -b --experimental-backends; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays
 exec --no-startup-id $scripts/headphones watch&
 exec_always --no-startup-id "killall -q polybar; polybar main&"
 exec_always --no-startup-id $scripts/autoname_workspaces
-
-# Utils
-exec --no-startup-id wavebox&
 
 # vim:filetype=i3config

@@ -14,13 +14,13 @@ has_secondary=$(xrandr | grep "^$secondary connected" 2>/dev/null || true)
 if [[ "$has_primary" != "" && "$has_secondary" != "" ]]; then
   if [[ "$mode" == "main-on-top" ]]; then
     xrandr --output $primary --primary --auto --above $secondary
-    i3-msg restart
+    i3-msg restart || true
   elif [[ "$mode" == "main-to-right" ]]; then
     xrandr --output $primary --primary --auto --right-of $secondary
-    i3-msg restart
+    i3-msg restart || true
   elif [[ "$mode" == "main-to-left" ]]; then
     xrandr --output $primary --primary --auto --left-of $secondary
-    i3-msg restart
+    i3-msg restart || true
   else
     echo "Unknown mode: $mode"
     exit 1
