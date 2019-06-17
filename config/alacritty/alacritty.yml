@@ -31,8 +31,6 @@ font:
     style: Italic
   size: 20.0
 
-render_timer: false
-
 # Gruvbox dark
 colors:
   primary:
