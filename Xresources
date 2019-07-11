@@ -6,8 +6,8 @@ Xft.rgba: rgb
 
 Xft.dpi: 192
 
-screens.primary: DP1
-screens.secondary: eDP1
+screens.primary: DP-1
+screens.secondary: eDP-1
 screens.mode: main-to-left
 
 i3.font: Source Code Pro 10

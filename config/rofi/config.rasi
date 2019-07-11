@@ -44,7 +44,7 @@ window {
 mainbox {
     background-color: @blackdarkest;
     spacing:0px;
-    children: [inputbar, message, sidebar, listview];
+    children: [inputbar, message, mode-switcher, listview];
 }
 
 message {
@@ -123,7 +123,7 @@ scrollbar {
     handle-width: 15px;
 }
 
-sidebar {
+mode-switcher {
     background-color: @blackwidget;
 }
 
