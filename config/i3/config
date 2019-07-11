@@ -141,10 +141,10 @@ bindcode 194 exec --no-startup-id $scripts/music iris
 bindcode 195 exec --no-startup-id $scripts/music shuffle
 bindcode 196 exec --no-startup-id $scripts/music
 
-set $mode_actions Actions: (c)hrome fil(e)s (o)paque (l)ock (r)eload
+set $mode_actions Actions: (c)brave fil(e)s (o)paque (l)ock (r)eload
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
-    bindsym c workspace number 1; exec --no-startup-id chromium; mode "default"
+    bindsym c workspace number 1; exec --no-startup-id brave; mode "default"
     bindsym e exec --no-startup-id nautilus; mode "default"
 
     bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
