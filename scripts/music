@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 function start_player() {
+  unlock_keyring
   systemctl --user start mopidy
 }
 
@@ -19,7 +20,7 @@ function wait_for_mopidy() {
   echo "Waiting for Mopidy"
   local ret=1
   while [[ $ret > 0 ]]; do
-    mpc >/dev/null 2&>1
+    mpc >/dev/null 2>&1
     ret=$?
   done
   echo "Running"
