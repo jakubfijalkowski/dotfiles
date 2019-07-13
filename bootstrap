@@ -160,7 +160,7 @@ function configure_user() {
   link "config/systemd/user/change-wallpaper.timer"
   link "config/systemd/user/change-wallpaper.service"
   link "config/systemd/user/mopidy.service"
-  link "config/chromium-flags.conf"
+  link "config/brave-flags.conf"
   link "config/i3/config"
   link "config/ncmpcpp/config"
   link "config/mopidy/mopidy.conf"

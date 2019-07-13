@@ -1,0 +1,4 @@
+#!/usr/bin/zsh
+systemctl --user stop greenclip
+greenclip clear
+systemctl --user start greenclip
