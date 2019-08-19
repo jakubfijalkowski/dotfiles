@@ -1,3 +1,4 @@
+acme.sh
 azuredatastudio
 clang
 cmake
@@ -15,8 +16,10 @@ kubectx
 libgit2
 mono
 msbuild-stable
+ngrok
 npm
 postman-bin
+ripgrep
 storageexplorer
 terraform
 terraform-lsp-bin
