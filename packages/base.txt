@@ -18,9 +18,10 @@ linux-headers
 llvm
 lm_sensors
 lsof
-neovim
+neovim-git
 neovim-drop-in
 networkmanager
+nodejs-neovim
 ntfs-3g
 nvme-cli-git
 openssh

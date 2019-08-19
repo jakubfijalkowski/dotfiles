@@ -23,32 +23,30 @@ Plug 'sheerun/vim-polyglot' " Lang packs
 Plug 'tpope/vim-repeat' " Fixup the . command
 Plug 'tpope/vim-surround' " Take a textobj and change the quotes :D
 Plug 'majutsushi/tagbar' " The mighty TagBar
-Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
 
 Plug 'junegunn/fzf' " FZF (CtrlP replacement)
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-slash'
 
-Plug 'SirVer/ultisnips' " Ultisnip
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " OMG, I love it
+Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
+
 Plug 'honza/vim-snippets'
-
-Plug 'roxma/nvim-yarp' " NCM2
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-vim' | Plug 'Shougo/neco-vim'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': './install.sh'
-    \ }
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'sgur/vim-editorconfig'
 Plug 'takac/vim-hardtime'
-Plug 'Shougo/echodoc.vim'
 Plug 'parsonsmatt/intero-neovim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-rooter'
 Plug 'godlygeek/tabular'
+Plug 'tpope/vim-fugitive'
 
 Plug 'rust-lang/rust.vim'
 
@@ -63,7 +61,6 @@ set encoding=utf-8
 set nobomb
 filetype plugin indent on
 
-" Color
 syntax enable
 set termguicolors
 set background=dark
@@ -89,8 +86,8 @@ set autowrite
 set signcolumn=yes
 set lazyredraw
 
-set wildmenu
 set wildignore+=.git " Common
+set wildoptions=pum
 set wildignore+=.cabal,.cabal-sandbox,dist " Haskell
 set wildignore+=*.lock.json
 
@@ -143,8 +140,6 @@ let g:python3_host_prog = "/usr/bin/python3"
 
 " Navigation, rebinds, helpers
 "
-" Remove last-search, works like <C-/> in Terminator
-map <silent> <C-_> :nohlsearch<CR>
 
 " Easier navigation
 map <C-H> <C-W>h
@@ -175,20 +170,16 @@ nmap <silent> <F9> :NERDTreeToggle<CR>
 nmap <silent> <F10> :TagbarToggle<CR>
 nmap <silent> <F11> :UndotreeToggle<CR>
 
-" NCM2, UltiSnips
-autocmd User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-autocmd User Ncm2PopupClose set completeopt=menuone
-autocmd TextChangedI * call ncm2#auto_trigger()
-autocmd BufEnter * call ncm2#enable_for_buffer()
+"  Coc
+nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
+nnoremap <silent> <F3> :CocFix<CR>
+nnoremap  <F5> :call CocAction('doHover')<CR>
+nnoremap <silent> <Leader>= :call CocAction('format')<CR>
 
-"  LanguageClient
-nnoremap <silent> gd :call GoToDefinition()<CR>
-nnoremap <silent> <F3> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> <F4> :call LanguageClient_textDocument_definition(()<CR>
-nnoremap <silent> <F5> :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> <leader>= :call LanguageClient_textDocument_formatting()<CR>
-vnoremap <silent> <leader>= :call LanguageClient_textDocument_rangeFormatting()<CR>
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
+" EasyMotion
 map s <Plug>(easymotion-bd-f)
 nmap s <Plug>(easymotion-overwin-f)
 map <Leader>j <Plug>(easymotion-jk)
@@ -251,6 +242,8 @@ let g:airline#extensions#hunks#enabled          = 1
 let g:airline#extensions#whitespace#enabled     = 1
 let g:airline#extensions#tabline#enabled        = 1
 let g:airline#extensions#languageclient#enabled = 1
+let g:airline#extensions#coc#enabled            = 1
+let g:airline#extensions#ale#enabled            = 1
 
 " Indent Guides
 let g:indent_guides_guide_size            = 1
@@ -305,12 +298,6 @@ let g:haskell_enable_quantification   = 1
 let g:haskell_enable_pattern_synonyms = 1
 hi link haskellType Statement
 
-" Gutentags
-let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
-let g:gutentags_ctags_executable_rust    = expand('~/.vim/tools/rusty_tags')
-let g:gutentags_cache_dir                = '~/.vim/tags'
-let g:gutentags_define_advanced_commands = 1
-
 " Tabular
 let g:haskell_tabular = 1
 
@@ -320,65 +307,39 @@ let g:gitgutter_override_sign_column_highlight = 0
 " Neoterm
 let g:neoterm_automap_keys = ''
 
-" LanguageClient & NCM2
-let g:LanguageClient_autoStart         = 1
-let g:LanguageClient_autoStop          = 1
-let g:LanguageClient_changeThrottle    = 0.5
-let g:LanguageClient_hasSnippetSupport = 1
-let g:LanguageClient_loggingLevel      = 'INFO'
-let g:LanguageClient_serverCommands    = {
-    \ 'haskell': ['hie-wrapper'],
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'] }
-
-" UltiSnips
-let g:UltiSnipsExpandTrigger       = "<Plug>(ultisnips_expand_or_jump)"
-let g:UltiSnipsJumpForwardTrigger  = "<Plug>(ultisnips_expand_or_jump)"
-let g:UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_back)"
-let g:UltiSnipsMappingsToIgnore    = [ "SelectModeTab", "ShiftTab" ]
-
-" Based on https://github.com/YaLTeR/dotfiles/blob/master/common/.config/nvim/init.vim#L491-L552
-inoremap <silent> <expr> <Tab> InsertModeTab()
-inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrTab()<CR>
-inoremap <silent> <S-Tab> <C-R>=ShiftTab()<CR>
-
-" Echodoc
-set cmdheight=2
-let g:echodoc#enable_at_startup = 1
+" ALE
+let g:ale_sign_column_always   = 1
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_enter        = 1
+let g:ale_lint_on_save         = 1
+let g:ale_lint_on_insert_leave = 1
 
 " Other
 let g:hardtime_default_on = 1
-let g:hardtime_maxcount = 3
+let g:hardtime_maxcount = 5
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
+let g:rooter_manual_only = 1
 
 " Helpers
 command! Reload source ~/.vimrc
 
-function! UltiSnipsExpandOrJumpOrTab()
-  call UltiSnips#ExpandSnippetOrJump()
-  if g:ulti_expand_or_jump_res > 0
-    return ""
-  else
-    return "\<Tab>"
-  endif
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-function! InsertModeTab()
-  let b:prevent_next_auto_hover = 1
-  return ncm2_ultisnips#expand_or("\<Plug>(ultisnips_try_expand)")
-endfunction
 
-function! ShiftTab()
-  let b:prevent_next_auto_hover = 1
-  return UltiSnips#JumpBackwards()
-endfunction
-
-function! GoToDefinitionHandler(output)
-  if has_key(a:output, 'error')
-    call searchdecl(expand('<cword>'))
-  endif
-endfunction
-
-function! GoToDefinition()
-  call LanguageClient#textDocument_definition({'handle': v:true}, 'GoToDefinitionHandler')
-endfunction
+" Consider deletion
+" Gutentags
+" Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
+"let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
+"let g:gutentags_ctags_executable_rust    = expand('~/.vim/tools/rusty_tags')
+"let g:gutentags_cache_dir                = '~/.vim/tags'
+"let g:gutentags_define_advanced_commands = 1

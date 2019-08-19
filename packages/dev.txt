@@ -19,6 +19,8 @@ npm
 postman-bin
 storageexplorer
 terraform
+terraform-lsp-bin
+tflint-bin
 tig
 universal-ctags-git
 visual-studio-code-bin

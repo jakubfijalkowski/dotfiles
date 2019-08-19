@@ -1,0 +1,11 @@
+{
+    "diagnostic.displayByAle": true,
+    "languageserver": {
+        "terraform": {
+            "command": "terraform-lsp",
+            "filetypes": [
+                "terraform"
+            ]
+        }
+    }
+}
