@@ -218,6 +218,7 @@ function configure_root() {
   copy "etc/X11/xorg.conf.d/20-nvidia.conf"
   copy "etc/X11/xorg.conf.d/30-touchpad.conf"
   copy "etc/sysctl.d/99-inotify.conf"
+  copy "etc/security/limits.conf"
 
   copy "usr/local/bin/configure_displays"
 
