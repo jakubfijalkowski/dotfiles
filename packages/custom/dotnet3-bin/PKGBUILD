@@ -1,5 +1,5 @@
-pkgname=('dotnet-host-bin' 'dotnet-runtime-bin' 'aspnet-runtime-bin' 'dotnet-sdk-bin')
-pkgver=3.0.0+preview8+28405+07+100+preview8+013656
+pkgname=('dotnet3-host-bin' 'dotnet3-runtime-bin' 'aspnet3-runtime-bin' 'dotnet3-sdk-bin')
+pkgver=3.0.0+100+preview8+013656
 pkgrel=1
 arch=('x86_64')
 url='https://www.microsoft.com/net/core'
@@ -8,10 +8,10 @@ options=(staticlibs)
 source=('https://download.visualstudio.microsoft.com/download/pr/a0e368ac-7161-4bde-a139-1a3ef5a82bbe/439cdbb58950916d3718771c5d986c35/dotnet-sdk-3.0.100-preview8-013656-linux-x64.tar.gz')
 sha256sums=('SKIP')
 
-package_dotnet-host-bin()
+package_dotnet3-host-bin()
 {
     pkgdesc='A generic driver for the .NET Core Command Line Interface'
-    provides=("libhostfxr=${pkgver}", "dotnet-host=${pkgver}")
+    provides=("libhostfxr=${pkgver}", "dotnet-host=${pkgver}", "dotnet-host-preview=${pkgver}")
     conflicts=('libhostfxr')
     replaces=('libhostfxr')
 
@@ -19,16 +19,14 @@ package_dotnet-host-bin()
     install -d "${pkgdir}"/usr/{bin,lib,share/dotnet,share/licenses/dotnet-host}
     cp -dr --no-preserve=ownership dotnet host "${pkgdir}"/usr/share/dotnet/
     cp -dr --no-preserve=ownership LICENSE.txt ThirdPartyNotices.txt "${pkgdir}"/usr/share/licenses/dotnet-host/
-    ln -s /usr/share/dotnet/dotnet "${pkgdir}"/usr/bin/dotnet
-    ln -s /usr/share/dotnet/host/fxr/"$(ls host/fxr)"/libhostfxr.so "${pkgdir}"/usr/lib/libhostfxr.so
 }
 
-package_dotnet-runtime-bin()
+package_dotnet3-runtime-bin()
 {
     pkgdesc='The .NET Core runtime'
     depends=("dotnet-host>=${pkgver}" 'icu' 'krb5' 'libunwind' 'openssl' 'zlib' 'libcurl.so')
     optdepends=('lttng-ust: CoreCLR tracing')
-    provides=("dotnet-runtime=${pkgver}")
+    provides=("dotnet-runtime=${pkgver}" "dotnet-runtime-preview=${pkgver}")
 
     cd "${srcdir}"
     install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
@@ -36,11 +34,11 @@ package_dotnet-runtime-bin()
     ln -s dotnet-host "${pkgdir}"/usr/share/licenses/dotnet-runtime
 }
 
-package_aspnet-runtime-bin()
+package_aspnet3-runtime-bin()
 {
     pkgdesc='The ASP.NET Core runtime'
     depends=("dotnet-runtime=${pkgver}")
-    provides=("aspnet-runtime=${pkgver}")
+    provides=("aspnet-runtime=${pkgver}" "aspnet-runtime-preview=${pkgver}")
 
     cd "${srcdir}"
     install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
@@ -48,11 +46,11 @@ package_aspnet-runtime-bin()
     ln -s dotnet-host "${pkgdir}"/usr/share/licenses/aspnet-runtime
 }
 
-package_dotnet-sdk-bin()
+package_dotnet3-sdk-bin()
 {
     pkgdesc='The .NET Core SDK'
     depends=("dotnet-runtime=${pkgver}")
-    provides=("dotnet-runtime=${pkgver}")
+    provides=("dotnet-sdk=${pkgver}" "dotnet-sdk-preview=${pkgver}")
 
     cd "${srcdir}"
     install -d "${pkgdir}"/usr/share/{dotnet,licenses}

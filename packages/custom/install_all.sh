@@ -11,8 +11,3 @@ popd
 pushd dotnet3-bin
 makepkg -Ccsi
 popd
-
-pushd msbuild
-ulimit -n 999999
-makepkg -Ccsi
-popd
