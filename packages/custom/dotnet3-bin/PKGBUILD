@@ -19,6 +19,7 @@ package_dotnet3-host-bin()
     install -d "${pkgdir}"/usr/{bin,lib,share/dotnet,share/licenses/dotnet-host}
     cp -dr --no-preserve=ownership dotnet host "${pkgdir}"/usr/share/dotnet/
     cp -dr --no-preserve=ownership LICENSE.txt ThirdPartyNotices.txt "${pkgdir}"/usr/share/licenses/dotnet-host/
+    ln -s /usr/share/dotnet/dotnet "${pkgdir}"/usr/bin/dotnet
 }
 
 package_dotnet3-runtime-bin()
