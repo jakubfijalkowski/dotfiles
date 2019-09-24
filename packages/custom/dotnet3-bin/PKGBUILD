@@ -1,60 +1,88 @@
+pkgbase='dotnet3-bin'
 pkgname=('dotnet3-host-bin' 'dotnet3-runtime-bin' 'aspnet3-runtime-bin' 'dotnet3-sdk-bin')
-pkgver=3.0.0+100+preview8+013656
+_runtimever=3.0.0
+_aspnetver=3.0.0
+_sdkver=3.0.100
+pkgver=${_runtimever/-/}
+pkgver=${pkgver//-/+}
 pkgrel=1
 arch=('x86_64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=(staticlibs)
-source=('https://download.visualstudio.microsoft.com/download/pr/a0e368ac-7161-4bde-a139-1a3ef5a82bbe/439cdbb58950916d3718771c5d986c35/dotnet-sdk-3.0.100-preview8-013656-linux-x64.tar.gz')
+source=('https://download.visualstudio.microsoft.com/download/pr/886b4a4c-30af-454b-8bec-81c72b7b4e1f/d1a0c8de9abb36d8535363ede4a15de6/dotnet-sdk-3.0.100-linux-x64.tar.gz')
 sha256sums=('SKIP')
 
 package_dotnet3-host-bin()
 {
     pkgdesc='A generic driver for the .NET Core Command Line Interface'
-    provides=("libhostfxr=${pkgver}", "dotnet-host=${pkgver}", "dotnet-host-preview=${pkgver}")
-    conflicts=('libhostfxr')
-    replaces=('libhostfxr')
+    depends=('gcc-libs')
+    provides=("libhostfxr=${pkgver}" "dotnet-host=${pkgver}" "dotnet-hostfxr=${pkgver}")
+    conflicts=('dotnet-host' 'dotnet-hostfxr' 'dotnet-host-preview' 'libhostfxr')
+    replaces=('dotnet-host' 'dotnet-hostfxr' 'dotnet-host-preview' 'libhostfxr')
 
-    cd "${srcdir}"
     install -d "${pkgdir}"/usr/{bin,lib,share/dotnet,share/licenses/dotnet-host}
-    cp -dr --no-preserve=ownership dotnet host "${pkgdir}"/usr/share/dotnet/
-    cp -dr --no-preserve=ownership LICENSE.txt ThirdPartyNotices.txt "${pkgdir}"/usr/share/licenses/dotnet-host/
-    ln -s /usr/share/dotnet/dotnet "${pkgdir}"/usr/bin/dotnet
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/{host,dotnet,LICENSE.txt,ThirdPartyNotices.txt} \
+        "${pkgdir}/usr/share/dotnet/"
+
+    ln -s /usr/share/dotnet/dotnet "${pkgdir}/usr/bin/dotnet"
+    ln -s /usr/share/dotnet/host/fxr/"${_runtimever}"/libhostfxr.so "${pkgdir}/usr/lib/libhostfxr.so"
+    ln -s /usr/share/dotnet/LICENSE.txt "${pkgdir}/usr/share/licenses/dotnet-host/LICENSE.txt"
+    ln -s /usr/share/dotnet/ThirdPartyNotices.txt "${pkgdir}/usr/share/licenses/dotnet-host/ThirdPartyNotices.txt"
 }
 
 package_dotnet3-runtime-bin()
 {
-    pkgdesc='The .NET Core runtime'
+    pkgdesc='The .NET Core 3.0 runtime'
     depends=("dotnet-host>=${pkgver}" 'icu' 'krb5' 'libunwind' 'openssl' 'zlib' 'libcurl.so')
     optdepends=('lttng-ust: CoreCLR tracing')
-    provides=("dotnet-runtime=${pkgver}" "dotnet-runtime-preview=${pkgver}")
+    provides=("dotnet-runtime=${pkgver}")
 
-    cd "${srcdir}"
     install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
-    cp -dr --no-preserve=ownership shared/Microsoft.NETCore.App "${pkgdir}"/usr/share/dotnet/shared/
-    ln -s dotnet-host "${pkgdir}"/usr/share/licenses/dotnet-runtime
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/shared/Microsoft.NETCore.* \
+        "${pkgdir}/usr/share/dotnet/shared/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
 package_aspnet3-runtime-bin()
 {
-    pkgdesc='The ASP.NET Core runtime'
+    pkgdesc='The ASP.NET Core 3.0 runtime'
+    pkgver=${_runtimever/-/}
+    pkgver=${pkgver//-/+}
     depends=("dotnet-runtime=${pkgver}")
-    provides=("aspnet-runtime=${pkgver}" "aspnet-runtime-preview=${pkgver}")
 
-    cd "${srcdir}"
+    pkgver=${_aspnetver/-/}
+    provides=("aspnet-runtime=${pkgver}")
+
     install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
-    cp -dr --no-preserve=ownership shared/Microsoft.AspNetCore.App "${pkgdir}"/usr/share/dotnet/shared/
-    ln -s dotnet-host "${pkgdir}"/usr/share/licenses/aspnet-runtime
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/shared/Microsoft.AspNetCore.* \
+        "${pkgdir}/usr/share/dotnet/shared/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
 package_dotnet3-sdk-bin()
 {
-    pkgdesc='The .NET Core SDK'
+    pkgdesc='The .NET Core 3.0 SDK'
+    pkgver=${_runtimever/-/}
+    pkgver=${pkgver//-/+}
     depends=("dotnet-runtime=${pkgver}")
-    provides=("dotnet-sdk=${pkgver}" "dotnet-sdk-preview=${pkgver}")
+    pkgver=${_sdkver/-/}
+    pkgver=${pkgver//-/+}
+    provides=("dotnet-sdk=${pkgver}")
 
-    cd "${srcdir}"
     install -d "${pkgdir}"/usr/share/{dotnet,licenses}
-    cp -dr --no-preserve=ownership sdk "${pkgdir}"/usr/share/dotnet/
-    ln -s dotnet-host "${pkgdir}"/usr/share/licenses/dotnet-sdk
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/{packs,sdk,templates} \
+        "${pkgdir}/usr/share/dotnet/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
 }

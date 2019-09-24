@@ -1,0 +1,63 @@
+pkgbase='dotnet2.1'
+pkgname=('dotnet2.1-runtime-bin' 'aspnet2.1-runtime-bin' 'dotnet2.1-sdk-bin')
+_runtimever=2.1.13
+_sdkver=2.1.802
+pkgver=${_runtimever/-/}
+pkgver=${pkgver//-/+}
+pkgrel=1
+arch=('x86_64')
+url='https://www.microsoft.com/net/core'
+license=('MIT')
+options=(staticlibs)
+source=('https://download.visualstudio.microsoft.com/download/pr/8029a774-0cc8-4c62-945e-169a473b51d3/2c3f6a18aed152e5e498035695ed816f/dotnet-sdk-2.1.802-linux-x64.tar.gz')
+sha256sums=('SKIP')
+
+package_dotnet2.1-runtime-bin()
+{
+    pkgdesc='The .NET Core 2.1 runtime'
+    depends=("dotnet-host>=${pkgver}" 'icu' 'krb5' 'libunwind' 'openssl-1.0' 'zlib' 'libcurl.so')
+    optdepends=('lttng-ust: CoreCLR tracing')
+    provides=("dotnet-runtime=${pkgver}")
+
+    install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/shared/Microsoft.NETCore.* \
+        "${pkgdir}/usr/share/dotnet/shared/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+package_aspnet2.1-runtime-bin()
+{
+    pkgdesc='The ASP.NET Core 2.1 runtime'
+    depends=("dotnet-runtime=${pkgver}")
+    provides=("aspnet-runtime=${pkgver}")
+
+    install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/shared/Microsoft.AspNetCore.* \
+        "${pkgdir}/usr/share/dotnet/shared/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+package_dotnet2.1-sdk-bin()
+{
+    pkgdesc='The .NET Core 2.1 SDK'
+    pkgver=${_runtimever/-/}
+    pkgver=${pkgver//-/+}
+    depends=("dotnet-runtime=${pkgver}")
+    pkgver=${_sdkver/-/}
+    pkgver=${pkgver//-/+}
+    provides=("dotnet-sdk=${pkgver}")
+
+    install -d "${pkgdir}"/usr/share/{dotnet,licenses}
+
+    cp -dr --no-preserve=ownership \
+        "${srcdir}"/sdk \
+        "${pkgdir}/usr/share/dotnet/"
+
+    ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
+}
