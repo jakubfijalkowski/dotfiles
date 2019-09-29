@@ -173,7 +173,7 @@ nmap <silent> <F11> :UndotreeToggle<CR>
 "  Coc
 nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
 nnoremap <silent> <F3> :CocFix<CR>
-nnoremap  <F5> :call CocAction('doHover')<CR>
+nnoremap <F5> :call CocAction('doHover')<CR>
 nnoremap <silent> <Leader>= :call CocAction('format')<CR>
 
 inoremap <silent><expr> <c-space> coc#refresh()

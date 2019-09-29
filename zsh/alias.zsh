@@ -4,3 +4,8 @@ alias t="terraform"
 alias k="kubectl"
 alias kc="kubectx"
 alias kns="kubens"
+
+alias tp="terraform plan"
+alias tpt="terraform plan -target"
+alias tpo="terraform plan -out"
+alias ta="terraform apply"
