@@ -17,8 +17,8 @@ main_bg = ${colors.background_dark}
 main_fg = ${colors.text_darkbg}
 
 [bar/main]
-monitor = ${xrdb:screens.primary:DP-1}
-monitor-fallback = ${env:screens.secondary:eDP-1}
+monitor = ${xrdb:screens.primary:DP1}
+monitor-fallback = ${env:screens.secondary:eDP1}
 
 width = 100%
 height = ${xrdb:polybar.height:45}
