@@ -8,11 +8,6 @@
 
 [alias]
   br = branch
-  ci = commit
-  co = checkout
-  st = status
-  cim = commit -m
-  ca = commit --all -m
   undo = "!f() { \\\n    git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
   update = "!f() { \\\n git fetch origin ${1}:${1}; \\\n}; f"
 
@@ -26,6 +21,12 @@
 
 [commit]
 	gpgsign = true
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 
 [include]
   path = "~/.local/gitconfig"
