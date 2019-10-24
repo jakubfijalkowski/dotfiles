@@ -179,7 +179,7 @@ workspace 9 output $secondary
 workspace 10 output $secondary
 
 # Required or configuration-related apps
-exec --no-startup-id compton -b --experimental-backends; sleep 1; $scripts/wallpaper
+exec --no-startup-id picom -b --experimental-backends; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays

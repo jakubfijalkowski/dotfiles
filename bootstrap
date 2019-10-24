@@ -148,7 +148,7 @@ function configure_user() {
   link "gnupg/pinentry-dmenu.conf"
 
   link "config/alacritty/alacritty.yml"
-  link "config/compton/compton.conf"
+  link "config/picom/picom.conf"
   link "config/dunst/dunstrc"
   link "config/gsimplecal/config"
   link "config/gtk-3.0/settings.ini"

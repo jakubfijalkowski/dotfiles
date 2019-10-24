@@ -1,5 +1,5 @@
 adobe-source-code-pro-fonts
-compton-git
+picom-git
 dunst
 eog
 evince
