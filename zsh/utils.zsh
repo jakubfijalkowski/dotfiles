@@ -1,5 +1,5 @@
-alias whatismyip="drill A myip.opendns.com @resolver1.opendns.com | grep IN | tac | head -n 1 | cut -d $'\t' -f5"
-alias whatismyipv6="drill -6 AAAA myip.opendns.com @resolver1.opendns.com | grep IN | tac | head -n 1 | cut -d $'\t' -f5"
+alias whatismyip="curl -4 ifconfig.co/ip"
+alias whatismyipv6="curl -6 ifconfig.co/ip"
 alias open=xdg-open
 
 if type exa &> /dev/null; then
