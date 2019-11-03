@@ -48,6 +48,8 @@ Plug 'airblade/vim-rooter'
 Plug 'godlygeek/tabular'
 Plug 'tpope/vim-fugitive'
 
+Plug 'ryanoasis/vim-devicons'
+
 Plug 'rust-lang/rust.vim'
 
 call plug#end()
