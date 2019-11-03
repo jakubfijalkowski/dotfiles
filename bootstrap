@@ -204,7 +204,6 @@ function configure_root() {
   copy "etc/environment"
   copy "etc/lightdm/lightdm.conf"
   copy "etc/lightdm/lightdm-webkit2-greeter.conf"
-  copy "etc/NetworkManager/NetworkManager.conf"
   copy "etc/pacman.conf"
   copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
   copy "etc/pam.d/sudo"
@@ -220,6 +219,7 @@ function configure_root() {
   copy "etc/X11/xorg.conf.d/30-touchpad.conf"
   copy "etc/sysctl.d/99-inotify.conf"
   copy "etc/security/limits.conf"
+  copy "etc/iwd/main.conf"
 
   copy "usr/local/bin/configure_displays"
 
@@ -229,9 +229,8 @@ function configure_root() {
 
   section "System services"
   systemctl daemon-reload
-  service "system" "NetworkManager.service"
+  service "system" "iwd.service"
   service "system" "pcscd.service"
-  service "system" "ufw.service"
   service "system" "ufw.service"
 
   section "Misc config"

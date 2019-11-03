@@ -186,11 +186,11 @@ label = %percentage:3%%
 
 [module/wlan]
 type = internal/network
-interface = wlp2s0
+interface = wlan0
 interval = 5.0
 
-format-connected = %{A1:networkmanager_dmenu:}<ramp-signal>%{A}
-format-disconnected = %{A1:networkmanager_dmenu:}%{A}
+format-connected = %{A1:wifi_control:}<ramp-signal>%{A}
+format-disconnected = %{A1:wifi_control:}%{A}
 format-disconnected-foreground = ${colors.icons_dimmed}
 format-disconnected-font = 3
 

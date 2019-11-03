@@ -14,13 +14,13 @@ fwupd
 git
 intel-ucode
 iw
+iwd
 linux-headers
 llvm
 lm_sensors
 lsof
 neovim-git
 neovim-drop-in
-networkmanager
 nodejs-neovim
 ntfs-3g
 nvme-cli-git
@@ -47,7 +47,6 @@ ufw
 unrar
 vulkan-intel
 wget
-wpa_supplicant
 xorg-server
 xorg-xdpyinfo
 xorg-xinit
