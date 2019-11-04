@@ -50,6 +50,7 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'ryanoasis/vim-devicons'
 
+Plug 'hashivim/vim-terraform'
 Plug 'rust-lang/rust.vim'
 
 call plug#end()
@@ -317,11 +318,12 @@ let g:ale_lint_on_save         = 1
 let g:ale_lint_on_insert_leave = 1
 
 " Other
-let g:hardtime_default_on = 1
-let g:hardtime_maxcount = 5
+let g:hardtime_default_on          = 1
+let g:hardtime_maxcount            = 5
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
-let g:rooter_manual_only = 1
+let g:rooter_manual_only           = 1
+let g:terraform_fmt_on_save        = 1
 
 " Helpers
 command! Reload source ~/.vimrc
