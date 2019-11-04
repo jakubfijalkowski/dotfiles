@@ -1,11 +1,14 @@
 alias dotnet="nocorrect dotnet"
 alias az="nocorrect az"
-alias t="terraform"
-alias k="kubectl"
-alias kc="kubectx"
-alias kns="kubens"
 
+alias t="terraform"
 alias tp="terraform plan"
 alias tpt="terraform plan -target"
 alias tpo="terraform plan -out"
 alias ta="terraform apply"
+
+alias k="kubectl"
+alias kc="kubectx"
+alias kns="kubens"
+alias kgn="kubectl get nodes"
+alias kdn="kubectl describe node"
