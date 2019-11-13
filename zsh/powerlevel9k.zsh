@@ -1,7 +1,7 @@
 # Powerlevel9k
 typeset -g ZLE_RPROMPT_INDENT=0
 
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs newline prompt_char)
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator dir vcs newline prompt_char)
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status nordvpn time newline)
 
 typeset -g POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'
