@@ -51,7 +51,7 @@ font-6 = ${xrdb:polybar.font.arch:font\-logos:style=logos:size=18;4}
 font-7 = ${xrdb:polybar.font.fallback:Font Awesome 5 Brands:style=Solid:size=17;4}
 
 modules-left = i3 xwindow
-modules-center = mpd
+modules-center = music
 modules-right = kubernetes separator azure separator yubikey arch-updates wlan battery headphones audio separator date
 
 tray-position = right
@@ -166,14 +166,13 @@ label-urgent-foreground = ${colors.text_lightbg}
 label-urgent-background = ${colors.tint_urgent}
 label-urgent-padding = 1
 
-[module/mpd]
-type = internal/mpd
+[module/music]
+type = custom/script
 interval = 20
-format-online = <label-song>
-
-label-song = %artist% - %title%
-label-song-maxlen = 50
-label-song-ellipsis = true
+exec = ~/.local/bin/current_track 2>/dev/null
+tail = true
+label-maxlen = 50
+label-ellipsis = true
 
 [module/cpu]
 type = internal/cpu

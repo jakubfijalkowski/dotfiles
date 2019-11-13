@@ -1,0 +1,12 @@
+[package]
+name = "current_track"
+version = "0.1.0"
+authors = ["Jakub Fijałkowski <kuba@codinginfinity.me>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dbus = "0.7.1"
+itertools = "0.8.1"
+mpd_client = { package = "mpd", version = "0.0.12" }
