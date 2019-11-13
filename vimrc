@@ -176,6 +176,7 @@ nmap <silent> <F11> :UndotreeToggle<CR>
 "  Coc
 nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
 nnoremap <silent> <F3> :CocFix<CR>
+nnoremap <silent> <F4> :CocList actions<CR>
 nnoremap <F5> :call CocAction('doHover')<CR>
 nnoremap <silent> <Leader>= :call CocAction('format')<CR>
 
