@@ -1,11 +1,6 @@
 #!/usr/bin/env zsh
 
-PIDFILE=~/.cache/check_updates.pid
-
 trap 'print_updates' USR1
-trap 'rm -f $PIDFILE; exit 0' EXIT INT TERM KILL
-
-echo $$ > $PIDFILE
 
 updates="0"
 function print_updates() {
@@ -24,4 +19,3 @@ while true; do
     wait $!
 done
 
-rm -f $PIDFILE

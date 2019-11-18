@@ -5,4 +5,4 @@ Target = *
 
 [Action]
 When = PostTransaction
-Exec = /home/fiolek/.local/bin/scripts/check_updates_refresh /home/fiolek
+Exec = "pkill -fu fiolek -USR1 'bin/scripts/check_updates$'"
