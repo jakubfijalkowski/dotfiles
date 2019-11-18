@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
+echo -n "" | xsel -b
 systemctl --user stop greenclip
 greenclip clear
 systemctl --user start greenclip

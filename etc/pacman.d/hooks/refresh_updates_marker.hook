@@ -5,4 +5,4 @@ Target = *
 
 [Action]
 When = PostTransaction
-Exec = "pkill -fu fiolek -USR1 'bin/scripts/check_updates$'"
+Exec = /usr/bin/sh -c "pkill -fu fiolek -USR1 'bin/scripts/check_updates$'"
