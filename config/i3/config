@@ -18,10 +18,11 @@ smart_gaps on
 gaps outer 0
 gaps inner $inner_gaps
 
-bindsym $mod+r            exec rofi -show run
-bindsym Hyper_L           exec rofi -show combi
 bindsym $mod+Return       exec alacritty --working-directory="`xcwd`"
 bindsym $mod+Shift+Return exec alacritty
+
+bindsym $mod+r            exec rofi -show run
+bindsym Hyper_L           exec rofi -show combi
 bindsym $mod+c            exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
 bindsym $mod+q kill
@@ -100,10 +101,10 @@ bindsym $mod+space focus mode_toggle
 set $mode_resize Resize
 bindsym $mod+Shift+r mode "$mode_resize"
 mode "$mode_resize" {
-    bindsym h     resize shrink width  5 px or 5 ppt
-    bindsym j     resize grow   height 5 px or 5 ppt
-    bindsym k     resize shrink height 5 px or 5 ppt
-    bindsym l     resize grow   width  5 px or 5 ppt
+    bindsym h           resize shrink width  5 px or 5 ppt
+    bindsym j           resize grow   height 5 px or 5 ppt
+    bindsym k           resize shrink height 5 px or 5 ppt
+    bindsym l           resize grow   width  5 px or 5 ppt
 
     bindsym Shift+h     resize shrink width  10 px or 10 ppt
     bindsym Shift+j     resize grow   height 10 px or 10 ppt
@@ -141,7 +142,7 @@ bindcode 194 exec --no-startup-id $scripts/music iris
 bindcode 195 exec --no-startup-id $scripts/music shuffle
 bindcode 196 exec --no-startup-id $scripts/music
 
-set $mode_actions Actions: (c)brave fil(e)s (o)paque (g)reenclip_clear (l)ock (r)eload
+set $mode_actions Actions: (c)brave fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
     bindsym c workspace number 1; exec --no-startup-id available_browser; mode "default"
@@ -150,7 +151,8 @@ mode "$mode_actions" {
     bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
     bindsym g exec --no-startup-id $scripts/greenclip_clear; mode "default"
     bindsym l exec --no-startup-id $scripts/i3exit lock; mode "default"
-    bindsym r reload; mode "default"
+    bindsym k exec --no-startup-id $scripts/calc; mode "default"
+    bindsym r restart; mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"

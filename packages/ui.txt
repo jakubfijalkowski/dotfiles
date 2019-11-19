@@ -6,7 +6,6 @@ evince
 feh
 fonts-meta-extended-lt
 gedit
-gnome-calculator
 gnome-font-viewer
 gnome-keyring
 gnome-shell-theme-ciliora-secunda-git
@@ -34,6 +33,7 @@ pinentry-dmenu
 polybar
 redshift
 rofi
+rofi-calc
 rofi-greenclip
 sushi
 ttf-liberation
