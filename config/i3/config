@@ -163,7 +163,7 @@ for_window [instance="calc"] floating enable
 for_window [class="calc"] floating enable
 for_window [instance="nm-connection-editor"] floating enable
 
-assign [class="wavebox"] workspace number 10
+assign [class="slack"] workspace number 10
 
 for_window [instance="spotify"] move to workspace number 9
 for_window [class="spotify"] move to workspace number 9
@@ -181,12 +181,12 @@ workspace 9 output $secondary
 workspace 10 output $secondary
 
 # Required or configuration-related apps
-exec --no-startup-id picom -b --experimental-backends; sleep 1; $scripts/wallpaper
+exec --no-startup-id picom -b; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays
 exec --no-startup-id $scripts/headphones watch&
 exec_always --no-startup-id "killall -q polybar; polybar main&"
-exec_always --no-startup-id $scripts/autoname_workspaces
+exec_always --no-startup-id "pkill -f 'autoname_workspaces\$'; $scripts/autoname_workspaces&"
 
 # vim:filetype=i3config
