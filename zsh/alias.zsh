@@ -1,6 +1,8 @@
 alias dotnet="nocorrect dotnet"
 alias az="nocorrect az"
 
+alias gso="git switchto"
+
 alias t="terraform"
 alias tp="terraform plan"
 alias tpt="terraform plan -target"
