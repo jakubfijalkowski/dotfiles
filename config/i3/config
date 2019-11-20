@@ -163,7 +163,7 @@ for_window [instance="calc"] floating enable
 for_window [class="calc"] floating enable
 for_window [instance="nm-connection-editor"] floating enable
 
-assign [class="slack"] workspace number 10
+assign [class="Slack"] workspace number 10
 
 for_window [instance="spotify"] move to workspace number 9
 for_window [class="spotify"] move to workspace number 9
