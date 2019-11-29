@@ -15,6 +15,7 @@ git
 intel-ucode
 iw
 iwd
+knot-resolver
 linux-headers
 llvm
 lm_sensors
