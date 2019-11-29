@@ -1,8 +1,8 @@
-pkgbase='dotnet3-bin'
-pkgname=('dotnet3-host-bin' 'dotnet3-runtime-bin' 'aspnet3-runtime-bin' 'dotnet3-sdk-bin')
-_runtimever=3.0.0
-_aspnetver=3.0.0
-_sdkver=3.0.100
+pkgbase='dotnet3.0-bin'
+pkgname=('dotnet3.0-host-bin' 'dotnet3.0-runtime-bin')
+_runtimever=3.0.1
+_aspnetver=3.0.1
+_sdkver=3.0.101
 pkgver=${_runtimever/-/}
 pkgver=${pkgver//-/+}
 pkgrel=1
@@ -10,10 +10,10 @@ arch=('x86_64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=(staticlibs)
-source=('https://download.visualstudio.microsoft.com/download/pr/886b4a4c-30af-454b-8bec-81c72b7b4e1f/d1a0c8de9abb36d8535363ede4a15de6/dotnet-sdk-3.0.100-linux-x64.tar.gz')
+source=('https://download.visualstudio.microsoft.com/download/pr/4f51cfd8-311d-43fe-a887-c80b40358cfd/440d10dc2091b8d0f1a12b7124034e49/dotnet-sdk-3.0.101-linux-x64.tar.gz')
 sha256sums=('SKIP')
 
-package_dotnet3-host-bin()
+package_dotnet3.0-host-bin()
 {
     pkgdesc='A generic driver for the .NET Core Command Line Interface'
     depends=('gcc-libs')
@@ -33,7 +33,7 @@ package_dotnet3-host-bin()
     ln -s /usr/share/dotnet/ThirdPartyNotices.txt "${pkgdir}/usr/share/licenses/dotnet-host/ThirdPartyNotices.txt"
 }
 
-package_dotnet3-runtime-bin()
+package_dotnet3.0-runtime-bin()
 {
     pkgdesc='The .NET Core 3.0 runtime'
     depends=("dotnet-host>=${pkgver}" 'icu' 'krb5' 'libunwind' 'openssl' 'zlib' 'libcurl.so')
@@ -49,15 +49,12 @@ package_dotnet3-runtime-bin()
     ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
-package_aspnet3-runtime-bin()
+package_aspnet3.0-runtime-bin()
 {
     pkgdesc='The ASP.NET Core 3.0 runtime'
-    pkgver=${_runtimever/-/}
-    pkgver=${pkgver//-/+}
-    depends=("dotnet-runtime=${pkgver}")
-
-    pkgver=${_aspnetver/-/}
-    provides=("aspnet-runtime=${pkgver}")
+    _runtimever=${_runtimever/-/}
+    _runtimever=${_runtimever//-/+}
+    depends=("dotnet-runtime=${_runtimever}")
 
     install -d "${pkgdir}"/usr/share/{dotnet/shared,licenses}
 
@@ -68,15 +65,12 @@ package_aspnet3-runtime-bin()
     ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
-package_dotnet3-sdk-bin()
+package_dotnet3.0-sdk-bin()
 {
     pkgdesc='The .NET Core 3.0 SDK'
-    pkgver=${_runtimever/-/}
-    pkgver=${pkgver//-/+}
+    _runtimever=${_runtimever/-/}
+    _runtimever=${pkgver//-/+}
     depends=("dotnet-runtime=${pkgver}")
-    pkgver=${_sdkver/-/}
-    pkgver=${pkgver//-/+}
-    provides=("dotnet-sdk=${pkgver}")
 
     install -d "${pkgdir}"/usr/share/{dotnet,licenses}
 

@@ -1,0 +1,9 @@
+--- PKGBUILD	2019-11-30 00:24:59.467310217 +0100
++++ runtime/PKGBUILD	2019-11-30 00:25:42.515518468 +0100
+@@ -1,5 +1,5 @@
+ pkgbase='dotnet3.0-bin'
+-pkgname=('dotnet3.0-host-bin' 'dotnet3.0-runtime-bin' 'aspnet3.0-runtime-bin' 'dotnet3.0-sdk-bin')
++pkgname=('dotnet3.0-host-bin' 'dotnet3.0-runtime-bin')
+ _runtimever=3.0.1
+ _aspnetver=3.0.1
+ _sdkver=3.0.101
