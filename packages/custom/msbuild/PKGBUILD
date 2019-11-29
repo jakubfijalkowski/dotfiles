@@ -1,52 +1,31 @@
 pkgname=msbuild
-pkgver=16.3+xamarinxplat.2019.08.08.00.55
+pkgver=16.4+xamarinxplat.2019.09.09.15.03
 pkgrel=10
 pkgdesc='Build system for .NET and Visual Studio'
 arch=('any')
 url='https://github.com/mono/msbuild'
 license=('MIT')
-depends=('mono>=6.0.0')
+depends=('mono>=6.4.0')
 optdepends=('dotnet-host: .NET Core support' 'dotnet-sdk: .NET Core support')
 makedepends=('dotnet-host' 'unzip')
 provides=("msbuild-sdkresolver=${pkgver}")
 conflicts=('msbuild-sdkresolver')
-source=("https://download.mono-project.com/sources/msbuild/msbuild-${pkgver}.tar.xz")
-sha256sums=('SKIP')
+source=("https://download.mono-project.com/sources/msbuild/msbuild-${pkgver}.tar.xz"
+        'case_sensitive_dotnetbits.patch'
+        'install_path_and_pdb.patch')
+sha256sums=('84c2e6021c43ba9dacc530d3d1bd6ed38e4f6b088a5e014f0ac4225843895d28'
+            'aaa827b13abfb150572915d3daaa6b7140a7b4c12cda48aa76fed0f830a8bee1'
+            '6b89d6f77adba0d5bcebfc3ab4da35b3989c4d862d54818d922dd54c2f022dde')
 
-prepare()
-{
+prepare() {
     cd "${srcdir}/msbuild-${pkgver%+*}"
-
     ln -f LICENSE license
+    patch --forward --strip=1 --input="${srcdir}/case_sensitive_dotnetbits.patch"
+    patch --forward --strip=1 --input="${srcdir}/install_path_and_pdb.patch"
     rm -f mono/SdkResolvers/Microsoft.DotNet.MSBuildSdkResolver/libhostfxr.dylib
-
-    patch -Np1 <<'EOF'
-diff --git a/mono/build/install.proj b/mono/build/install.proj
-index d202ffb..b8a1795 100644
---- a/mono/build/install.proj
-+++ b/mono/build/install.proj
-@@ -31,7 +31,6 @@
-         <ItemGroup>
-             <MSBuildFiles Include="$(MSBuildBinSrcDir)\Microsoft.Build.*" />
-             <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.dll*" />
--            <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.pdb" />
-             <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.rsp" />
-
-             <MSBuildFiles Include="$(MSBuildBinSrcDir)\Microsoft.*props" />
-@@ -160,7 +159,7 @@
-             <CopiedFiles Include="$(MSBuildInstallBinDir)\System.Reflection.Metadata.dll" />
-         </ItemGroup>
-
--        <Exec Command="$(RepoRoot)\mono\build\gen_msbuild_wrapper.sh $(MonoInstallPrefix) $(MonoInstallPrefix)\bin" />
-+        <Exec Command="$(RepoRoot)\mono\build\gen_msbuild_wrapper.sh /usr $(MonoInstallPrefix)\bin" />
-         <ItemGroup>
-             <CopiedFiles Include="$(MonoInstallPrefix)\bin\msbuild" />
-         </ItemGroup>
-EOF
 }
 
-build()
-{
+build() {
     cd "${srcdir}/msbuild-${pkgver%+*}"
 
     ./eng/cibuild_bootstrapped_msbuild.sh \
@@ -57,8 +36,7 @@ build()
         /p:DebugType=none
 }
 
-package()
-{
+package() {
     cd "${srcdir}/msbuild-${pkgver%+*}"
 
     ./stage1/mono-msbuild/msbuild \
