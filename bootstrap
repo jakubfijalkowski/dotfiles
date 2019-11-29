@@ -259,7 +259,7 @@ function run_root_config() {
 function configure_optimus_user() {
   if [[ "$(lspci)" == *"NVIDIA"* ]]; then
     section "Configuring Nvidia Optimus & Bluetooth"
-    yay -S nvidia nvidia-settings nvidia-utls bbswitch bumblebee-git primus
+    yay -S nvidia-dkms nvidia-settings nvidia-utls bbswitch bumblebee-git primus
     service "system" "bumblebeed.service"
   fi
 }

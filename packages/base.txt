@@ -16,7 +16,10 @@ intel-ucode
 iw
 iwd
 knot-resolver
+linux
+linux-zen
 linux-headers
+linux-zen-headers
 llvm
 lm_sensors
 lsof
