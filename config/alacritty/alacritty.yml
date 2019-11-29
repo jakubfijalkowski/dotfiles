@@ -13,7 +13,6 @@ window:
 scrolling:
   history: 10000
   multiplier: 3
-  faux_multiplier: 3
   auto_scroll: false
 
 tabspaces: 4
@@ -29,7 +28,7 @@ font:
   italic:
     family: SauceCodePro Nerd Font
     style: Italic
-  size: 20.0
+  size: 10.0
 
 # Gruvbox dark
 colors:
