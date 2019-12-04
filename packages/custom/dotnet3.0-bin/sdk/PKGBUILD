@@ -69,8 +69,8 @@ package_dotnet3.0-sdk-bin()
 {
     pkgdesc='The .NET Core 3.0 SDK'
     _runtimever=${_runtimever/-/}
-    _runtimever=${pkgver//-/+}
-    depends=("dotnet-runtime=${pkgver}")
+    _runtimever=${_runtimever//-/+}
+    depends=("dotnet-runtime=${_runtimever}")
 
     install -d "${pkgdir}"/usr/share/{dotnet,licenses}
 
