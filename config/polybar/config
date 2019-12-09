@@ -52,7 +52,7 @@ font-7 = ${xrdb:polybar.font.fallback:Font Awesome 5 Brands:style=Solid:size=17;
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = kubernetes separator azure separator yubikey arch-updates wlan battery headphones audio separator date
+modules-right = kubernetes separator azure separator yubikey arch-updates graphics wlan battery headphones audio separator date
 
 tray-position = right
 tray-padding = 2
@@ -124,6 +124,15 @@ type = custom/script
 exec = ~/.local/bin/scripts/music_headphones
 tail = true
 interval = 60
+format-foreground = ${colors.icons}
+
+[module/graphics]
+type = custom/script
+exec = echo NVIDIA
+exec-if = optimus-manager --print-mode | grep "nvidia"
+tail = false
+interval = 3600
+format = ""
 format-foreground = ${colors.icons}
 
 [module/xwindow]

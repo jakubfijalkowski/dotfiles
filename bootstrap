@@ -141,7 +141,7 @@ function configure_user() {
 
   link "gtkrc-2.0"
   link "xbindkeysrc"
-  link "Xresources"
+  copy "Xresources"
 
   link "gnupg/gpg-agent.conf"
   link "gnupg/gpg.conf"
@@ -209,6 +209,7 @@ function configure_root() {
   copy "etc/pam.d/sudo"
   copy "etc/pam.d/lightdm"
   copy "etc/pam.d/i3lock"
+  copy "etc/profile.d/displays.sh"
   copy "etc/profile.d/headphones.sh"
   copy "etc/profile.d/z_user_config.sh"
   copy "etc/udev/rules.d/10-displays.rules"
@@ -221,6 +222,7 @@ function configure_root() {
   copy "etc/security/limits.conf"
   copy "etc/iwd/main.conf"
   copy "etc/knot-resolver/kresd.conf"
+  copy "etc/optimus-manager/optimus-manager.conf"
 
   copy "usr/local/bin/configure_displays"
 
@@ -259,22 +261,21 @@ function run_root_config() {
 function configure_optimus_user() {
   if [[ "$(lspci)" == *"NVIDIA"* ]]; then
     section "Configuring Nvidia Optimus & Bluetooth"
-    yay -S nvidia-dkms nvidia-settings nvidia-utls bbswitch bumblebee-git primus
-    service "system" "bumblebeed.service"
+    yay -S nvidia-dkms nvidia-settings nvidia-utls bbswitch-dkms optimus-manager
   fi
 }
 
 function configure_optimus_root() {
   if [[ "$(lspci)" == *"NVIDIA"* ]]; then
     section "Configuring Nvidia Optimus & Bluetooth"
-    service "system" "bumblebeed.service"
+    service "system" "optimus-manager.service"
   fi
 }
 
 function configure_power_save() {
   if [[ "$NO_POWER_SAVE" != "1" ]]; then
     section "Configuring power save"
-    yay -S tlp-git tlp-rdw-git
+    yay -S tlp tlp-rdw
   fi
 }
 

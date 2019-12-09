@@ -142,7 +142,8 @@ bindcode 194 exec --no-startup-id $scripts/music iris
 bindcode 195 exec --no-startup-id $scripts/music shuffle
 bindcode 196 exec --no-startup-id $scripts/music
 
-set $mode_actions Actions: (c)brave fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
+# Custom modes
+set $mode_actions Actions: (c)hrome fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
     bindsym c workspace number 1; exec --no-startup-id available_browser; mode "default"
@@ -153,6 +154,16 @@ mode "$mode_actions" {
     bindsym l exec --no-startup-id $scripts/i3exit lock; mode "default"
     bindsym k exec --no-startup-id $scripts/calc; mode "default"
     bindsym r restart; mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+set $mode_graphics Graphics card used: (n)vidia (i)ntel
+bindsym $mod+g mode "$mode_graphics"
+mode "$mode_graphics" {
+    bindsym n exec --no-startup-id optimus-manager --switch nvidia --no-confirm; mode "default"
+    bindsym i exec --no-startup-id optimus-manager --switch intel --no-confirm; mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -181,7 +192,7 @@ workspace 9 output $secondary
 workspace 10 output $secondary
 
 # Required or configuration-related apps
-exec --no-startup-id picom -b; sleep 1; $scripts/wallpaper
+exec --no-startup-id optimus-manager --print-mode | grep "nvidia" && sleep 3; picom -b; sleep 1; $scripts/wallpaper
 exec --no-startup-id "killall -q xcape; xcape -e \"Super_L=Hyper_L\""
 exec --no-startup-id "killall -q xss-lock; xss-lock -- $scripts/i3exit lock&"
 exec --no-startup-id $scripts/configure_displays
