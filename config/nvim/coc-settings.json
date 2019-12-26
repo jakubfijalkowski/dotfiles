@@ -1,5 +1,11 @@
 {
-    "diagnostic.displayByAle": true,
+    "codeLens.enable": true,
+    "diagnostic.displayByAle": false,
+    "diagnostic.refreshOnInsertMode": true,
+    "diagnostic.virtualText": true,
+    "diagnostic.errorSign": "!!",
+    "suggest.enablePreview": true,
+
     "languageserver": {
         "terraform": {
             "command": "terraform-lsp",
@@ -7,5 +13,6 @@
                 "terraform"
             ]
         }
-    }
+    },
+    "rust-analyzer.enableCargoWatchOnStartup": "enabled"
 }

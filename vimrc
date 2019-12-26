@@ -28,13 +28,12 @@ Plug 'junegunn/fzf' " FZF (CtrlP replacement)
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
-Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " OMG, I love it
 Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
@@ -175,13 +174,42 @@ nmap <silent> <F11> :UndotreeToggle<CR>
 
 "  Coc
 nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
+nnoremap <silent> <F2> :call CocAction('rename')<CR>
 nnoremap <silent> <F3> :CocFix<CR>
-nnoremap <silent> <F4> :CocList actions<CR>
+nnoremap <silent> <F4> :call CocAction('codeLensAction')<CR>
 nnoremap <F5> :call CocAction('doHover')<CR>
 nnoremap <silent> <Leader>= :call CocAction('format')<CR>
 
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+inoremap <silent><expr> <TAB>
+    \ pumvisible() ? coc#_select_confirm() :
+    \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+function! CocTagFunc(pattern, flags, info) abort
+	if a:flags != "c"
+		return v:null
+	endif
+
+	let name = expand("<cword>")
+	execute("call CocAction('jumpDefinition')")
+	let filename = expand('%:p')
+	let cursor_pos = getpos(".")
+	let cmd = '/\%'.cursor_pos[1].'l\%'.cursor_pos[2].'c/'
+	execute("normal \<C-o>")
+	return [ { 'name': name, 'filename': filename, 'cmd': cmd } ]
+endfunction
+set tagfunc=CocTagFunc
 
 " EasyMotion
 map s <Plug>(easymotion-bd-f)
@@ -247,7 +275,6 @@ let g:airline#extensions#whitespace#enabled     = 1
 let g:airline#extensions#tabline#enabled        = 1
 let g:airline#extensions#languageclient#enabled = 1
 let g:airline#extensions#coc#enabled            = 1
-let g:airline#extensions#ale#enabled            = 1
 
 " Indent Guides
 let g:indent_guides_guide_size            = 1
@@ -311,13 +338,6 @@ let g:gitgutter_override_sign_column_highlight = 0
 " Neoterm
 let g:neoterm_automap_keys = ''
 
-" ALE
-let g:ale_sign_column_always   = 1
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_enter        = 1
-let g:ale_lint_on_save         = 1
-let g:ale_lint_on_insert_leave = 1
-
 " Other
 let g:hardtime_default_on          = 1
 let g:hardtime_maxcount            = 5
@@ -329,22 +349,3 @@ let g:terraform_fmt_on_save        = 1
 " Helpers
 command! Reload source ~/.vimrc
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-
-" Consider deletion
-" Gutentags
-" Plug 'ludovicchabant/vim-gutentags' " Automatic tagfile regeneration
-"let g:gutentags_ctags_executable_haskell = expand('~/.vim/tools/hasktags_wrapper')
-"let g:gutentags_ctags_executable_rust    = expand('~/.vim/tools/rusty_tags')
-"let g:gutentags_cache_dir                = '~/.vim/tags'
-"let g:gutentags_define_advanced_commands = 1
