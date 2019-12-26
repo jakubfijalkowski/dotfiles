@@ -82,9 +82,10 @@ function install_yay() {
 }
 
 function install_packages() {
-  cat $dotfiles_dir/packages/*.txt > /tmp/pkglist.txt
-  yay --editmenu -S --needed - < /tmp/pkglist.txt
-  rm -rf /tmp/pkglist.txt
+  yay -Sy base base-devel
+  pushd $dotfiles_dir/packages
+  makepkg -si
+  popd
 }
 
 function install_python_packages() {
@@ -261,7 +262,7 @@ function run_root_config() {
 function configure_optimus_user() {
   if [[ "$(lspci)" == *"NVIDIA"* ]]; then
     section "Configuring Nvidia Optimus & Bluetooth"
-    yay -S nvidia-dkms nvidia-settings nvidia-utls bbswitch-dkms optimus-manager
+    yay -S nvidia-dkms nvidia-settings nvidia-utils bbswitch-dkms optimus-manager
   fi
 }
 
