@@ -146,8 +146,8 @@ bindcode 196 exec --no-startup-id $scripts/music
 set $mode_actions Actions: (c)hrome fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
-    bindsym c workspace number 1; exec --no-startup-id available_browser; mode "default"
-    bindsym e exec --no-startup-id nautilus; mode "default"
+    bindsym c exec --no-startup-id available_browser; mode "default"
+    bindsym e exec nautilus; mode "default"
 
     bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
     bindsym g exec --no-startup-id $scripts/greenclip_clear; mode "default"
@@ -170,15 +170,12 @@ mode "$mode_graphics" {
 }
 
 for_window [window_role="pop-up"] floating enable
-for_window [instance="calc"] floating enable
-for_window [class="calc"] floating enable
-for_window [instance="nm-connection-editor"] floating enable
 
 assign [class="Slack"] workspace number 10
 
-for_window [instance="spotify"] move to workspace number 9
-for_window [class="spotify"] move to workspace number 9
 assign [instance="ncmpcpp-player"] workspace number 9
+for_window [class="Spotify"] move to workspace number 9
+assign [class="Spotify"] workspace number 9
 
 workspace 1 output $primary
 workspace 2 output $primary
