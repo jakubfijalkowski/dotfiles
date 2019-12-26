@@ -1,0 +1,21 @@
+Index: xamarin-pkg-msbuild/mono/build/install.proj
+===================================================================
+--- install.proj.orig
++++ install.proj
+@@ -32,7 +32,6 @@
+         <ItemGroup>
+             <MSBuildFiles Include="$(MSBuildBinSrcDir)\Microsoft.Build.*" />
+             <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.dll*" />
+-            <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.pdb" />
+             <MSBuildFiles Include="$(MSBuildBinSrcDir)\MSBuild.rsp" />
+
+             <MSBuildFiles Include="$(MSBuildBinSrcDir)\Microsoft.*props" />
+@@ -162,7 +161,7 @@
+             <CopiedFiles Include="$(MSBuildInstallBinDir)\System.Reflection.Metadata.dll" />
+         </ItemGroup>
+
+-        <Exec Command="$(RepoRoot)\mono\build\gen_msbuild_wrapper.sh $(MonoInstallPrefix) $(MonoInstallPrefix)\bin" />
++        <Exec Command="$(RepoRoot)\mono\build\gen_msbuild_wrapper.sh /usr $(MonoInstallPrefix)\bin" />
+         <ItemGroup>
+             <CopiedFiles Include="$(MonoInstallPrefix)\bin\msbuild" />
+         </ItemGroup>
