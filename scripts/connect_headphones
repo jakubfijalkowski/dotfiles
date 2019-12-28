@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/sh
 
 rfkill unblock bluetooth
 bluetoothctl disconnect $HEADPHONES_MAC
@@ -7,6 +7,6 @@ bluetoothctl power on
 bluetoothctl connect $HEADPHONES_MAC
 
 sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
-if [[ "$sink" == "" ]]; then
+if [ "$sink" = "" ]; then
   notify-send -u critical -a Headphones Headphones 'Connection failed'
 fi

@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 format_ctx() {
     local curr_ct="$(kubectl config view -o=jsonpath='{.current-context}')"
     local curr_ns="$(kubectl config view -o=jsonpath="{.contexts[?(@.name==\"${curr_ct}\")].context.namespace}")"
 
-    if [[ "$curr_ns" == "" || "$curr_ns" == "$curr_ct" || "$curr_ns" == "default" ]]; then
+    if [ "$curr_ns" = "" || "$curr_ns" = "$curr_ct" || "$curr_ns" = "default" ]; then
         echo $curr_ct
     else
         echo "$curr_ct/$curr_ns"

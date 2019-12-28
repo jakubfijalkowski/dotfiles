@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
+#!/bin/sh
 secret-tool search --all --unlock service mopidy >/dev/null 2>&1
