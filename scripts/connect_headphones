@@ -1,4 +1,4 @@
-#!/usr/sh
+#!/bin/sh
 
 rfkill unblock bluetooth
 bluetoothctl disconnect $HEADPHONES_MAC
