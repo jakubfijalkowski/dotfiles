@@ -216,13 +216,11 @@ interval = 5
 date = "%a, %e %b"
 time = %H:%M
 
-format = %{A1:gsimplecal:} <label>%{A}
+format = %{A1:LC_ALL=pl_PL.utf8 gsimplecal:} <label>%{A}
 format-foreground = ${colors.icons}
 
 label = %date% %time%
 label-foreground = ${colors.main_fg}
-
-click-left=gsimplecal
 
 [module/audio]
 type = internal/pulseaudio
