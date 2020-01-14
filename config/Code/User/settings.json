@@ -82,7 +82,6 @@
     "breadcrumbs.enabled": true,
     "msbuildProjectTools.nuget.includePreRelease": true,
     "msbuildProjectTools.nuget.newestVersionsFirst": true,
-    "razor.disabled": true,
 
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -96,5 +95,10 @@
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "editor.lineNumbers": "relative"
+    "editor.lineNumbers": "relative",
+
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.useGlobalMono": "never",
+    "razor.disabled": true,
 }
