@@ -1,5 +1,4 @@
-pkgbase='dotnet2.1-bin'
-pkgname=('dotnet2.1-runtime-bin' 'aspnet2.1-runtime-bin' 'dotnet2.1-sdk-bin')
+pkgname='dotnet2.1-sdk-bin'
 _runtimever=2.1.15
 _aspnetver=2.1.15
 _sdkver=2.1.803
@@ -55,7 +54,7 @@ package_dotnet2.1-sdk-bin()
     install -d "${pkgdir}"/usr/share/{dotnet,licenses}
 
     cp -dr --no-preserve=ownership \
-        "${srcdir}"/{packs,sdk,templates} \
+        "${srcdir}"/sdk \
         "${pkgdir}/usr/share/dotnet/"
 
     ln -s dotnet-host "${pkgdir}/usr/share/licenses/${pkgname}"

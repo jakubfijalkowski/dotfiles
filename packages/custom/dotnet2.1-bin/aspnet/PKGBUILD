@@ -1,5 +1,4 @@
-pkgbase='dotnet2.1-bin'
-pkgname=('dotnet2.1-runtime-bin' 'aspnet2.1-runtime-bin' 'dotnet2.1-sdk-bin')
+pkgname='aspnet2.1-runtime-bin'
 _runtimever=2.1.15
 _aspnetver=2.1.15
 _sdkver=2.1.803
