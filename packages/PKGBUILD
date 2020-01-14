@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -178,7 +178,6 @@ depends=(
   'kubectl-bin'
   'kubectx'
   'kubernetes-helm-bin'
-  'mono'
   'npm'
   'postman-bin'
   'storageexplorer'
