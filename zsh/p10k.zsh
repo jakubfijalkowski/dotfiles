@@ -87,8 +87,8 @@ typeset -g POWERLEVEL9K_AZURE_FOREGROUND=0
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=none
 typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=same-dir
 
-typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|kubens'
+typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|kubens|kubectx'
 typeset -g POWERLEVEL9K_AZURE_SHOW_ON_COMMAND='az|terraform'
 
-zplugin ice depth=1 cloneopts'--branch reactive'
+zplugin ice depth=1 cloneopts'--branch reactive --recursive'
 zplugin light romkatv/powerlevel10k
