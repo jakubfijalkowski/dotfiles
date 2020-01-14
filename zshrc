@@ -6,7 +6,6 @@ source "$HOME/.zsh/init.zsh"
 
 source "$HOME/.zsh/omz.zsh"
 source "$HOME/.zsh/p10k.zsh"
-source "$HOME/.zsh/p10k-transient.zsh"
 source "$HOME/.zsh/misc.zsh"
 source "$HOME/.zsh/completions.zsh"
 
