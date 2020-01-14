@@ -175,7 +175,7 @@ nmap <silent> <F11> :UndotreeToggle<CR>
 "  Coc
 nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
 nnoremap <silent> <F2> :call CocAction('rename')<CR>
-nnoremap <silent> <F3> :CocFix<CR>
+nnoremap <silent> <F3> :CocAction<CR>
 nnoremap <silent> <F4> :call CocAction('codeLensAction')<CR>
 nnoremap <F5> :call CocAction('doHover')<CR>
 nnoremap <silent> <Leader>= :call CocAction('format')<CR>
@@ -197,17 +197,17 @@ endfunction
 let g:coc_snippet_next = '<tab>'
 
 function! CocTagFunc(pattern, flags, info) abort
-	if a:flags != "c"
-		return v:null
-	endif
+  if a:flags != "c"
+    return v:null
+  endif
 
-	let name = expand("<cword>")
-	execute("call CocAction('jumpDefinition')")
-	let filename = expand('%:p')
-	let cursor_pos = getpos(".")
-	let cmd = '/\%'.cursor_pos[1].'l\%'.cursor_pos[2].'c/'
-	execute("normal \<C-o>")
-	return [ { 'name': name, 'filename': filename, 'cmd': cmd } ]
+  let name = expand("<cword>")
+  execute("call CocAction('jumpDefinition')")
+  let filename = expand('%:p')
+  let cursor_pos = getpos(".")
+  let cmd = '/\%'.cursor_pos[1].'l\%'.cursor_pos[2].'c/'
+  execute("normal \<C-o>")
+  return [ { 'name': name, 'filename': filename, 'cmd': cmd } ]
 endfunction
 set tagfunc=CocTagFunc
 
