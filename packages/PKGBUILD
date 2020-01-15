@@ -90,7 +90,6 @@ depends=(
   'lightdm-webkit-theme-litarvan'
   'xbindkeys'
   'xcape'
-  'xcwd-tsarn'
   'xdg-user-dirs-gtk'
   'xdotool'
   'xf86-video-intel'
