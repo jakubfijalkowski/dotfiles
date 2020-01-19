@@ -10,11 +10,11 @@ screens.primary: DP-1
 screens.secondary: eDP-1
 screens.mode: main-to-left
 
-i3.font: Source Code Pro 10
+i3.font: Iosevka 10
 i3.inner_gaps: 1
 
 polybar.height: 45
-polybar.font.main: Source Code Pro:size=16;3
+polybar.font.main: Iosevka:size=16;3
 polybar.font.icons1: Font Awesome 5 Free:style=Solid:size=17;4
 polybar.font.icons2: Material Icons:size=18;4
 polybar.font.wifi: material\-wifi:size=18;4

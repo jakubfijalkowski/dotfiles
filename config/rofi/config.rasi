@@ -12,7 +12,7 @@ configuration {
     display-run: "Exe";
     display-combi: "All";
 
-    font: "Source Code Pro 20";
+    font: "Iosevka 20";
     show-icons: true;
     sidebar-mode: true;
 }

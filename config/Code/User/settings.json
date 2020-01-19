@@ -1,7 +1,7 @@
 {
     "workbench.colorTheme": "Dracula",
     "workbench.iconTheme": "vscode-icons",
-    "editor.fontFamily": "'Source Code Variable', 'Source Code Pro', Consolas, 'Courier New', monospace",
+    "editor.fontFamily": "'Iosevka', 'Source Code Variable', 'Source Code Pro', Consolas, 'Courier New', monospace",
     "editor.rulers": [
         100
     ],
@@ -117,6 +117,8 @@
     "atlascode.showWelcomeOnInstall": false,
     "yaml.schemas": {
         "file:///home/fiolek/.vscode/extensions/atlassian.atlascode-2.2.1/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
-    }
+    },
+    "editor.fontWeight": "300",
+    "vim.easymotionMarkerFontFamily": "Iosevka"
 }
 

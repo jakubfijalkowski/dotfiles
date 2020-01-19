@@ -20,14 +20,14 @@ draw_bold_text_with_bright_colors: true
 
 font:
   normal:
-    family: SauceCodePro Nerd Font
-    style: Regular
+    family: Iosevka
+    style: Light
   bold:
-    family: SauceCodePro Nerd Font
-    style: Bold
+    family: Iosevka
+    style: Medium
   italic:
-    family: SauceCodePro Nerd Font
-    style: Italic
+    family: Iosevka
+    style: Light Italic
   size: 10.0
 
 # Gruvbox dark

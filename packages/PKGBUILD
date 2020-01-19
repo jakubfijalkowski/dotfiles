@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -67,6 +67,7 @@ depends=(
   'fonts-meta-extended-lt'
   'terminus-font'
   'ttf-liberation'
+  'ttf-iosevka'
 
   # Gnome apps & config
   'eog'
