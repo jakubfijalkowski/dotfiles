@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
 if hash brave 2>/dev/null; then
-  exec i3-msg 'workspace number 1; exec brave'
+  exec brave
 else
-  exec i3-msg 'workspace number 1; exec chromium'
+  exec chromium
 fi
