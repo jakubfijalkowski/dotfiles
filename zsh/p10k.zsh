@@ -1,4 +1,4 @@
-# Powerlevel9k
+# Powerlevel10k
 typeset -g ZLE_RPROMPT_INDENT=0
 
 typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator dir vcs newline prompt_char)
@@ -90,5 +90,5 @@ typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=same-dir
 typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|kubens|kubectx'
 typeset -g POWERLEVEL9K_AZURE_SHOW_ON_COMMAND='az|terraform'
 
-zplugin ice depth=1
-zplugin light romkatv/powerlevel10k
+zinit ice depth=1
+zinit light romkatv/powerlevel10k

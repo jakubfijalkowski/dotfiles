@@ -24,7 +24,7 @@ omz_plugin stack
 omz_plugin terraform
 omz_plugin kubectl
 
-zplugin ice multisrc"$omz_load" atload"touch stub.sh" pick"stub.sh" blockf \
+zinit ice multisrc"$omz_load" atload"touch stub.sh" pick"stub.sh" blockf \
   compile"(lib|plugins)/**/*.zsh"
-zplugin light robbyrussell/oh-my-zsh
+zinit light robbyrussell/oh-my-zsh
 

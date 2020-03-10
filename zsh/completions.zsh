@@ -1,10 +1,10 @@
-zplugin snippet "https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion"
-zplugin ice as"completion"
-zplugin snippet "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh"
-zplugin ice as"completion"
-zplugin snippet "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh"
-zplugin snippet "/usr/share/fzf/completion.zsh"
-zplugin snippet "/usr/share/fzf/key-bindings.zsh"
+zinit snippet "https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion"
+zinit ice as"completion"
+zinit snippet "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh"
+zinit ice as"completion"
+zinit snippet "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh"
+zinit snippet "/usr/share/fzf/completion.zsh"
+zinit snippet "/usr/share/fzf/key-bindings.zsh"
 
-zplugin ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
+zinit light zdharma/fast-syntax-highlighting
