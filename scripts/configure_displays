@@ -1,34 +1,43 @@
 #!/bin/sh
 
 get_xrdb() {
-  xrdb -q | grep "$1" | cut -d: -f2 | tr -d '[:space:]'
+    xrdb -q | grep "$1" | cut -d: -f2 | tr -d '[:space:]'
 }
 
-primary=$(get_xrdb 'screens.primary')
-secondary=$(get_xrdb 'screens.secondary')
-mode=$(get_xrdb 'screens.mode')
+action="$1"
 
-has_primary=$(xrandr | grep "^$primary connected" 2>/dev/null || true)
-has_secondary=$(xrandr | grep "^$secondary connected" 2>/dev/null || true)
+if [ "$action" = "" ]; then
+    primary=$(get_xrdb 'screens.primary')
+    secondary=$(get_xrdb 'screens.secondary')
+    mode=$(get_xrdb 'screens.mode')
 
-if [ "$has_primary" != "" ] && [ "$has_secondary" != "" ]; then
-  if [ "$mode" = "main-on-top" ]; then
-    xrandr --output $primary --primary --auto --above $secondary
-    i3-msg restart || true
-  elif [ "$mode" = "main-to-right" ]; then
-    xrandr --output $primary --primary --auto --right-of $secondary
-    i3-msg restart || true
-  elif [ "$mode" = "main-to-left" ]; then
-    xrandr --output $primary --primary --auto --left-of $secondary
-    i3-msg restart || true
-  else
-    echo "Unknown mode: $mode"
-    exit 1
-  fi
-elif [ "$has_primary" != "" ]; then
-  xrandr --output $primary --primary
-  xrandr --auto
-else
-  xrandr --output $secondary --primary
-  xrandr --auto
+    has_primary=$(xrandr | grep "^$primary connected" 2>/dev/null || true)
+    has_secondary=$(xrandr | grep "^$secondary connected" 2>/dev/null || true)
+
+    if [ "$has_primary" != "" ] && [ "$has_secondary" != "" ]; then
+    if [ "$mode" = "main-on-top" ]; then
+        xrandr --output $primary --primary --auto --above $secondary
+        i3-msg restart || true
+    elif [ "$mode" = "main-to-right" ]; then
+        xrandr --output $primary --primary --auto --right-of $secondary
+        i3-msg restart || true
+    elif [ "$mode" = "main-to-left" ]; then
+        xrandr --output $primary --primary --auto --left-of $secondary
+        i3-msg restart || true
+    else
+        echo "Unknown mode: $mode"
+        exit 1
+    fi
+    elif [ "$has_primary" != "" ]; then
+    xrandr --output $primary --primary
+    xrandr --auto
+    else
+    xrandr --output $secondary --primary
+    xrandr --auto
+    fi
+elif [ "$action" = "duplicate" ]; then
+    secondary=$(get_xrdb 'screens.secondary')
+    other=$2
+    res=$3
+    xrandr --output "$secondary" --mode "$res" --output "$other" --same-as "$secondary" --mode "$res"
 fi
