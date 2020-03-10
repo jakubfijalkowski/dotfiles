@@ -14,5 +14,6 @@
             ]
         }
     },
-    "rust-analyzer.enableCargoWatchOnStartup": "enabled"
+    "rust-analyzer.serverPath": "~/.cargo/bin/rust-analyzer",
+    "rust-analyzer.cargo-watch.enable": true
 }

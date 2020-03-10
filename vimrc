@@ -40,7 +40,6 @@ Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'sgur/vim-editorconfig'
 Plug 'takac/vim-hardtime'
-Plug 'parsonsmatt/intero-neovim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-rooter'
@@ -168,9 +167,13 @@ nnoremap <silent> <leader>p :BTags<CR>
 nnoremap <silent> <leader><S-P> :Tags<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
-nmap <silent> <F9> :NERDTreeToggle<CR>
+nmap <silent> <F9> :NERDTreeFocus<CR>
 nmap <silent> <F10> :TagbarToggle<CR>
 nmap <silent> <F11> :UndotreeToggle<CR>
+let g:NERDTreeMapOpenSplit = '<C-x>'
+let g:NERDTreeMapPreviewSplit = '<C-X>'
+let g:NERDTreeMapOpenVSplit = '<C-v>'
+let g:NERDTreeMapPreviewVSplit = '<C-V>'
 
 "  Coc
 nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
@@ -196,19 +199,6 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 
-function! CocTagFunc(pattern, flags, info) abort
-  if a:flags != "c"
-    return v:null
-  endif
-
-  let name = expand("<cword>")
-  execute("call CocAction('jumpDefinition')")
-  let filename = expand('%:p')
-  let cursor_pos = getpos(".")
-  let cmd = '/\%'.cursor_pos[1].'l\%'.cursor_pos[2].'c/'
-  execute("normal \<C-o>")
-  return [ { 'name': name, 'filename': filename, 'cmd': cmd } ]
-endfunction
 set tagfunc=CocTagFunc
 
 " EasyMotion
@@ -235,15 +225,6 @@ augroup haskell_bindings
 
     autocmd FileType haskell nnoremap <silent> <Leader>hs :%!stylish-haskell<CR>
     autocmd FileType haskell nnoremap <silent> <leader>hc :!codex update --force<CR>
-    autocmd FileType haskell map <silent> <leader>ht <Plug>InteroGenericType
-    autocmd FileType haskell map <silent> <leader>hT <Plug>InteroType
-    autocmd FileType haskell nnoremap <silent> <leader>hit :InteroTypeInsert<CR>
-    autocmd FileType haskell map <silent> <leader>ho :InteroOpen<CR>
-    autocmd FileType haskell map <silent> <leader>hr :InteroReload<CR>
-    autocmd FileType haskell map <silent> <leader>hcf :InteroLoadCurrentFile<CR>
-    autocmd FileType haskell map <silent> <leader>hcm :InteroLoadCurrentModule<CR>
-
-    autocmd BufWritePost *.hs InteroReload
 augroup END
 "
 "
@@ -261,8 +242,8 @@ let g:EasyMotion_do_mapping = 0
 hi EasyMotionShade ctermbg=none ctermfg=blue
 
 " NerdTree
-autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
-let NERDTreeIgnore    = ['\.git[[dir]]', '\~$\', '\.cabal[[dir]]', 'dist[[dir]]']
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeIgnore    = ['\.git[[dir]]', '\~$\', '\.cabal[[dir]]', 'dist[[dir]]', 'target[[dir]]']
 let NERDTreeDirArrows = 1
 
 " Airline and statusline
@@ -341,6 +322,7 @@ let g:neoterm_automap_keys = ''
 " Other
 let g:hardtime_default_on          = 1
 let g:hardtime_maxcount            = 5
+let g:hardtime_ignore_buffer_patterns = ["NERD.*"]
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
 let g:rooter_manual_only           = 1
