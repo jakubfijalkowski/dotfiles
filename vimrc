@@ -171,15 +171,23 @@ let g:NERDTreeMapOpenVSplit = '<C-v>'
 let g:NERDTreeMapPreviewVSplit = '<C-V>'
 
 "  Coc
-nnoremap <silent> gd :call CocAction('jumpDefinition')<CR>
+set tagfunc=CocTagFunc
+
 nnoremap <silent> <F2> :call CocAction('rename')<CR>
 nnoremap <silent> <F3> :CocAction<CR>
 nnoremap <silent> <F4> :call CocAction('codeLensAction')<CR>
-nnoremap <F5> :call CocAction('doHover')<CR>
-nnoremap <silent> <Leader>= :call CocAction('format')<CR>
+nnoremap <silent> <F5> :CocList outline<CR>
+nnoremap <silent> <leader>= :call CocAction('format')<CR>
+nnoremap <silent> <leader>qf <Plug>(coc-fix-current)
 
 inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+nnoremap <silent> [g <Plug>(coc-diagnostic-prev)
+nnoremap <silent> ]g <Plug>(coc-diagnostic-next)
+nnoremap <silent> gr <Plug>(coc-references)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+let g:coc_snippet_next = '<tab>'
 
 inoremap <silent><expr> <TAB>
     \ pumvisible() ? coc#_select_confirm() :
@@ -192,11 +200,14 @@ function! s:check_back_space() abort
     return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<tab>'
-
-set tagfunc=CocTagFunc
-
-nmap <leader>qf  <Plug>(coc-fix-current)
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " EasyMotion
 map s <Plug>(easymotion-bd-f)
@@ -234,6 +245,7 @@ augroup rust_bindings
     autocmd!
     autocmd BufWritePost *.rs :call s:rustyTags()
     autocmd BufRead *.rs :setlocal tags=./target/rusty-tags.vi;/
+    autocmd FileType rust let b:coc_root_patterns = ['Cargo.toml']
 augroup END
 
 " Plugin configs
