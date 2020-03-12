@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.2
+pkgver=1.0.3
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -103,7 +103,6 @@ depends=(
 
   # My i3 config
   'alacritty'
-  'alacritty-terminfo'
   'dunst'
   'feh'
   'flameshot'
@@ -180,7 +179,6 @@ depends=(
   'kubernetes-helm-bin'
   'npm'
   'postman-bin'
-  'storageexplorer'
   'terraform'
   'terraform-lsp-bin'
   'visual-studio-code-bin'
