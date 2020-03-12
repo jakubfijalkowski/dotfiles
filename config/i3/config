@@ -197,4 +197,7 @@ exec --no-startup-id $scripts/headphones watch&
 exec_always --no-startup-id "killall -q polybar; polybar main&"
 exec_always --no-startup-id "pkill -f 'autoname_workspaces\$'; $scripts/autoname_workspaces&"
 
+# User apps
+exec --no-startup-id "killall -q slack; slack&"
+
 # vim:filetype=i3config
