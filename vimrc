@@ -6,50 +6,46 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'morhetz/gruvbox' " Theme
+Plug 'morhetz/gruvbox'                                                           " Theme
 
-Plug 'mbbill/undotree' " The migthy undo
-Plug 'scrooloose/nerdtree' " Treeview of files
-Plug 'vim-airline/vim-airline' " Bottom bar
+Plug 'mbbill/undotree'                                                           " The migthy undo
+Plug 'scrooloose/nerdtree'                                                       " Treeview of files
+Plug 'vim-airline/vim-airline'                                                   " Bottom bar
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'kassio/neoterm' " :terminal helpers
-Plug 'scrooloose/nerdcommenter' " Comments, the <leader>c* keys
-Plug 'godlygeek/tabular' " Align lines
-Plug 'easymotion/vim-easymotion' " ,s hotkey
-Plug 'airblade/vim-gitgutter' " The git changes in gutter
-Plug 'nathanaelkane/vim-indent-guides' " Well...
-Plug 'sheerun/vim-polyglot' " Lang packs
-Plug 'tpope/vim-repeat' " Fixup the . command
-Plug 'tpope/vim-surround' " Take a textobj and change the quotes :D
-Plug 'majutsushi/tagbar' " The mighty TagBar
+Plug 'kassio/neoterm'                                                            " :terminal helpers
+Plug 'scrooloose/nerdcommenter'                                                  " Comments, the <leader>c* keys
+Plug 'godlygeek/tabular'                                                         " Align lines
+Plug 'easymotion/vim-easymotion'                                                 " ,s hotkey
+Plug 'airblade/vim-gitgutter'                                                    " The git changes in gutter
+Plug 'nathanaelkane/vim-indent-guides'                                           " Well...
+Plug 'sheerun/vim-polyglot'                                                      " Lang packs
+Plug 'tpope/vim-repeat'                                                          " Fixup the . command
+Plug 'tpope/vim-surround'                                                        " Take a textobj and change the quotes :D
+Plug 'majutsushi/tagbar'                                                         " The mighty TagBar
+Plug 'ryanoasis/vim-devicons'                                                    " Icon pack
+Plug 'takac/vim-hardtime'                                                        " Force me to use proper movements
+Plug 'machakann/vim-highlightedyank'                                             " Show me what have I yanked
+Plug 'mhinz/vim-startify'                                                        " Start page
+Plug 'tpope/vim-fugitive'                                                        " I'm yet to get used to it
+Plug 'airblade/vim-rooter'                                                       " Find the root, esp. with/ startify
+Plug 'editorconfig/editorconfig-vim'                                             " It should work someday
 
-Plug 'junegunn/fzf' " FZF (CtrlP replacement)
+Plug 'junegunn/fzf'                                                              " FZF (CtrlP replacement)
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " OMG, I love it
+Plug 'neoclide/coc.nvim', {'branch': 'release'}                                  " OMG, I love it
 Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
+Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile && yarn build'}
 Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
-
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 
-Plug 'sgur/vim-editorconfig'
-Plug 'takac/vim-hardtime'
-Plug 'machakann/vim-highlightedyank'
-Plug 'mhinz/vim-startify'
-Plug 'airblade/vim-rooter'
-Plug 'godlygeek/tabular'
-Plug 'tpope/vim-fugitive'
-
-Plug 'ryanoasis/vim-devicons'
-
-Plug 'hashivim/vim-terraform'
 Plug 'rust-lang/rust.vim'
+Plug 'hashivim/vim-terraform'
 
 call plug#end()
 "
@@ -133,7 +129,6 @@ augroup END
 let mapleader=','
 
 " Fixups
-let g:python_host_prog = "/usr/bin/python2"
 let g:python3_host_prog = "/usr/bin/python3"
 
 " Key bindings
@@ -201,6 +196,8 @@ let g:coc_snippet_next = '<tab>'
 
 set tagfunc=CocTagFunc
 
+nmap <leader>qf  <Plug>(coc-fix-current)
+
 " EasyMotion
 map s <Plug>(easymotion-bd-f)
 nmap s <Plug>(easymotion-overwin-f)
@@ -226,8 +223,18 @@ augroup haskell_bindings
     autocmd FileType haskell nnoremap <silent> <Leader>hs :%!stylish-haskell<CR>
     autocmd FileType haskell nnoremap <silent> <leader>hc :!codex update --force<CR>
 augroup END
-"
-"
+
+" Rust
+function! s:rustyTags()
+    let root_dir = FindRootDirectory()
+    call jobstart(['rusty-tags', 'vi', '-O', root_dir . '/target/rusty-tags.vi', '--start-dir', root_dir])
+endfunction
+
+augroup rust_bindings
+    autocmd!
+    autocmd BufWritePost *.rs :call s:rustyTags()
+    autocmd BufRead *.rs :setlocal tags=./target/rusty-tags.vi;/
+augroup END
 
 " Plugin configs
 
@@ -269,65 +276,20 @@ let g:undotree_SetFocusWhenToggle = 1
 set undodir=~/.vim/undo
 set undofile
 
-" Tagbar
-let g:tagbar_autofocus = 1
-if executable('hasktags')
-    let g:tagbar_type_haskell = {
-        \ 'ctagsbin'  : 'hasktags',
-        \ 'ctagsargs' : '-x -c -o-',
-        \ 'kinds'     : [
-            \  'm:modules:0:1',
-            \  'd:data: 0:1',
-            \  'd_gadt: data gadt:0:1',
-            \  't:type names:0:1',
-            \  'nt:new types:0:1',
-            \  'c:classes:0:1',
-            \  'cons:constructors:1:1',
-            \  'c_gadt:constructor gadt:1:1',
-            \  'c_a:constructor accessors:1:1',
-            \  'ft:function types:1:1',
-            \  'fi:function implementations:0:1',
-            \  'o:others:0:1'
-        \ ],
-        \ 'sro'        : '.',
-        \ 'kind2scope' : {
-            \ 'm' : 'module',
-            \ 'c' : 'class',
-            \ 'd' : 'data',
-            \ 't' : 'type'
-        \ },
-        \ 'scope2kind' : {
-            \ 'module' : 'm',
-            \ 'class'  : 'c',
-            \ 'data'   : 'd',
-            \ 'type'   : 't'
-        \ }
-    \ }
-endif
-
-" haskell-vim
-let g:haskell_enable_quantification   = 1
-let g:haskell_enable_pattern_synonyms = 1
-hi link haskellType Statement
-
-" Tabular
-let g:haskell_tabular = 1
-
-" GitGutter
-let g:gitgutter_override_sign_column_highlight = 0
-
-" Neoterm
-let g:neoterm_automap_keys = ''
-
 " Other
-let g:hardtime_default_on          = 1
-let g:hardtime_maxcount            = 5
-let g:hardtime_ignore_buffer_patterns = ["NERD.*"]
-let g:startify_session_persistence = 1
-let g:startify_fortune_use_unicode = 1
-let g:rooter_manual_only           = 1
-let g:terraform_fmt_on_save        = 1
+let g:EditorConfig_exclude_patterns            = ['fugitive://.*']
+let g:gitgutter_override_sign_column_highlight = 0
+let g:hardtime_default_on                      = 1
+let g:hardtime_ignore_buffer_patterns          = ["NERD.*"]
+let g:hardtime_maxcount                        = 5
+let g:neoterm_automap_keys                     = ''
+let g:rooter_manual_only                       = 1
+let g:rooter_patterns                          = ['Cargo.toml', '.git/']
+let g:startify_change_to_dir                   = 1
+let g:startify_fortune_use_unicode             = 1
+let g:startify_session_persistence             = 1
+let g:tagbar_autofocus                         = 1
+let g:terraform_fmt_on_save                    = 1
 
 " Helpers
 command! Reload source ~/.vimrc
-
