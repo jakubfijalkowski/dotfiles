@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.4
+pkgver=1.0.5
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -12,7 +12,6 @@ depends=(
   'dash'
   'dashbinsh'
   'devtools'
-  'dhcpcd'
   'fwupd'
   'htop'
   'intel-ucode'

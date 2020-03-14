@@ -224,15 +224,14 @@ function configure_root() {
   copy "etc/iwd/main.conf"
   copy "etc/optimus-manager/optimus-manager.conf"
   copy "etc/systemd/resolved.conf"
+  copy "etc/systemd/network/20-wireless.network"
 
   copy "usr/local/bin/configure_displays"
 
-  chattr -i "/etc/resolv.conf"
-  copy "etc/resolv.conf"
-  chattr +i "/etc/resolv.conf"
-
   section "System services"
   systemctl daemon-reload
+  service "system" "systemd-networkd.service"
+  service "system" "systemd-resolved.service"
   service "system" "iwd.service"
   service "system" "pcscd.service"
   service "system" "ufw.service"
