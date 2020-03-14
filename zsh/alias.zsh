@@ -14,3 +14,5 @@ alias kc="kubectx"
 alias kns="kubens"
 alias kgn="kubectl get nodes"
 alias kdn="kubectl describe node"
+
+alias gsm="git switchto master"
