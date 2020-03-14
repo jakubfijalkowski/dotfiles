@@ -222,8 +222,8 @@ function configure_root() {
   copy "etc/sysctl.d/99-inotify.conf"
   copy "etc/security/limits.conf"
   copy "etc/iwd/main.conf"
-  copy "etc/knot-resolver/kresd.conf"
   copy "etc/optimus-manager/optimus-manager.conf"
+  copy "etc/systemd/resolved.conf"
 
   copy "usr/local/bin/configure_displays"
 
@@ -236,7 +236,6 @@ function configure_root() {
   service "system" "iwd.service"
   service "system" "pcscd.service"
   service "system" "ufw.service"
-  service "system" "knotd@1.service"
 
   section "Misc config"
   echo "Firewall"
@@ -252,6 +251,9 @@ function configure_root() {
   echo "Reload udev rules"
   udevadm control --reload
   udevadm trigger
+
+  echo "Enabling systemd-resolved"
+  ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 }
 
 function run_root_config() {
