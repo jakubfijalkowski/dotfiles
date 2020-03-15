@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.5
+pkgver=1.0.6
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -117,6 +117,7 @@ depends=(
   'xss-lock'
   'yubikey-manager'
   'yubikey-touch-detector'
+  'python-i3ipc'
 
   # Browsers + drivers
   'chromium-vaapi'
