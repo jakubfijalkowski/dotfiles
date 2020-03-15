@@ -145,6 +145,10 @@ depends=(
   'mpd'
   'ncmpcpp'
   'spotify'
+  'mopidy'
+  'mopidy-spotify'
+  'mopidy-iris'
+  'mopidy-local'
 
   # Music - drivers
   'alsa-utils'
