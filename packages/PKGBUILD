@@ -11,7 +11,6 @@ depends=(
   'bash'
   'dash'
   'dashbinsh'
-  'devtools'
   'fwupd'
   'htop'
   'intel-ucode'
@@ -50,8 +49,6 @@ depends=(
 
   # Python
   'python-pip'
-  'python2'
-  'python2-pip'
   'python3'
 
   # Neovim

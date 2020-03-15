@@ -88,16 +88,6 @@ function install_packages() {
   popd
 }
 
-function install_python_packages() {
-  pip install --user i3ipc fontawesome
-  pip2 install --user \
-    mopidy \
-    mopidy-spotify \
-    mopidy-iris \
-    mopidy-local-sqlite \
-    dbus-python
-}
-
 function install_fonts() {
   section "Installing fonts"
   mkdir -p ~/.local/share/fonts
@@ -298,7 +288,6 @@ if [[ "$(whoami)" == "root" ]]; then
 else
   install_yay
   install_packages
-  install_python_packages
   install_fonts
   configure_user
   configure_yubikey
