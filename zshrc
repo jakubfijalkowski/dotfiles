@@ -4,15 +4,17 @@ fi
 
 source "$HOME/.zsh/init.zsh"
 
-source "$HOME/.zsh/omz.zsh"
-source "$HOME/.zsh/p10k.zsh"
 source "$HOME/.zsh/misc.zsh"
+source "$HOME/.zsh/p10k.zsh"
+source "$HOME/.zsh/title.zsh"
+source "$HOME/.zsh/widgets.zsh"
+source "$HOME/.zsh/keybindings.zsh"
+source "$HOME/.zsh/fzf.zsh"
+source "$HOME/.zsh/options.zsh"
 source "$HOME/.zsh/completions.zsh"
 
-source "$HOME/.zsh/functions.zsh"
-source "$HOME/.zsh/utils.zsh"
-source "$HOME/.zsh/alias.zsh"
-source "$HOME/.zsh/fzf.zsh"
-
-source "$HOME/.zsh/machine.zsh"
+# Per-machine config
+if [ -e ~/.local/zshrc ]; then
+    source ~/.local/zshrc
+fi
 
