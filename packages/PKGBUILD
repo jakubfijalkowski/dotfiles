@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -35,7 +35,9 @@ depends=(
   # Tools
   'curl'
   'exa'
+  'fd'
   'jq'
+  'lscolors-git'
   'p7zip'
   'ripgrep'
   'tlp'
