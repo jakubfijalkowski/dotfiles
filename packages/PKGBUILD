@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.7
+pkgver=1.0.8
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -33,6 +33,7 @@ depends=(
   'yay'
 
   # Tools
+  'bat'
   'curl'
   'exa'
   'fd'
@@ -187,6 +188,5 @@ depends=(
   'yarn'
 
   # Keybase
-  'kbfs'
   'keybase'
 )
