@@ -90,4 +90,4 @@ typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=same-dir
 typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|kubens|kubectx'
 typeset -g POWERLEVEL9K_AZURE_SHOW_ON_COMMAND='az|terraform'
 
-source $ZSH_CACHE_DIR/powerlevel10k/powerlevel10k.zsh-theme
+z4h source $ZSH_CACHE_DIR/romkatv/powerlevel10k/powerlevel10k.zsh-theme

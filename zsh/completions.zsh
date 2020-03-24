@@ -1,5 +1,3 @@
-fpath+="$ZSH_CACHE_DIR/completions"
-
 autoload -Uz compinit; compinit -d ${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
 autoload -Uz bashcompinit; bashcompinit
 
@@ -18,7 +16,7 @@ zstyle ':completion::complete:*'        cache-path      ${XDG_CACHE_HOME:-$HOME/
 # Use only folders for `exa` completions
 compdef _cd exa
 
-source $ZSH_CACHE_DIR/az.completion
-source $ZSH_CACHE_DIR/git.plugin.zsh
-source $ZSH_CACHE_DIR/pj.plugin.zsh
-source $ZSH_CACHE_DIR/kubectl.plugin.zsh
+z4h source $ZSH_CACHE_DIR/az.completion
+z4h source $ZSH_CACHE_DIR/git.plugin.zsh
+z4h source $ZSH_CACHE_DIR/pj.plugin.zsh
+z4h source $ZSH_CACHE_DIR/kubectl.plugin.zsh

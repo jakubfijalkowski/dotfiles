@@ -6,19 +6,19 @@ function _fs_filter() {
   case "$2" in
     '~'*)
       # Expand and then collapse `~` at the beginning of the search string
-      local res="$(fd --max-depth=3 --type=$1 . "$(dirname "${2/#\~/$HOME}")")"
+      local res="$(fd --max-depth=3 --hidden --follow --type=$1 . "$(dirname "${2/#\~/$HOME}")")"
       echo ${res//$HOME/\~}
       ;;
     ..|../)
-      fd --max-depth=3 --type=$1 . ..
+      fd --max-depth=3 --hidden --follow --type=$1 . ..
       ;;
     *)
-      fd --max-depth=3 --type=$1 . "$(dirname "$2")"
+      fd --max-depth=3 --hidden --follow --type=$1 . "$(dirname "$2")"
       ;;
   esac
 }
 function _fs_select() {
-  fd --max-depth=3 --type=$1 . $2
+  fd --max-depth=3 --hidden --follow --type=$1 . $2
 }
 function _files() {
     local tokens=(${(z)LBUFFER})
@@ -42,11 +42,12 @@ source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 
 bindkey '\t' expand-or-complete        # fzf-tab reads it during initialization
-source $ZSH_CACHE_DIR/fzf-tab/fzf-tab.plugin.zsh
+z4h source $ZSH_CACHE_DIR/Aloxaf/fzf-tab/fzf-tab.plugin.zsh
 
 zstyle ':fzf-tab:*' show-group full
 zstyle ':fzf-tab:*' single-group full
 zstyle ':fzf-tab:*' prefix ''
+zstyle ':fzf-tab:*' continuous-trigger 'alt-enter'
 
 # Previews for some commands
 local extract="
