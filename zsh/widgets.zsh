@@ -1,5 +1,5 @@
 function my-expand-dot-to-parent-directory-path() {
-    if [[ $LBUFFER = *.. ]]; then
+    if [[ "$LBUFFER" = *.. ]]; then
         LBUFFER+='/..'
     else
         LBUFFER+='.'

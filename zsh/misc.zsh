@@ -1,6 +1,9 @@
-zinit snippet /usr/share/LS_COLORS/dircolors.sh
-zinit ice depth=1
-zinit light romkatv/archive
+source /usr/share/LS_COLORS/dircolors.sh
+
+fpath+=$ZSH_CACHE_DIR/archive
+autoload -Uz archive lsarchive unarchive
+
+alias cat='bat'
 
 alias whatismyip="curl -4 ifconfig.co/ip"
 alias whatismyipv6="curl -6 ifconfig.co/ip"
@@ -16,16 +19,13 @@ alias tp="terraform plan"
 alias tpt="terraform plan -target"
 alias tpo="terraform plan -out"
 alias ta="terraform apply"
+alias tv="terraform validate"
 
 alias k="kubectl"
 alias kc="kubectx"
 alias kns="kubens"
-alias kgn="kubectl get nodes"
-alias kdn="kubectl describe node"
 
 alias gsm="git switchto master"
-
-alias fzf='fzf --preview-window down:3 --preview "head -n 3 {}" --bind "ctrl-y:execute-silent(echo $PWD/{} | xsel -b)+abort,alt-y:execute(cat {})+abort"'
 
 if type exa &> /dev/null; then
     alias ls="exa -lh --git"
@@ -37,8 +37,6 @@ fi
 function take() {
   mkdir -p $@ && cd ${@:$#}
 }
-
-alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}'
 
 alias -- -='cd -'
 alias 1='cd -'
@@ -58,4 +56,14 @@ function d () {
     dirs -v | head -10
   fi
 }
-compdef _dirs d
+
+function git_current_branch() {
+  local ref
+  ref=$(command git symbolic-ref --quiet HEAD 2> /dev/null)
+  local ret=$?
+  if [[ $ret != 0 ]]; then
+    [[ $ret == 128 ]] && return  # no git repo.
+    ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  fi
+  echo ${ref#refs/heads/}
+}

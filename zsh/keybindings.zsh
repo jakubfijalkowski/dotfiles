@@ -42,7 +42,6 @@ bindkey '^[[1;3D' my-cd-back                             # alt+left   cd into th
 bindkey '^[[1;3C' my-cd-forward                          # alt+right  cd into the next directory
 bindkey '^[[1;3A' my-cd-up                               # alt+up     cd ..
 bindkey '^[[1;3B' fzf-cd-widget                          # alt+down   fzf cd
-bindkey '^T'      fzf-completion                         # ctrl+t     fzf file completion
 bindkey '^R'      my-fzf-history-widget                  # ctrl+r     fzf history
 bindkey '.'       my-expand-dot-to-parent-directory-path # .          change ... to ../..
 

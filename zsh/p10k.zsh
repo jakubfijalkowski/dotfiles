@@ -90,5 +90,4 @@ typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=same-dir
 typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|kubens|kubectx'
 typeset -g POWERLEVEL9K_AZURE_SHOW_ON_COMMAND='az|terraform'
 
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
+source $ZSH_CACHE_DIR/powerlevel10k/powerlevel10k.zsh-theme

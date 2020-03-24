@@ -32,7 +32,3 @@ setopt PUSHD_SILENT           # do not print the directory stack after pushd or 
 setopt PUSHD_TO_HOME          # push to home directory when no argument is given.
 setopt RC_QUOTES              # allow 'Henry''s Garage' instead of 'Henry'\''s Garage'.
 setopt SHARE_HISTORY          # write and import history on every command
-
-autoload -U regexp-replace
-autoload -U +X bashcompinit && bashcompinit
-
