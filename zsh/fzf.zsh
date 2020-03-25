@@ -1,42 +1,50 @@
-export FZF_DEFAULT_COMMAND='fd --max-depth=3 --type=f'
-export FZF_ALT_C_COMMAND='fd --max-depth=3 --type=d'
+function _fd_base() {
+  fd --max-depth=3 --follow --type=$1 ${@:2}
+}
 
-function _fs_filter() {
+function _fd_filter() {
   # Special-case some of the usages
   case "$2" in
     '~'*)
-      # Expand and then collapse `~` at the beginning of the search string
-      local res="$(fd --max-depth=3 --hidden --follow --type=$1 . "$(dirname "${2/#\~/$HOME}")")"
+      # Expand and then collapse `~` at the beginning of the search string and then re-check it
+      local res="$(_fd_filter $1 "${2/#\~/$HOME}")"
       echo ${res//$HOME/\~}
       ;;
-    ..|../)
-      fd --max-depth=3 --hidden --follow --type=$1 . ..
+    (../)##(..)#)
+      # Parent dir, handle manually as `dirname` fails to handle that correctly
+      _fd_base $1 . $2
+      ;;
+    *.|.*|*/.[^/]#)
+      # Search for hidden also
+      _fd_base $1 --hidden . "$(dirname "$2")"
       ;;
     *)
-      fd --max-depth=3 --hidden --follow --type=$1 . "$(dirname "$2")"
+      # All the rest
+      _fd_base $1 . "$(dirname "$2")"
       ;;
   esac
 }
-function _fs_select() {
-  fd --max-depth=3 --hidden --follow --type=$1 . $2
-}
+
 function _files() {
     local tokens=(${(z)LBUFFER})
     [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
     local query="${tokens[-1]}"
-    local result=("${(@f)$(_fs_filter f "$query")}")
+    local result=("${(@f)$(_fd_filter f "$query")}")
     compadd -a -f result
 }
-function _fzf_compgen_path() { _fs_select f "$1" }
+function _fzf_compgen_path() { _fs_base f . "$1" }
 
 function _cd() {
     local tokens=(${(z)LBUFFER})
     [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
     local query="${tokens[-1]}"
-    local result=("${(@f)$(_fs_filter d "$query")}")
+    local result=("${(@f)$(_fd_filter d "$query")}")
     compadd -a -f result
 }
-function _fzf_compgen_dir() { _fs_select d "$1" }
+function _fzf_compgen_dir() { _fd_base d . "$1" }
+
+export FZF_DEFAULT_COMMAND='_fd_base f'
+export FZF_ALT_C_COMMAND='_fd_base d'
 
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
@@ -54,7 +62,9 @@ local extract="
 in=\${\${\"\$(<{f})\"%\$'\0'*}#*\$'\0'}
 local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
 "
+local sanitized_in='${~ctxt[hpre]}"${${in//\\ / }/#\~/$HOME}"'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
-zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always ${~ctxt[hpre]}"${${in//\\ / }/#\~/$HOME}"'
-zstyle ':fzf-tab:complete:vim:*' extra-opts --preview=$extract'bat --pager=never --color=always --line-range :30 ${~ctxt[hpre]}"${in//\\ / }"' --preview-window=right:70%
+zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
+zstyle ':fzf-tab:complete:exa:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
+zstyle ':fzf-tab:complete:vim:*' extra-opts --preview=$extract'bat --pager=never --color=always --line-range :30 '$sanitized_in --preview-window=right:70%
