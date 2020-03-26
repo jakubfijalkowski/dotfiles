@@ -253,9 +253,12 @@ augroup END
 
 " FZF
 let g:fzf_layout = { 'down': '20split' }
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup fzf
+    autocmd! FileType fzf
+    autocmd  FileType fzf set laststatus=0 noshowmode noruler
+                \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+    autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
+augroup END
 
 " EasyMotion
 let g:EasyMotion_do_mapping = 0

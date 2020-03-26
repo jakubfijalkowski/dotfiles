@@ -1,6 +1,10 @@
+local _fd_base_str='fd --max-depth=4 --follow --type='
 function _fd_base() {
-  fd --max-depth=4 --follow --type=$1 ${@:2}
+  eval $_fd_base_str$1 ${@:2}
 }
+
+export FZF_DEFAULT_COMMAND="${_fd_base_str}f"
+export FZF_ALT_C_COMMAND="${_fd_base_str}d"
 
 function _fd_filter() {
   # Special-case some of the usages
@@ -11,7 +15,7 @@ function _fd_filter() {
       echo ${res//$HOME/\~}
       ;;
     (../)##(..)#)
-      # Parent dir, handle manually as `dirname` fails to handle that correctly
+      # Parent dir only, handle manually as `dirname` fails to handle that correctly
       _fd_base $1 -p . $2
       ;;
     *.|.*|*/.[^/]#)
@@ -42,9 +46,6 @@ function _cd() {
     compadd -a -f result
 }
 function _fzf_compgen_dir() { _fd_base d . "$1" }
-
-export FZF_DEFAULT_COMMAND='_fd_base f'
-export FZF_ALT_C_COMMAND='_fd_base d'
 
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
