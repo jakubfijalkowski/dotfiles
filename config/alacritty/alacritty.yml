@@ -237,7 +237,7 @@ key_bindings:
   - { key: F10,      mods: Super,            chars: "\x1b[21;3~"                       }
   - { key: F11,      mods: Super,            chars: "\x1b[23;3~"                       }
   - { key: F12,      mods: Super,            chars: "\x1b[24;3~"                       }
-  - { key: J,        mods: Control,          action: ScrollLineDown,  mode: ~AppCursor }
-  - { key: J,        mods: Control|Shift,    action: ScrollPageDown,  mode: ~AppCursor }
-  - { key: K,        mods: Control,          action: ScrollLineUp,    mode: ~AppCursor }
-  - { key: K,        mods: Control|Shift,    action: ScrollPageUp,    mode: ~AppCursor }
+  - { key: E,        mods: Control,          action: ScrollLineDown,  mode: ~AppCursor }
+  - { key: D,        mods: Control,          action: ScrollPageDown,  mode: ~AppCursor }
+  - { key: Y,        mods: Control,          action: ScrollLineUp,    mode: ~AppCursor }
+  - { key: U,        mods: Control,          action: ScrollPageUp,    mode: ~AppCursor }
