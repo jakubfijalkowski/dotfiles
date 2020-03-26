@@ -1,6 +1,5 @@
 .cache
 .npm
 .nuget
-.config
 .git
 /go
