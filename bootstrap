@@ -124,11 +124,12 @@ function install_fonts() {
 
 function configure_user() {
   section "Configuring user dotfiles"
-  link "zsh"
-  link "zshrc"
+  link "fdignore"
+  link "gitconfig"
   link "vim"
   link "vimrc"
-  link "gitconfig"
+  link "zsh"
+  link "zshrc"
 
   link "gtkrc-2.0"
   link "xbindkeysrc"

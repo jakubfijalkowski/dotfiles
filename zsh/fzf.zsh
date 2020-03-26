@@ -1,5 +1,5 @@
 function _fd_base() {
-  fd --max-depth=3 --follow --type=$1 ${@:2}
+  fd --max-depth=4 --follow --type=$1 ${@:2}
 }
 
 function _fd_filter() {
@@ -12,15 +12,15 @@ function _fd_filter() {
       ;;
     (../)##(..)#)
       # Parent dir, handle manually as `dirname` fails to handle that correctly
-      _fd_base $1 . $2
+      _fd_base $1 -p . $2
       ;;
     *.|.*|*/.[^/]#)
       # Search for hidden also
-      _fd_base $1 --hidden . "$(dirname "$2")"
+      _fd_base $1 -p --hidden . "$(dirname "$2")"
       ;;
     *)
       # All the rest
-      _fd_base $1 . "$(dirname "$2")"
+      _fd_base $1 -p . "$(dirname "$2")"
       ;;
   esac
 }
