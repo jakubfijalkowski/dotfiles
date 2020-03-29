@@ -1,6 +1,6 @@
-local _fd_base_str='fd --max-depth=4 --follow --type='
+local _fd_base_str='fd --follow --type='
 function _fd_base() {
-  eval $_fd_base_str$1 ${@:2}
+  eval $_fd_base_str$1 --max-depth=5 ${@:2}
 }
 
 export FZF_DEFAULT_COMMAND="${_fd_base_str}f"
