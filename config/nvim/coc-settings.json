@@ -2,9 +2,14 @@
     "codeLens.enable": true,
     "diagnostic.displayByAle": false,
     "diagnostic.refreshOnInsertMode": true,
+    "diagnostic.refreshAfterSave": true,
     "diagnostic.virtualText": true,
     "diagnostic.errorSign": "!",
     "suggest.enablePreview": true,
+    "list.normalMappings": {
+        "<C-j>": "normal:j",
+        "<C-k>": "normal:k"
+    },
 
     "languageserver": {
         "terraform": {

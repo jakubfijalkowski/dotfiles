@@ -35,15 +35,15 @@ Plug 'junegunn/fzf'                                                             
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}                                  " OMG, I love it
-Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
-Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile && yarn build'}
-Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim',             { 'branch': 'release'}                     " OMG, I love it
+Plug 'neoclide/coc-pairs',            { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yank',             { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json',             { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yaml',             { 'do': 'yarn install --frozen-lockfile'}
+Plug 'iamcco/coc-vimlsp',             { 'do': 'yarn install --frozen-lockfile && yarn build'}
+Plug 'fannheyward/coc-rust-analyzer', { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-snippets',         { 'do': 'yarn install --frozen-lockfile'}
 Plug 'honza/vim-snippets'
-Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'rust-lang/rust.vim'
 Plug 'hashivim/vim-terraform'
@@ -174,19 +174,19 @@ let g:NERDTreeMapPreviewVSplit = '<C-V>'
 "  Coc
 set tagfunc=CocTagFunc
 
-nnoremap <silent> <F2> :call CocAction('rename')<CR>
+nnoremap <silent> <F2> :CocList outline<CR>
 nnoremap <silent> <F3> :CocAction<CR>
-nnoremap <silent> <F4> :call CocAction('codeLensAction')<CR>
-nnoremap <silent> <F5> :CocList outline<CR>
+nnoremap <silent> <F4> :call CocActionAsync('codeLensAction')<CR>
+nnoremap <silent> <F5> :call CocAction('refactor')<CR>
 nnoremap <silent> <leader>= :call CocAction('format')<CR>
-nnoremap <silent> <leader>qf <Plug>(coc-fix-current)
+nnoremap <silent> <leader>qf :call CocActionAsync('doQuickfix')<CR>
 
+nnoremap <silent> [g :call CocActionAsync('diagnosticPrevious')<CR>
+nnoremap <silent> ]g :call CocActionAsync('diagnosticNext')<CR>
+nnoremap <silent> gr :call CocAction('jumpReferences')<CR>
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-nnoremap <silent> [g <Plug>(coc-diagnostic-prev)
-nnoremap <silent> ]g <Plug>(coc-diagnostic-next)
-nnoremap <silent> gr <Plug>(coc-references)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 let g:coc_snippet_next = '<tab>'
 
