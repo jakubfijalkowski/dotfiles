@@ -2,7 +2,6 @@
     "codeLens.enable": true,
     "diagnostic.displayByAle": false,
     "diagnostic.refreshOnInsertMode": true,
-    "diagnostic.refreshAfterSave": true,
     "diagnostic.virtualText": true,
     "diagnostic.errorSign": "!",
     "suggest.enablePreview": true,
