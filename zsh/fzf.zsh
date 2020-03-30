@@ -1,6 +1,6 @@
 local _fd_base_str='fd --follow --type='
 function _fd_base() {
-  eval $_fd_base_str$1 --max-depth=5 ${@:2}
+  eval $_fd_base_str$1 --max-depth=10 ${@:2}
 }
 
 export FZF_DEFAULT_COMMAND="${_fd_base_str}f"
@@ -30,27 +30,27 @@ function _fd_filter() {
 }
 
 function _files() {
-    local tokens=(${(z)LBUFFER})
-    [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
-    local query="${tokens[-1]}"
-    local result=("${(@f)$(_fd_filter f "$query")}")
-    compadd -a -f result
+  local tokens=(${(z)LBUFFER})
+  [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
+  local query="${tokens[-1]}"
+  local result=("${(@f)$(_fd_filter f "$query")}")
+  compadd -a -f result
 }
 function _fzf_compgen_path() { _fs_base f . "$1" }
 
 function _cd() {
-    local tokens=(${(z)LBUFFER})
-    [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
-    local query="${tokens[-1]}"
-    local result=("${(@f)$(_fd_filter d "$query")}")
-    compadd -a -f result
+  local tokens=(${(z)LBUFFER})
+  [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
+  local query="${tokens[-1]}"
+  local result=("${(@f)$(_fd_filter d "$query")}")
+  compadd -a -f result
 }
 function _fzf_compgen_dir() { _fd_base d . "$1" }
 
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 
-bindkey '\t' expand-or-complete        # fzf-tab reads it during initialization
+bindkey '\t' expand-or-complete # fzf-tab reads it during initialization
 z4h source $ZSH_CACHE_DIR/Aloxaf/fzf-tab/fzf-tab.plugin.zsh
 
 zstyle ':fzf-tab:*' show-group full

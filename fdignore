@@ -3,3 +3,5 @@
 .nuget
 .git
 /go
+target
+Work
