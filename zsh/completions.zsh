@@ -1,10 +1,14 @@
-autoload -Uz compinit; compinit -d ${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
-autoload -Uz bashcompinit; bashcompinit
+autoload -Uz compinit
+compinit -d ${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
+autoload -Uz bashcompinit
+bashcompinit
 
 # Configure completions.
 zstyle ':completion:*'                  matcher-list    'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 zstyle ':completion:*:descriptions'     format          '[%d]'
-zstyle ':completion:*'                  completer       _complete
+zstyle ':completion:*'                  completer       _complete _match _approximate
+zstyle ':completion:*:match:*'          original        only
+zstyle ':completion:*:approximate:*'    max-errors      1 numeric
 zstyle ':completion:*:*:-subscript-:*'  tag-order       indexes parameters
 zstyle ':completion:*'                  squeeze-slashes true
 zstyle '*'                              single-ignored  show
@@ -20,3 +24,4 @@ z4h source $ZSH_CACHE_DIR/az.completion
 z4h source $ZSH_CACHE_DIR/git.plugin.zsh
 z4h source $ZSH_CACHE_DIR/pj.plugin.zsh
 z4h source $ZSH_CACHE_DIR/kubectl.plugin.zsh
+unalias _complete # Kubectl completion aliases the function
