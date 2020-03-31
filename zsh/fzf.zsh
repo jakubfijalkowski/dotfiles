@@ -26,10 +26,19 @@ function _fd_filter() {
 }
 
 function _fd_select() {
+  local -a opts
+  case "$1" in
+    'f')
+      opts=(--preview="bat --pager=never --color=always --line-range :30 {}" --preview-window=right:70%)
+      ;;
+    'd')
+      opts=(--preview='exa -1 --color=always {}' --preview-window=right:50%)
+      ;;
+  esac
   _fd_filter $1 "$2" | fzf \
-    --ansi \
+    --ansi $opts \
     --layout=reverse --height=75% \
-    --tiebreak=begin -m --bind=tab:down,btab:up,change:top,ctrl-space:toggle \
+    --tiebreak=begin --bind=tab:down,btab:up,change:top \
     --cycle --query="$(basename "$2")"
 }
 
@@ -88,7 +97,7 @@ local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
 local sanitized_in='${~ctxt[hpre]}"${${in//\\ / }/#\~/$HOME}"'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
-# Does not work for now
+# Does not work for now, see _fd_select for current implementation
 zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
 zstyle ':fzf-tab:complete:exa:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
 zstyle ':fzf-tab:complete:vim:*' extra-opts --preview=$extract'bat --pager=never --color=always --line-range :30 '$sanitized_in --preview-window=right:70%
