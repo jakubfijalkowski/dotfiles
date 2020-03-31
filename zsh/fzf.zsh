@@ -1,6 +1,6 @@
 local _fd_base_str='fd --follow --type='
 function _fd_base() {
-  eval $_fd_base_str$1 --max-depth=10 ${@:2}
+  eval $_fd_base_str$1 --hidden --max-depth=10 ${@:2}
 }
 
 export FZF_DEFAULT_COMMAND="${_fd_base_str}f"
@@ -18,10 +18,6 @@ function _fd_filter() {
       # Parent dir only, handle manually as `dirname` fails to handle that correctly
       _fd_base $1 -p . $2
       ;;
-    *.|.*|*/.[^/]#)
-      # Search for hidden also
-      _fd_base $1 -p --hidden . "$(dirname "$2")"
-      ;;
     *)
       # All the rest
       _fd_base $1 -p . "$(dirname "$2")"
@@ -29,12 +25,39 @@ function _fd_filter() {
   esac
 }
 
+function _fd_select() {
+  _fd_filter $1 "$2" | fzf \
+    --ansi \
+    --layout=reverse --height=75% \
+    --tiebreak=begin -m --bind=tab:down,btab:up,change:top,ctrl-space:toggle \
+    --cycle --query="$(basename "$2")"
+}
+
+FZF_SAVED_COMPLETION=''
+
+function _fd_execute() {
+  # All through compadd
+  #local result=("${(@f)$(_fd_filter $1 $2)}")
+  #compadd -a -f result
+
+  # Display FZF manually with a hack to prevent multiple appearances of FZF (i.e. multiple calls to
+  # _files and _cd) when cancelling the matching
+  if [[ $_matcher_num == 1 ]]; then
+    local result=$(_fd_select $1 $2)
+    if [[ "$result" != '' ]]; then
+      compadd -f -U -- "$result"
+    fi
+    return 0
+  else
+    return 1
+  fi
+}
+
 function _files() {
   local tokens=(${(z)LBUFFER})
   [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
   local query="${tokens[-1]}"
-  local result=("${(@f)$(_fd_filter f "$query")}")
-  compadd -a -f result
+  _fd_execute f "$query"
 }
 function _fzf_compgen_path() { _fs_base f . "$1" }
 
@@ -42,8 +65,7 @@ function _cd() {
   local tokens=(${(z)LBUFFER})
   [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
   local query="${tokens[-1]}"
-  local result=("${(@f)$(_fd_filter d "$query")}")
-  compadd -a -f result
+  _fd_execute d "$query"
 }
 function _fzf_compgen_dir() { _fd_base d . "$1" }
 
@@ -66,6 +88,7 @@ local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
 local sanitized_in='${~ctxt[hpre]}"${${in//\\ / }/#\~/$HOME}"'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
+# Does not work for now
 zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
 zstyle ':fzf-tab:complete:exa:*' extra-opts --preview=$extract'exa -1 --color=always '$sanitized_in --preview-window=right:40%
 zstyle ':fzf-tab:complete:vim:*' extra-opts --preview=$extract'bat --pager=never --color=always --line-range :30 '$sanitized_in --preview-window=right:70%

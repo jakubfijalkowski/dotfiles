@@ -6,9 +6,7 @@ bashcompinit
 # Configure completions.
 zstyle ':completion:*'                  matcher-list    'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 zstyle ':completion:*:descriptions'     format          '[%d]'
-zstyle ':completion:*'                  completer       _complete _match _approximate
-zstyle ':completion:*:match:*'          original        only
-zstyle ':completion:*:approximate:*'    max-errors      1 numeric
+zstyle ':completion:*'                  completer       _complete
 zstyle ':completion:*:*:-subscript-:*'  tag-order       indexes parameters
 zstyle ':completion:*'                  squeeze-slashes true
 zstyle '*'                              single-ignored  show
