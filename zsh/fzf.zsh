@@ -42,8 +42,6 @@ function _fd_select() {
     --cycle --query="$(basename "$2")"
 }
 
-FZF_SAVED_COMPLETION=''
-
 function _fd_execute() {
   # All through compadd
   #local result=("${(@f)$(_fd_filter $1 $2)}")
@@ -51,7 +49,7 @@ function _fd_execute() {
 
   # Display FZF manually with a hack to prevent multiple appearances of FZF (i.e. multiple calls to
   # _files and _cd) when cancelling the matching
-  if [[ $_matcher_num == 1 ]]; then
+  if [[ $_matcher_num == 1 && $curcontext != ':complete:-command-:' ]]; then
     local result=$(_fd_select $1 $2)
     if [[ "$result" != '' ]]; then
       compadd -f -U -- "$result"
