@@ -17,7 +17,7 @@
 .node-gyp
 .npm
 .nuget
-.rustup/toolchains
+.rustup/toolchains/*
 .rusty-tags
 .stack
 .templateengine

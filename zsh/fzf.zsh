@@ -11,8 +11,7 @@ function _fd_filter() {
   case "$2" in
     '~'*)
       # Expand and then collapse `~` at the beginning of the search string and then re-check it
-      local res="$(_fd_filter $1 "${2/#\~/$HOME}")"
-      echo ${res//$HOME/\~}
+      _fd_filter $1 "${2/#\~/$HOME}"
       ;;
     (../)##(..)#)
       # Parent dir only, handle manually as `dirname` fails to handle that correctly
