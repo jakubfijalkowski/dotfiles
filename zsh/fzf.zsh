@@ -49,7 +49,7 @@ function _fd_execute() {
 
   # Display FZF manually with a hack to prevent multiple appearances of FZF (i.e. multiple calls to
   # _files and _cd) when cancelling the matching
-  if [[ $_matcher_num == 1 && $curcontext != ':complete:-command-:' ]]; then
+  if [[ $_matcher_num == 1 ]]; then
     local result=$(_fd_select $1 $2)
     if [[ "$result" != '' ]]; then
       compadd -f -U -- "$result"
@@ -60,19 +60,32 @@ function _fd_execute() {
   fi
 }
 
+# Save the original functions since we want them to run when executing `-command-` completion
+autoload +X _files _cd
+functions[_save_orig_files]=$functions[_files]
+functions[_save_orig_cd]=$functions[_cd]
+
 function _files() {
-  local tokens=(${(z)LBUFFER})
-  [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
-  local query="${tokens[-1]}"
-  _fd_execute f "$query"
+  if [[ $curcontext == ':complete:-command-:' ]]; then
+    _save_orig_files $@
+  else
+    local tokens=(${(z)LBUFFER})
+    [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
+    local query="${tokens[-1]}"
+    _fd_execute f "$query"
+  fi
 }
 function _fzf_compgen_path() { _fs_base f . "$1" }
 
 function _cd() {
-  local tokens=(${(z)LBUFFER})
-  [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
-  local query="${tokens[-1]}"
-  _fd_execute d "$query"
+  if [[ $curcontext == ':complete:-command-:' ]]; then
+    _save_orig_cd $@
+  else
+    local tokens=(${(z)LBUFFER})
+    [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
+    local query="${tokens[-1]}"
+    _fd_execute d "$query"
+  fi
 }
 function _fzf_compgen_dir() { _fd_base d . "$1" }
 
