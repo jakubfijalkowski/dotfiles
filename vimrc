@@ -35,7 +35,7 @@ Plug 'junegunn/fzf'                                                             
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
-Plug 'neoclide/coc.nvim',             { 'branch': 'release'}                     " OMG, I love it
+Plug 'neoclide/coc.nvim',             { 'branch': 'release' }                    " OMG, I love it
 Plug 'neoclide/coc-pairs',            { 'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yank',             { 'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json',             { 'do': 'yarn install --frozen-lockfile'}

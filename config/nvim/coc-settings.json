@@ -2,8 +2,10 @@
     "codeLens.enable": true,
     "diagnostic.displayByAle": false,
     "diagnostic.refreshOnInsertMode": true,
+    "diagnostic.refreshAfterSave": true,
     "diagnostic.virtualText": true,
     "diagnostic.errorSign": "!",
+    "diagnostic.checkCurrentLine": true,
     "suggest.enablePreview": true,
     "list.normalMappings": {
         "<C-j>": "normal:j",
@@ -20,10 +22,8 @@
     },
 
     "rust-analyzer.serverPath": "~/.cargo/bin/rust-analyzer",
-    "rust-analyzer.cargo-watch.enable": true,
 
     "yaml.format.enable": true,
-    "yaml.schemaStore.enable": true,
     "yaml.schemas": {
         "kubernetes": [ "*.yaml", "*.yml" ]
     }
