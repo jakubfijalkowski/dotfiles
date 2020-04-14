@@ -43,6 +43,7 @@ Plug 'iamcco/coc-vimlsp',             { 'do': 'yarn install --frozen-lockfile &&
 Plug 'fannheyward/coc-rust-analyzer', { 'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-snippets',         { 'do': 'yarn install --frozen-lockfile'}
 Plug 'honza/vim-snippets'
+Plug 'antoinemadec/coc-fzf'
 
 Plug 'rust-lang/rust.vim'
 Plug 'hashivim/vim-terraform'
@@ -160,8 +161,8 @@ tnoremap <Esc> <C-\><C-n>
 
 " File mgmt & panels
 nnoremap <silent> <C-P> :Files<CR>
-nnoremap <silent> <leader>p :BTags<CR>
-nnoremap <silent> <leader><S-P> :Tags<CR>
+nnoremap <silent> <leader>p :CocFzfList symbols<CR>
+nnoremap <silent> <leader><S-P> :Commands<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
 nmap <silent> <F9> :NERDTreeFocus<CR>
@@ -175,8 +176,8 @@ let g:NERDTreeMapPreviewVSplit = '<C-V>'
 "  Coc
 set tagfunc=CocTagFunc
 
-nnoremap <silent> <F2> :CocList outline<CR>
-nnoremap <silent> <F3> :CocAction<CR>
+nnoremap <silent> <F2> :CocFzfList commands<CR>
+nnoremap <silent> <F3> :CocFzfList actions<CR>
 nnoremap <silent> <F4> :call CocActionAsync('codeLensAction')<CR>
 nnoremap <silent> <F5> :call CocAction('refactor')<CR>
 nnoremap <silent> <leader>= :call CocAction('format')<CR>
@@ -185,6 +186,7 @@ nnoremap <silent> <leader>qf :call CocActionAsync('doQuickfix')<CR>
 nnoremap <silent> [g :call CocActionAsync('diagnosticPrevious')<CR>
 nnoremap <silent> ]g :call CocActionAsync('diagnosticNext')<CR>
 nnoremap <silent> gr :call CocAction('jumpReferences')<CR>
+nnoremap <silent> gd :CocFzfList diagnostics<CR>
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -238,22 +240,15 @@ augroup haskell_bindings
 augroup END
 
 " Rust
-function! s:rustyTags()
-    let root_dir = FindRootDirectory()
-    call jobstart(['rusty-tags', 'vi', '-O', root_dir . '/target/rusty-tags.vi', '--start-dir', root_dir])
-endfunction
-
 augroup rust_bindings
     autocmd!
-    autocmd BufWritePost *.rs :call s:rustyTags()
-    autocmd BufRead *.rs :setlocal tags=./target/rusty-tags.vi;/
     autocmd FileType rust let b:coc_root_patterns = ['Cargo.toml']
 augroup END
 
 " Plugin configs
 
 " FZF
-let g:fzf_layout = { 'down': '20split' }
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 augroup fzf
     autocmd! FileType fzf
     autocmd  FileType fzf set laststatus=0 noshowmode noruler
