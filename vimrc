@@ -22,7 +22,6 @@ Plug 'nathanaelkane/vim-indent-guides'                                          
 Plug 'sheerun/vim-polyglot'                                                      " Lang packs
 Plug 'tpope/vim-repeat'                                                          " Fixup the . command
 Plug 'tpope/vim-surround'                                                        " Take a textobj and change the quotes :D
-Plug 'majutsushi/tagbar'                                                         " The mighty TagBar
 Plug 'ryanoasis/vim-devicons'                                                    " Icon pack
 Plug 'takac/vim-hardtime'                                                        " Force me to use proper movements
 Plug 'machakann/vim-highlightedyank'                                             " Show me what have I yanked
@@ -47,6 +46,8 @@ Plug 'honza/vim-snippets'
 
 Plug 'rust-lang/rust.vim'
 Plug 'hashivim/vim-terraform'
+
+Plug 'liuchengxu/vista.vim'
 
 call plug#end()
 "
@@ -164,7 +165,7 @@ nnoremap <silent> <leader><S-P> :Tags<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
 nmap <silent> <F9> :NERDTreeFocus<CR>
-nmap <silent> <F10> :TagbarToggle<CR>
+nmap <silent> <F10> :Vista!!<CR>
 nmap <silent> <F11> :UndotreeToggle<CR>
 let g:NERDTreeMapOpenSplit = '<C-x>'
 let g:NERDTreeMapPreviewSplit = '<C-X>'
@@ -273,11 +274,9 @@ let NERDTreeDirArrows = 1
 set laststatus=2
 let g:airline_theme                             = 'gruvbox'
 let g:airline_powerline_fonts                   = 1
-let g:airline#extensions#tagbar#enabled         = 1
 let g:airline#extensions#hunks#enabled          = 1
 let g:airline#extensions#whitespace#enabled     = 1
 let g:airline#extensions#tabline#enabled        = 1
-let g:airline#extensions#languageclient#enabled = 1
 let g:airline#extensions#coc#enabled            = 1
 
 " Indent Guides
@@ -292,6 +291,13 @@ let g:undotree_SetFocusWhenToggle = 1
 set undodir=~/.vim/undo
 set undofile
 
+let g:vista_default_executive    = 'coc'
+let g:vista_fzf_preview          = ['bottom:50%']
+let g:vista#renderer#enable_icon = 1
+let g:vista_sidebar_width        = 40
+let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_disable_statusline   = 1
+
 " Other
 let g:EditorConfig_exclude_patterns            = ['fugitive://.*']
 let g:gitgutter_override_sign_column_highlight = 0
@@ -304,7 +310,6 @@ let g:rooter_patterns                          = ['Cargo.toml', '.git/']
 let g:startify_change_to_dir                   = 1
 let g:startify_fortune_use_unicode             = 1
 let g:startify_session_persistence             = 1
-let g:tagbar_autofocus                         = 1
 let g:terraform_fmt_on_save                    = 1
 
 " Helpers
