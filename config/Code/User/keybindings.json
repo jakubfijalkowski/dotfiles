@@ -1,0 +1,11 @@
+[
+    {
+        "key": "alt+/",
+        "command": "-gitlens.showCommitSearch",
+        "when": "gitlens:enabled"
+    },
+    {
+        "key": "f13",
+        "command": "codelens.showLensesInCurrentLine"
+    }
+]
