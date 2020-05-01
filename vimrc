@@ -13,7 +13,6 @@ Plug 'scrooloose/nerdtree'                                                      
 Plug 'vim-airline/vim-airline'                                                   " Bottom bar
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'kassio/neoterm'                                                            " :terminal helpers
 Plug 'scrooloose/nerdcommenter'                                                  " Comments, the <leader>c* keys
 Plug 'godlygeek/tabular'                                                         " Align lines
 Plug 'easymotion/vim-easymotion'                                                 " ,s hotkey
@@ -29,6 +28,7 @@ Plug 'mhinz/vim-startify'                                                       
 Plug 'tpope/vim-fugitive'                                                        " I'm yet to get used to it
 Plug 'airblade/vim-rooter'                                                       " Find the root, esp. with/ startify
 Plug 'editorconfig/editorconfig-vim'                                             " It should work someday
+Plug 'qpkorr/vim-bufkill'                                                        " bdelete override with sanity
 
 Plug 'junegunn/fzf'                                                              " FZF (CtrlP replacement)
 Plug 'junegunn/fzf.vim'
@@ -110,6 +110,7 @@ autocmd FileType zsh setlocal shiftwidth=2 tabstop=2
 
 " Search
 set incsearch
+set inccommand=nosplit
 set ignorecase
 set hlsearch
 set gdefault
@@ -219,10 +220,6 @@ nmap s <Plug>(easymotion-overwin-f)
 map <Leader>j <Plug>(easymotion-jk)
 map <Leader>k <Plug>(easymotion-jk)
 
-"  Neoterm
-nmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
-xmap <silent> <Leader>tt <Plug>(neoterm-repl-send)
-
 " Haskell
 "
 augroup haskell_bindings
@@ -299,7 +296,6 @@ let g:gitgutter_override_sign_column_highlight = 0
 let g:hardtime_default_on                      = 1
 let g:hardtime_ignore_buffer_patterns          = ["NERD.*"]
 let g:hardtime_maxcount                        = 5
-let g:neoterm_automap_keys                     = ''
 let g:rooter_manual_only                       = 1
 let g:rooter_patterns                          = ['Cargo.toml', '.git/']
 let g:startify_change_to_dir                   = 1
