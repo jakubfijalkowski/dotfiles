@@ -163,12 +163,12 @@ tnoremap <Esc> <C-\><C-n>
 " File mgmt & panels
 nnoremap <silent> <C-P> :Files<CR>
 nnoremap <silent> <leader>p :CocFzfList symbols<CR>
-nnoremap <silent> <leader><S-P> :Commands<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
-nmap <silent> <F9> :NERDTreeFocus<CR>
-nmap <silent> <F10> :Vista!!<CR>
-nmap <silent> <F11> :UndotreeToggle<CR>
+nnoremap <silent> <F9> :NERDTreeFocus<CR>
+nnoremap <silent> <F10> :UndotreeToggle<CR>
+nnoremap <silent> <F11> :Vista!!<CR>
+nnoremap <silent> <F12> :CocFzfList commands<CR>
 let g:NERDTreeMapOpenSplit = '<C-x>'
 let g:NERDTreeMapPreviewSplit = '<C-X>'
 let g:NERDTreeMapOpenVSplit = '<C-v>'
@@ -177,10 +177,10 @@ let g:NERDTreeMapPreviewVSplit = '<C-V>'
 "  Coc
 set tagfunc=CocTagFunc
 
-nnoremap <silent> <F2> :CocFzfList commands<CR>
-nnoremap <silent> <F3> :CocFzfList actions<CR>
+nnoremap <silent> <F5> :CocFzfList actions<CR>
 nnoremap <silent> <F4> :call CocActionAsync('codeLensAction')<CR>
-nnoremap <silent> <F5> :call CocAction('refactor')<CR>
+nnoremap <silent> <F3> :Commands<CR>
+nnoremap <silent> <F2> :call CocActionAsync('rename')<CR>
 nnoremap <silent> <leader>= :call CocAction('format')<CR>
 nnoremap <silent> <leader>qf :call CocActionAsync('doQuickfix')<CR>
 

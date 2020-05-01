@@ -135,12 +135,12 @@ bindsym --release Shift+Control+Print exec flameshot screen -p ~/Pictures/Screen
 # Other
 bindsym Mod1+F7 exec --no-startup-id $scripts/toggle_touchpad
 # Remember - F13 - 191
-bindcode 191 exec --no-startup-id $scripts/connect_headphones
-bindcode 192 exec --no-startup-id /usr/bin/bluetoothctl disconnect
+#bindcode 191 exec --no-startup-id $scripts/connect_headphones
+#bindcode 192 exec --no-startup-id /usr/bin/bluetoothctl disconnect
 
-bindcode 194 exec --no-startup-id $scripts/music iris
-bindcode 195 exec --no-startup-id $scripts/music shuffle
-bindcode 196 exec --no-startup-id $scripts/music
+#bindcode 194 exec --no-startup-id $scripts/music iris
+#bindcode 195 exec --no-startup-id $scripts/music shuffle
+#bindcode 196 exec --no-startup-id $scripts/music
 
 # Custom modes
 set $mode_actions Actions: (c)hrome fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
