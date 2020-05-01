@@ -6,16 +6,13 @@
         100
     ],
     "editor.lineNumbers": "relative",
-
     "explorer.openEditors.visible": 0,
     "explorer.autoReveal": false,
     "explorer.confirmDragAndDrop": false,
     "extensions.ignoreRecommendations": false,
     "files.eol": "\n",
-
     "window.zoomLevel": 0,
     "window.menuBarVisibility": "toggle",
-
     "gitlens.hovers.currentLine.enabled": false,
     "gitlens.currentLine.enabled": false,
     "gitlens.hovers.currentLine.over": "line",
@@ -33,7 +30,9 @@
         "containers"
     ],
     "gitlens.advanced.messages": {
-        "suppressCommitHasNoPreviousCommitWarning": false, "suppressCommitNotFoundWarning": true, "suppressFileNotUnderSourceControlWarning": false,
+        "suppressCommitHasNoPreviousCommitWarning": false,
+        "suppressCommitNotFoundWarning": true,
+        "suppressFileNotUnderSourceControlWarning": false,
         "suppressGitVersionWarning": false,
         "suppressLineUncommittedWarning": false,
         "suppressNoRepositoryWarning": false,
@@ -49,9 +48,7 @@
     "gitlens.views.repositories.enabled": false,
     "gitlens.views.fileHistory.enabled": true,
     "gitlens.views.lineHistory.enabled": true,
-
     "typescript.check.npmIsInstalled": false,
-
     "vim.useSystemClipboard": true,
     "vim.foldfix": true,
     "vim.leader": ",",
@@ -59,7 +56,10 @@
     "vim.sneak": true,
     "vim.normalModeKeyBindings": [
         {
-            "before": [ "g", "r" ],
+            "before": [
+                "g",
+                "r"
+            ],
             "after": [],
             "commands": [
                 {
@@ -69,29 +69,31 @@
             ]
         },
         {
-            "after": [ "<leader>", "<leader>", "s" ],
-            "before": [ "<leader>", "s" ]
+            "after": [
+                "<leader>",
+                "<leader>",
+                "s"
+            ],
+            "before": [
+                "<leader>",
+                "s"
+            ]
         }
     ],
     "breadcrumbs.enabled": true,
     "msbuildProjectTools.nuget.includePreRelease": true,
     "msbuildProjectTools.nuget.newestVersionsFirst": true,
-
     "omnisharp.path": "latest",
     "omnisharp.enableEditorConfigSupport": true,
     "omnisharp.enableRoslynAnalyzers": true,
     "omnisharp.useGlobalMono": "never",
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 2000,
     "razor.disabled": true,
-
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.formatOnSave": true
+    },
+    "[typescriptreact]": {
+        "editor.formatOnSave": true
     },
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -102,23 +104,6 @@
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
     },
-
-    "atlascode.jira.workingSite": {
-        "baseUrlSuffix": "atlassian.net"
-    },
-    "atlascode.bitbucket.issues.explorerEnabled": false,
-    "atlascode.bitbucket.pipelines.explorerEnabled": false,
-    "atlascode.bitbucket.statusbar.enabled": false,
-    "atlascode.jira.statusbar.showSite": true,
-    "atlascode.jira.statusbar.showProject": true,
-    "atlascode.jira.statusbar.showProduct": false,
-    "atlascode.jira.statusbar.showUser": false,
-    "atlascode.jira.statusbar.showLogin": false,
-    "atlascode.showWelcomeOnInstall": false,
-    "yaml.schemas": {
-        "file:///home/fiolek/.vscode/extensions/atlassian.atlascode-2.2.1/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
-    },
     "editor.fontWeight": "300",
-    "vim.easymotionMarkerFontFamily": "Iosevka"
+    "vim.easymotionMarkerFontFamily": "Iosevka",
 }
-
