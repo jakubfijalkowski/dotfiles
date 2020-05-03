@@ -36,6 +36,8 @@ function _fd_select() {
   esac
   _fd_filter $1 "$2" | fzf \
     --ansi $opts \
+    --select-1 \
+    --exit-0 \
     --layout=reverse --height=75% \
     --tiebreak=begin --bind=tab:down,btab:up,change:top \
     --cycle --query="$(basename "$2")"
