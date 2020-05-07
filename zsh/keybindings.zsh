@@ -29,10 +29,7 @@ bindkey '^?'      backward-delete-char                   # bs         delete one
 bindkey '^[[3~'   delete-char                            # delete     delete one char forward
 bindkey '^[[1;5C' forward-word                           # ctrl+right go forward one word
 bindkey '^[[1;5D' backward-word                          # ctrl+left  go backward one word
-bindkey '^H'      backward-kill-word                     # ctrl+bs    delete previous word
 bindkey '^[[3;5~' kill-word                              # ctrl+del   delete next word
-bindkey '^K'      kill-line                              # ctrl+k     delete line after cursor
-bindkey '^J'      backward-kill-line                     # ctrl+j     delete line before cursor
 bindkey '^N'      kill-buffer                            # ctrl+n     delete all lines
 bindkey '^_'      undo                                   # ctrl+/     undo
 bindkey '^\'      redo                                   # ctrl+\     redo
@@ -44,5 +41,11 @@ bindkey '^[[1;3A' my-cd-up                               # alt+up     cd ..
 bindkey '^[[1;3B' fzf-cd-widget                          # alt+down   fzf cd
 bindkey '^R'      my-fzf-history-widget                  # ctrl+r     fzf history
 bindkey '.'       my-expand-dot-to-parent-directory-path # .          change ... to ../..
+
+# VIM-like movements
+bindkey '^H'      backward-word                          # ctrl+h    back previous word
+bindkey '^L'      forward-word                           # ctrl+l    forward previous word
+bindkey '^K'      up-line-or-beginning-search            # ctrl+k    prev cmd in global history
+bindkey '^J'      down-line-or-beginning-search          # ctrl+j    next cmd in global history
 
 bindkey '\C-x\C-e' edit-command-line # in-$EDITOR cmd edit
