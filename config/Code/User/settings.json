@@ -87,6 +87,8 @@
     "omnisharp.enableEditorConfigSupport": true,
     "omnisharp.enableRoslynAnalyzers": true,
     "omnisharp.useGlobalMono": "never",
+    "csharp.semanticHighlighting.enabled": true,
+    "omnisharp.enableDecompilationSupport": true,
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 2000,
     "razor.disabled": true,
     "[typescript]": {
