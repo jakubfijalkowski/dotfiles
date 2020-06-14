@@ -20,6 +20,9 @@
 [push]
   default = matching
 
+[pull]
+	rebase = true
+
 [commit]
 	gpgsign = true
 
