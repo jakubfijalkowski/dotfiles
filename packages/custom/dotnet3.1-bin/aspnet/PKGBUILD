@@ -1,16 +1,17 @@
-pkgname='aspnet3.1-runtime-bin'
-_runtimever=3.1.1
-_aspnetver=3.1.1
-_sdkver=3.1.101
-pkgver=${_aspnetver/-/}
-pkgver=${pkgver//-/+}
+_runtimever=3.1.5
+_aspnetver=3.1.5
+_sdkver=3.1.301
 pkgrel=1
 arch=('x86_64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=(staticlibs)
-source=('https://download.visualstudio.microsoft.com/download/pr/c4b503d6-2f41-4908-b634-270a0a1dcfca/c5a20e42868a48a2cd1ae27cf038044c/dotnet-sdk-3.1.101-linux-x64.tar.gz')
-sha512sums=('eeee75323be762c329176d5856ec2ecfd16f06607965614df006730ed648a5b5d12ac7fd1942fe37cfc97e3013e796ef278e7c7bc4f32b8680585c4884a8a6a1')
+source=('https://download.visualstudio.microsoft.com/download/pr/8db2b522-7fa2-4903-97ec-d6d04d297a01/f467006b9098c2de256e40d2e2f36fea/dotnet-sdk-3.1.301-linux-x64.tar.gz')
+sha512sums=('dd39931df438b8c1561f9a3bdb50f72372e29e5706d3fb4c490692f04a3d55f5acc0b46b8049bc7ea34dedba63c71b4c64c57032740cbea81eef1dce41929b4e')
+
+pkgname='aspnet3.1-runtime-bin'
+pkgver=${_aspnetver/-/}
+pkgver=${pkgver//-/+}
 
 package_dotnet3.1-host-bin()
 {
