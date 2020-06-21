@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.8
+pkgver=1.0.9
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -66,6 +66,8 @@ depends=(
   'terminus-font'
   'ttf-liberation'
   'ttf-iosevka'
+  'ttf-joypixels'
+  'ttf-nerd-fonts-symbols'
 
   # Gnome apps & config
   'eog'
@@ -127,7 +129,7 @@ depends=(
   'chromium-widevine'
   'libva-intel-driver'
   'libva-utils'
-  'libva-vdpau-driver-chromium'
+  'libva-vdpau-driver-vp9'
   'vulkan-intel'
 
   # Misc apps
@@ -186,7 +188,4 @@ depends=(
   'terraform-lsp-bin'
   'visual-studio-code-bin'
   'yarn'
-
-  # Keybase
-  'keybase'
 )
