@@ -92,7 +92,8 @@
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 2000,
     "razor.disabled": true,
     "[typescript]": {
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescriptreact]": {
         "editor.formatOnSave": true
