@@ -181,7 +181,7 @@ depends=(
   'azuredatastudio'
   'kubectl-bin'
   'kubectx'
-  'kubernetes-helm-bin'
+  'helm'
   'npm'
   'postman-bin'
   'terraform'
