@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.9
+pkgver=1.0.10
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -114,15 +114,16 @@ depends=(
   'picom-git'
   'pinentry-dmenu'
   'polybar'
+  'python-i3ipc'
   'redshift'
   'rofi'
   'rofi-calc'
   'rofi-greenclip'
+  'xcwd-git'
   'xsel'
   'xss-lock'
   'yubikey-manager'
   'yubikey-touch-detector'
-  'python-i3ipc'
 
   # Browsers + drivers
   'chromium-vaapi'
@@ -179,7 +180,7 @@ depends=(
   # Work-related tools
   'acme.sh'
   'azuredatastudio'
-  'kubectl-bin'
+  'kubectl'
   'kubectx'
   'helm'
   'npm'
@@ -187,5 +188,16 @@ depends=(
   'terraform'
   'terraform-lsp-bin'
   'visual-studio-code-bin'
-  'yarn'
+
+  'aspnet-runtime'
+  'aspnet-runtime-preview'
+  'aspnet-targeting-pack'
+  'aspnet-targeting-pack-preview'
+  'dotnet-host-preview'
+  'dotnet-runtime'
+  'dotnet-runtime-preview'
+  'dotnet-sdk'
+  'dotnet-sdk-preview'
+  'dotnet-targeting-pack'
+  'dotnet-targeting-pack-preview'
 )
