@@ -179,7 +179,7 @@ depends=(
 
   # Work-related tools
   'acme.sh'
-  'azuredatastudio'
+  'azuredatastudio-bin'
   'kubectl'
   'kubectx'
   'helm'
