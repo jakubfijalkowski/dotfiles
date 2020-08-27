@@ -1,14 +1,14 @@
 [core]
   autocrlf = input
   editor = "vim"
+  pager = "delta"
 
 [user]
   name = Jakub Fijałkowski
   email = kuba@codinginfinity.me
 
 [alias]
-  br = branch
-  undo = "!f() { \\\n    git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
+  undo = "!f() { \\\n git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
   update = "!f() { \\\n git fetch origin ${1}:${1}; \\\n}; f"
   switchto = "!f() { \\\n git fetch origin ${1}:${1}; git checkout ${1}; \\\n}; f"
 
@@ -21,16 +21,41 @@
   default = matching
 
 [pull]
-	rebase = true
+  rebase = true
 
 [commit]
-	gpgsign = true
+  gpgsign = true
+
+[diff]
+  colorMoved = true
+
+[interactive]
+  diffFilter = delta --color-only
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[delta]
+  syntax-theme = gruvbox
+  features = side-by-side line-numbers decorations
+  whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+  hunk-header-decoration-style = cyan box ul
+
+[delta "line-numbers"]
+  line-numbers-left-style = cyan
+  line-numbers-right-style = cyan
+  line-numbers-minus-style = 124
+  line-numbers-plus-style = 28
 
 [include]
   path = "~/.local/gitconfig"
+
+# vim:set et sw=2 ts=2 tw=100:

@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.10
+pkgver=1.0.11
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -37,6 +37,7 @@ depends=(
   'curl'
   'exa'
   'fd'
+  'git-delta-bin'
   'jq'
   'lscolors-git'
   'p7zip'
