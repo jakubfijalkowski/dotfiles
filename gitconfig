@@ -56,6 +56,6 @@
   line-numbers-plus-style = 28
 
 [include]
-  path = "~/.local/gitconfig"
+  path = "~/.dotfiles-private/gitconfig"
 
 # vim:set et sw=2 ts=2 tw=100:
