@@ -1,0 +1,7 @@
+[Match]
+Name=wlan*
+SSID=Illuminati*
+
+[Network]
+DHCP=yes
+DNS=2a02:a310:540:8700:ba27:ebff:fea8:7706 192.168.0.5
