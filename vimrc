@@ -35,13 +35,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
 Plug 'neoclide/coc.nvim',             { 'branch': 'release' }                    " OMG, I love it
-Plug 'neoclide/coc-pairs',            { 'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-yank',             { 'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json',             { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-pairs',            { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-snippets',         { 'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yaml',             { 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yank',             { 'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-vimlsp',             { 'do': 'yarn install --frozen-lockfile && yarn build'}
 Plug 'fannheyward/coc-rust-analyzer', { 'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-snippets',         { 'do': 'yarn install --frozen-lockfile'}
 Plug 'honza/vim-snippets'
 Plug 'antoinemadec/coc-fzf'
 
@@ -221,7 +221,6 @@ map <Leader>j <Plug>(easymotion-jk)
 map <Leader>k <Plug>(easymotion-jk)
 
 " Haskell
-"
 augroup haskell_bindings
     autocmd!
 
@@ -240,6 +239,12 @@ augroup END
 augroup rust_bindings
     autocmd!
     autocmd FileType rust let b:coc_root_patterns = ['Cargo.toml']
+augroup END
+
+" Terraform
+augroup terraform_bindings
+    autocmd!
+    autocmd FileType terraform let b:coc_root_patterns = ['main.tf']
 augroup END
 
 " Plugin configs
