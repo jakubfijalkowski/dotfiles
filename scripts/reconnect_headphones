@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+bluetoothctl remove $HEADPHONES_MAC
+bluetoothctl scan on &
+SCAN_PID=$!
+sleep 5
+kill $SCAN_PID
+bluetoothctl trust $HEADPHONES_MAC
+bluetoothctl pair $HEADPHONES_MAC
+bluetoothctl connect $HEADPHONES_MAC
