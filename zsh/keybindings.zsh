@@ -43,9 +43,15 @@ bindkey '^R'      my-fzf-history-widget                  # ctrl+r     fzf histor
 bindkey '.'       my-expand-dot-to-parent-directory-path # .          change ... to ../..
 
 # VIM-like movements
-bindkey '^H'      backward-word                          # ctrl+h    back previous word
-bindkey '^L'      forward-word                           # ctrl+l    forward previous word
+bindkey '^H'      backward-char                          # ctrl+h
+bindkey '^L'      forward-char                           # ctrl+l
+bindkey '^[h'     backward-word                          # alt+h
+bindkey '^[l'     forward-word                           # alt+l
+
+bindkey '^^'      beginning-of-line                      # ctrl+6 (^)
+bindkey '^\'      end-of-line                            # ctrl+4 ($)
+
 bindkey '^K'      up-line-or-beginning-search            # ctrl+k    prev cmd in global history
 bindkey '^J'      down-line-or-beginning-search          # ctrl+j    next cmd in global history
 
-bindkey '\C-x\C-e' edit-command-line # in-$EDITOR cmd edit
+bindkey '^[H'     run-help                               # alt+shift+h
