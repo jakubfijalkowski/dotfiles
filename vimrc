@@ -169,28 +169,32 @@ nnoremap <silent> <F9> :NERDTreeFocus<CR>
 nnoremap <silent> <F10> :UndotreeToggle<CR>
 nnoremap <silent> <F11> :Vista!!<CR>
 nnoremap <silent> <F12> :CocFzfList commands<CR>
+
 let g:NERDTreeMapOpenSplit = '<C-x>'
 let g:NERDTreeMapPreviewSplit = '<C-X>'
 let g:NERDTreeMapOpenVSplit = '<C-v>'
 let g:NERDTreeMapPreviewVSplit = '<C-V>'
+nnoremap <silent> gr :NERDTreeFind<CR>
 
 "  Coc
 set tagfunc=CocTagFunc
 
-nnoremap <silent> <F5> :CocFzfList actions<CR>
-nnoremap <silent> <F4> :call CocActionAsync('codeLensAction')<CR>
-nnoremap <silent> <F3> :Commands<CR>
-nnoremap <silent> <F2> :call CocActionAsync('rename')<CR>
-nnoremap <silent> <leader>= :call CocAction('format')<CR>
-nnoremap <silent> <leader>qf :call CocActionAsync('doQuickfix')<CR>
+nmap <silent> <F2> <Plug>(coc-rename)
+nmap <silent> <F3> :CocFzfList diagnostics<CR>
+nmap <silent> <F4> <Plug>(coc-codelens-action)
+vmap <silent> <F5> <Plug>(coc-codeaction-selected)
+nmap <silent> <F5> <Plug>(coc-codeaction-selected)l
+imap <F5> <C-o>:call CocActionAsync('codeAction', 'char')<CR>
 
-nnoremap <silent> [g :call CocActionAsync('diagnosticPrevious')<CR>
-nnoremap <silent> ]g :call CocActionAsync('diagnosticNext')<CR>
-nnoremap <silent> gr :call CocAction('jumpReferences')<CR>
-nnoremap <silent> gd :CocFzfList diagnostics<CR>
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+nmap <silent> <leader>= <Plug>(coc-format)
+nmap <silent> <leader>qf <Plug>(coc-fix-current)
+
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> K :call <SID>show_documentation()<CR>
+
+imap <silent><expr> <c-space> coc#refresh()
+imap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 let g:coc_snippet_next = '<tab>'
 
@@ -279,7 +283,7 @@ let g:airline#extensions#coc#enabled            = 1
 " Indent Guides
 let g:indent_guides_guide_size            = 1
 let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_exclude_filetypes     = ['help', 'nerdtree', 'fzf']
+let g:indent_guides_exclude_filetypes     = ['help', 'nerdtree', 'fzf', '__vista__']
 let g:indent_guides_start_level           = 2
 
 " Undotree
@@ -288,18 +292,19 @@ let g:undotree_SetFocusWhenToggle = 1
 set undodir=~/.vim/undo
 set undofile
 
-let g:vista_default_executive    = 'coc'
-let g:vista_fzf_preview          = ['bottom:50%']
 let g:vista#renderer#enable_icon = 1
-let g:vista_sidebar_width        = 40
-let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_default_executive    = 'coc'
 let g:vista_disable_statusline   = 1
+let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_fzf_preview          = ['bottom:50%']
+let g:vista_sidebar_width        = 40
+let g:vista_rust_executive       = 'ctags'
 
 " Other
 let g:EditorConfig_exclude_patterns            = ['fugitive://.*']
 let g:gitgutter_override_sign_column_highlight = 0
 let g:hardtime_default_on                      = 1
-let g:hardtime_ignore_buffer_patterns          = ["NERD.*"]
+let g:hardtime_ignore_buffer_patterns          = ['NERD.*', '__vista__']
 let g:hardtime_maxcount                        = 5
 let g:rooter_manual_only                       = 1
 let g:rooter_patterns                          = ['Cargo.toml', '.git/']
