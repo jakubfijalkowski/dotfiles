@@ -19,6 +19,7 @@
 
 [push]
   default = matching
+  gpgSign = if-asked
 
 [pull]
   rebase = true
