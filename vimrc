@@ -180,21 +180,21 @@ nnoremap <silent> gr :NERDTreeFind<CR>
 set tagfunc=CocTagFunc
 
 nmap <silent> <F2> <Plug>(coc-rename)
-nmap <silent> <F3> :CocFzfList diagnostics<CR>
+nnoremap <silent> <F3> :CocFzfList diagnostics<CR>
 nmap <silent> <F4> <Plug>(coc-codelens-action)
 vmap <silent> <F5> <Plug>(coc-codeaction-selected)
 nmap <silent> <F5> <Plug>(coc-codeaction-selected)l
-imap <F5> <C-o>:call CocActionAsync('codeAction', 'char')<CR>
+inoremap <F5> <C-o>:call CocActionAsync('codeAction', 'char')<CR>
 
 nmap <silent> <leader>= <Plug>(coc-format)
 nmap <silent> <leader>qf <Plug>(coc-fix-current)
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-imap <silent><expr> <c-space> coc#refresh()
-imap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 let g:coc_snippet_next = '<tab>'
 
