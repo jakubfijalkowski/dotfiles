@@ -1,9 +1,12 @@
-#!/bin/sh
+#!/bin/env bash
 
-rfkill unblock bluetooth
-bluetoothctl disconnect $HEADPHONES_MAC
-bluetoothctl power off
-bluetoothctl power on
+if [[ "$(rfkill --json | jq -Mr '.""[] | select(.type == "bluetooth").hard')" == "blocked" ]]; then
+    rfkill unblock bluetooth
+fi
+if bluetoothctl show | grep -q 'Powered: no'; then
+    bluetoothctl power on
+fi
+
 bluetoothctl connect $HEADPHONES_MAC
 
 sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
