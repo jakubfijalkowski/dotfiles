@@ -7,7 +7,14 @@ if bluetoothctl show | grep -q 'Powered: no'; then
     bluetoothctl power on
 fi
 
-bluetoothctl connect $HEADPHONES_MAC
+for i in $(seq 1 10); do
+    echo "Trying $i/10"
+    bluetoothctl connect $HEADPHONES_MAC
+    sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
+    if [[ "$sink" != "" ]]; then
+        break
+    fi
+done
 
 sink=$(pactl list short sinks | grep 'bluez' | awk -F' ' '{print $1}')
 if [ "$sink" = "" ]; then
