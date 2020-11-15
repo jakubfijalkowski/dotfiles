@@ -273,12 +273,17 @@ let NERDTreeDirArrows = 1
 
 " Airline and statusline
 set laststatus=2
-let g:airline_theme                             = 'gruvbox'
-let g:airline_powerline_fonts                   = 1
-let g:airline#extensions#hunks#enabled          = 1
-let g:airline#extensions#whitespace#enabled     = 1
-let g:airline#extensions#tabline#enabled        = 1
-let g:airline#extensions#coc#enabled            = 1
+let g:airline_theme                         = 'gruvbox'
+let g:airline_powerline_fonts               = 1
+let g:airline_highlighting_cache            = 1
+let g:airline#extensions#hunks#enabled      = 1
+let g:airline#extensions#whitespace#enabled = 1
+let g:airline#extensions#tabline#enabled    = 1
+let g:airline#extensions#coc#enabled        = 1
+let g:airline_extensions = [
+      \ 'branch', 'coc', 'fugitiveline', 'fzf', 'quickfix', 'tabline',
+      \ 'term', 'undotree', 'vista', 'whitespace'
+      \ ]
 
 " Indent Guides
 let g:indent_guides_guide_size            = 1
