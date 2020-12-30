@@ -18,6 +18,7 @@ alias tpt="terraform plan -target"
 alias tpo="terraform plan -out"
 alias ta="terraform apply"
 alias tv="terraform validate"
+alias tg="terragrunt"
 
 alias k="kubectl"
 alias kc="kubectx"
