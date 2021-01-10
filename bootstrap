@@ -107,7 +107,7 @@ function install_fonts() {
     curl -sL https://github.com/lukas-w/font-logos/blob/master/assets/font-logos.ttf\?raw\=true -o font-logos.ttf
 
     echo "Font Awesome"
-    fa_version="5.7.2"
+    fa_version="5.15.1"
     curl -sL https://use.fontawesome.com/releases/v$fa_version/fontawesome-free-$fa_version-desktop.zip -o /tmp/font-awesome.zip
     unzip -q /tmp/font-awesome.zip -d /tmp/font-awesome
     cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Regular-400.otf" fontawesome-regular.otf
