@@ -49,6 +49,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'hashivim/vim-terraform'
 
 Plug 'liuchengxu/vista.vim'
+Plug 'junegunn/goyo.vim'
 
 call plug#end()
 "
@@ -304,6 +305,23 @@ let g:vista_echo_cursor_strategy = 'floating_win'
 let g:vista_fzf_preview          = ['bottom:50%']
 let g:vista_sidebar_width        = 40
 let g:vista_rust_executive       = 'ctags'
+
+" Goyo
+function! s:goyo_enter()
+  set textwidth=0
+  set scrolloff=20
+  set wrap
+endfunction
+
+function! s:goyo_leave()
+  set scrolloff=4
+  set textwidth=100
+  set nowrap
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+let g:goyo_width                               = 140
 
 " Other
 let g:EditorConfig_exclude_patterns            = ['fugitive://.*']
