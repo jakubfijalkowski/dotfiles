@@ -155,9 +155,12 @@ function configure_user() {
   link "config/polybar/config"
   link "config/redshift/redshift.conf"
   link "config/rofi/config.rasi"
+  link "config/safeeyes"
+
   link "config/systemd/user/change-wallpaper.service"
   link "config/systemd/user/change-wallpaper.timer"
   link "config/systemd/user/mopidy.service"
+  link "config/systemd/user/safeeyes.service"
 
   link "config/Code/User/settings.json"
   link "config/Code/User/locale.json"
@@ -178,9 +181,8 @@ function configure_user() {
   service "user" "yubikey-touch-detector.service"
   service "user" "dirmngr.service"
   service "user" "change-wallpaper.timer"
-  service "user" "keybase.service"
   service "user" "xdg-user-dirs-update.service"
-  service "user" "mopidy"
+  service "user" "safeeyes.service"
 }
 
 function configure_yubikey() {
