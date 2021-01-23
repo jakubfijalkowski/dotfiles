@@ -1,0 +1,21 @@
+#!/bin/sh
+
+trap 'print_dnd' USR1
+
+dnd="0"
+print_dnd() {
+    if [ "$dnd" = "true" ]; then
+        echo $dnd
+    else
+        echo ""
+    fi
+}
+
+while true; do
+    dnd=$(dunstctl is-paused)
+    print_dnd
+
+    sleep 1200 &
+    wait $!
+done
+

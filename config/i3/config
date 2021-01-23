@@ -143,16 +143,17 @@ bindsym Mod1+F7 exec --no-startup-id $scripts/toggle_touchpad
 #bindcode 196 exec --no-startup-id $scripts/music
 
 # Custom modes
-set $mode_actions Actions: (c)hrome fil(e)s (o)paque (g)reenclip_clear (l)ock (k)calc (r)estart
+set $mode_actions Actions: (b)rowser fil(e)s (d)nd (o)paque (g)reenclip_clear (l)ock (c)alc (r)estart
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
-    bindsym c exec --no-startup-id available_browser; mode "default"
+    bindsym b exec --no-startup-id available_browser; mode "default"
     bindsym e exec nautilus; mode "default"
 
+    bindsym d exec --no-startup-id toggle_dnd; mode "default"
     bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
     bindsym g exec --no-startup-id $scripts/greenclip_clear; mode "default"
     bindsym l exec --no-startup-id $scripts/i3exit lock; mode "default"
-    bindsym k exec --no-startup-id $scripts/calc; mode "default"
+    bindsym c exec --no-startup-id $scripts/calc; mode "default"
     bindsym r restart; mode "default"
 
     bindsym Return mode "default"

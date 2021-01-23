@@ -52,7 +52,7 @@ font-7 = ${xrdb:polybar.font.fallback:Font Awesome 5 Brands:style=Solid:size=17;
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = yubikey arch-updates graphics wlan battery headphones audio separator date
+modules-right = yubikey dnd arch-updates graphics wlan battery headphones audio separator date
 
 tray-position = right
 tray-padding = 2
@@ -66,6 +66,16 @@ screenchange-reload = true
 [global/wm]
 margin-top = 0
 margin-bottom = 0
+
+[module/dnd]
+type = custom/script
+tail = true
+interval = 3600
+exec = ~/.local/bin/scripts/check_dnd
+format = %{T7}%{T-}
+format-foreground = ${colors.tint_urgent}
+
+click-left = toggle_dnd
 
 [module/arch-updates]
 type = custom/script
