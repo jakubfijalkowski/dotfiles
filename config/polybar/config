@@ -107,28 +107,6 @@ content = "|"
 content-padding = 1
 content-foreground = ${colors.icons}
 
-[module/azure]
-type = custom/script
-exec-if = test -f ~/.azure/azureProfile.json
-exec = ~/.local/bin/scripts/azure_profile
-tail = true
-interval = 60
-
-format-prefix = " "
-format-prefix-foreground = ${colors.icons}
-format-foreground = ${colors.main_fg}
-
-[module/kubernetes]
-type = custom/script
-exec-if = test -f ~/.kube/config
-exec = ~/.local/bin/scripts/kubectl_context
-tail = true
-interval = 60
-
-format-prefix = " "
-format-prefix-foreground = ${colors.icons}
-format-foreground = ${colors.main_fg}
-
 [module/headphones]
 type = custom/script
 exec = ~/.local/bin/scripts/music_headphones

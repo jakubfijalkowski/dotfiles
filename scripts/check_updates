@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 trap 'print_updates' USR1
 
 updates="0"
