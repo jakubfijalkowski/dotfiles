@@ -1,8 +1,6 @@
 {
     "codeLens.enable": true,
-    "diagnostic.displayByAle": false,
     "diagnostic.refreshOnInsertMode": true,
-    "diagnostic.refreshAfterSave": true,
     "diagnostic.virtualText": false,
     "diagnostic.errorSign": "!",
     "diagnostic.checkCurrentLine": false,
@@ -16,18 +14,27 @@
     "languageserver": {
         "terraform": {
             "command": "terraform-ls",
-            "args": ["serve"],
+            "args": [
+                "serve"
+            ],
             "filetypes": [
-                "terraform"
-            ]
+                "terraform",
+                "tf"
+            ],
+            "initializationOptions": {},
+            "settings": {}
         }
     },
 
-    "rust-analyzer.serverPath": "~/.cargo/bin/rust-analyzer",
+    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
     "rust-analyzer.procMacro.enable": true,
+    "rust-analyzer.server.path": "~/.cargo/bin/rust-analyzer",
 
     "yaml.format.enable": true,
     "yaml.schemas": {
-        "kubernetes": [ "*.yaml", "*.yml" ]
+        "kubernetes": [
+            "*.yaml",
+            "*.yml"
+        ]
     }
 }

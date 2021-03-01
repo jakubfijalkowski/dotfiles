@@ -62,11 +62,6 @@ set encoding=utf-8
 set nobomb
 filetype plugin indent on
 
-syntax enable
-set termguicolors
-set background=dark
-colorscheme gruvbox
-
 " Basic
 set clipboard=unnamedplus
 set showmode
@@ -93,6 +88,14 @@ set wildignore+=.cabal,.cabal-sandbox,dist " Haskell
 set wildignore+=*.lock.json
 
 set diffopt=filler,vertical
+
+" Display
+syntax enable
+set termguicolors
+set background=dark
+colorscheme gruvbox
+
+highlight CocHintSign guifg=#4e6159
 
 " Rulers
 set textwidth=100
@@ -156,7 +159,6 @@ nnoremap <silent> <S-Down> :resize -1<CR>
 nnoremap <silent> <S-Left> :vertical :resize -1<CR>
 nnoremap <silent> <S-Right> :vertical :resize +1<CR>
 
-nnoremap Y y$
 tnoremap <Esc> <C-\><C-n>
 
 " Plugins
