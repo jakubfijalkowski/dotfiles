@@ -1,16 +1,17 @@
 #!/usr/bin/env zsh
 
-# Ensure safeeyes is running
-systemctl start --user safeeyes
+if [[ "$(systemctl is-active --user safeeyes.service)" == "inactive" ]]; then
+  systemctl start --user safeeyes.service
+fi
 
-if [[ "$(dunstctl is-paused)" == "false" ]]; then
-  echo "Disabling DND"
-  safeeyes --disable
-  dunstctl set-paused true
-else
+if [[ "$(dunstctl is-paused)" == "true" || "$1" == "--force-enable" ]]; then
   echo "Enabling DND"
   safeeyes --enable
   dunstctl set-paused false
+else
+  echo "Disabling DND"
+  safeeyes --disable
+  dunstctl set-paused true
 fi
 
 pkill -f -USR1 'bin/scripts/check_dnd$' >/dev/null
