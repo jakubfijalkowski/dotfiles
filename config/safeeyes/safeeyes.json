@@ -38,11 +38,11 @@
             "version": "0.0.1"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "id": "audiblealert",
             "settings": {
                 "post_break_alert": true,
-                "pre_break_alert": true
+                "pre_break_alert": false
             },
             "version": "0.0.3"
         },
