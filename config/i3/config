@@ -197,6 +197,7 @@ exec --no-startup-id $scripts/configure_displays
 exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 exec_always --no-startup-id "killall -q polybar; polybar main&"
 exec_always --no-startup-id "pkill -f 'autoname_workspaces\$'; $scripts/autoname_workspaces&"
+exec_always --no-startup-id $scripts/toggle_dnd --force-enable&
 
 # User apps
 exec --no-startup-id "killall -q slack; slack&"
