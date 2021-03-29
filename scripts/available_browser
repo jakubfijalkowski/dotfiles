@@ -2,6 +2,10 @@
 
 if hash brave 2>/dev/null; then
   exec brave
-else
+elif hash chromium 2>/dev/null; then
   exec chromium
+elif hash google-chrome-stable 2>/dev/null; then
+  exec google-chrome-stable
+else
+  exec microsoft-edge-dev
 fi
