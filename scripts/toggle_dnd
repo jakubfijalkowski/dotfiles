@@ -1,7 +1,9 @@
 #!/usr/bin/env zsh
 
 if [[ "$(systemctl is-active --user safeeyes.service)" == "inactive" ]]; then
+  sleep 10 # Give it a little bit time to start properly
   systemctl start --user safeeyes.service
+  sleep 5 # And to settle down post-start
 fi
 
 if [[ "$(dunstctl is-paused)" == "true" || "$1" == "--force-enable" ]]; then
