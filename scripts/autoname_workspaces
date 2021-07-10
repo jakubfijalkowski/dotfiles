@@ -126,7 +126,7 @@ WINDOW_ICONS = {
     'mpv': '\uf26c',
     'mupdf': '\uf1c1',
     'mysql-workbench-bin': '\uf1c0',
-    'nautilus': '\uf0c5',
+    'org.gnome.nautilus': '\uf0c5',
     'nemo': '\uf0c5',
     'openscad': '\uf1b2',
     'pavucontrol': '\uf028',
