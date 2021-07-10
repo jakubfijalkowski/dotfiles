@@ -12,12 +12,12 @@ lock() {
     local keyhl=e77cdb7f
     local bshl=582da37f
     i3lock --clock --indicator \
-        --veriftext="" --wrongtext="" --noinputtext="" \
-        --insidecolor=$inside --ringcolor=$ring \
-        --insidevercolor=$insidever --ringvercolor=$ringver \
-        --insidewrongcolor=$insidewrong --ringwrongcolor=$ringwrong \
-        --keyhlcolor=$keyhl --bshlcolor=$bshl \
-        --linecolor=${bg}ff --separatorcolor=${bg}7f \
+        --verif-text="" --wrong-text="" --noinput-text="" \
+        --inside-color=$inside --ring-color=$ring \
+        --insidever-color=$insidever --ringver-color=$ringver \
+        --insidewrong-color=$insidewrong --ringwrong-color=$ringwrong \
+        --keyhl-color=$keyhl --bshl-color=$bshl \
+        --line-color=${bg}ff --separator-color=${bg}7f \
         --radius 130 --ring-width 10
 }
 
