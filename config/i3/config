@@ -147,7 +147,7 @@ set $mode_actions Actions: (b)rowser fil(e)s (d)nd (o)paque (g)reenclip_clear (l
 bindsym $mod+a mode "$mode_actions"
 mode "$mode_actions" {
     bindsym b exec --no-startup-id available_browser; mode "default"
-    bindsym e exec nautilus; mode "default"
+    bindsym e exec "GDK_DPI_SCALE=0.5 GDK_SCALE=2 nautilus"; mode "default"
 
     bindsym d exec --no-startup-id toggle_dnd; mode "default"
     bindsym o exec --no-startup-id $scripts/toggle_opaque; mode "default"
