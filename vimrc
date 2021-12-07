@@ -50,6 +50,7 @@ Plug 'hashivim/vim-terraform'
 
 Plug 'liuchengxu/vista.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'IndianBoy42/tree-sitter-just'
 
 call plug#end()
 "
