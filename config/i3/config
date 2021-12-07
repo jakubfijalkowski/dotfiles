@@ -170,7 +170,13 @@ mode "$mode_graphics" {
     bindsym Escape mode "default"
 }
 
+# Dunst
+bindsym Control+space exec --no-startup-id dunstctl close
+bindsym Control+Shift+space exec --no-startup-id dunstctl close-all
+bindsym Control+grave exec --no-startup-id dunstctl history-pop
+
 for_window [window_role="pop-up"] floating enable
+for_window [class="1Password"] floating enable
 
 assign [class="Slack"] workspace number 10
 

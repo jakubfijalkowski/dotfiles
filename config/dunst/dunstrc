@@ -1,13 +1,16 @@
 [global]
     monitor = 0
     follow = none
-    geometry = "700x5-30+20"
+
+    width = 400
+    height = 300
+    origin = top-right
+    offset = 30x20
 
     indicate_hidden = yes
     shrink = no
 
     transparency = 5
-    notification_height = 0
     separator_height = 2
     padding = 8
     horizontal_padding = 10
@@ -114,11 +117,6 @@
     # Define the class of the windows spawned by dunst
     class = Dunst
 
-    # Print a notification on startup.
-    # This is mainly for error detection, since dbus (re-)starts dunst
-    # automatically after a crash.
-    startup_notification = false
-
     ### Legacy
 
     # Use the Xinerama extension instead of RandR for multi-monitor support.
@@ -141,39 +139,17 @@
     # where there are multiple screens with very different dpi values.
     per_monitor_dpi = false
 
-[shortcuts]
-
-    # Shortcuts are specified as [modifier+][modifier+]...key
-    # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-    # "mod3" and "mod4" (windows-key).
-    # Xev might be helpful to find names for keys.
-
-    # Close notification.
-    close = ctrl+space
-
-    # Close all notifications.
-    close_all = ctrl+shift+space
-
-    # Redisplay last message(s).
-    # On the US keyboard layout "grave" is normally above TAB and left
-    # of "1". Make sure this key actually exists on your keyboard layout,
-    # e.g. check output of 'xmodmap -pke'
-    history = ctrl+grave
-
-    # Context menu.
-    context = ctrl+shift+period
-
 [urgency_low]
     background = "#2d4d5e"
     foreground = "#dadada"
     timeout = 10
-    icon = /usr/share/icons/Paper/48x48@2x/status/info.png
+    new_icon = /usr/share/icons/Paper/48x48@2x/status/info.png
 
 [urgency_normal]
     background = "#4c7e99"
     foreground = "#dadada"
     timeout = 10
-    icon = /usr/share/icons/Paper/48x48@2x/status/info.png
+    new_icon = /usr/share/icons/Paper/48x48@2x/status/info.png
 
 [urgency_critical]
     background = "#b7512f"
