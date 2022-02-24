@@ -82,7 +82,7 @@ function install_yay() {
 }
 
 function install_packages() {
-  yay -Sy base base-devel
+  yay -Sy base base-devel chaotic-keyring
   pushd $dotfiles_dir/packages
   makepkg -si
   popd
