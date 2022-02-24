@@ -1,5 +1,5 @@
 pkgname='jakubfijalkowski'
-pkgver=1.0.11
+pkgver=1.0.12
 pkgrel=1
 pkgdesc='My packages'
 arch=('any')
@@ -7,7 +7,6 @@ url='https://github.com/jakubfijalkowski/dotfiles'
 license=('MIT')
 depends=(
   # Base
-  'base'
   'bash'
   'dash'
   'dashbinsh'
@@ -26,7 +25,7 @@ depends=(
   'man-pages'
   'pacutils'
   'pam-u2f'
-  'refind-efi'
+  'refind'
   'reflector'
   'systemd-sysvcompat'
   'ufw'
@@ -37,7 +36,7 @@ depends=(
   'curl'
   'exa'
   'fd'
-  'git-delta-bin'
+  'git-delta'
   'jq'
   'lscolors-git'
   'p7zip'
@@ -53,7 +52,7 @@ depends=(
 
   # Python
   'python-pip'
-  'python3'
+  'python'
 
   # Neovim
   'neovim-drop-in'
@@ -127,25 +126,18 @@ depends=(
   'yubikey-touch-detector'
 
   # Browsers + drivers
-  'chromium-vaapi'
-  'chromium-widevine'
-  'libva-intel-driver'
-  'libva-utils'
-  'libva-vdpau-driver-vp9'
-  'vulkan-intel'
+  'google-chrome'
 
   # Misc apps
+  '1password'
   'drive-bin'
-  'filezilla'
   'freerdp'
   'ngrok'
   'nordvpn-bin'
   'openssh'
   'openvpn'
-  'powerstat-git'
-  'powertop'
   'remmina'
-  'simple-scan'
+  'safeeyes'
 
   # Music
   'libspotify'
@@ -162,11 +154,11 @@ depends=(
   'alsa-utils'
   'blueman'
   'bluez-utils'
-  'pulseaudio-modules-bt-git'
+  'pipewire'
+  'pipewire-pulse'
 
   # Dev tools
   'clang'
-  'cmake'
   'docker'
   'docker-compose'
   'fzf'
@@ -180,25 +172,23 @@ depends=(
 
   # Work-related tools
   'acme.sh'
+  'azure-cli'
   'azuredatastudio-bin'
+  'helm'
   'kubectl'
   'kubectx'
-  'helm'
   'npm'
   'postman-bin'
+  'rancher-k3d-bin'
   'terraform'
-  'terraform-lsp-bin'
+  'terraform-ls-bin'
+  'terragrunt'
   'visual-studio-code-bin'
 
   'aspnet-runtime'
-  'aspnet-runtime-preview'
   'aspnet-targeting-pack'
-  'aspnet-targeting-pack-preview'
-  'dotnet-host-preview'
+  'dotnet-host-bin'
   'dotnet-runtime'
-  'dotnet-runtime-preview'
   'dotnet-sdk'
-  'dotnet-sdk-preview'
   'dotnet-targeting-pack'
-  'dotnet-targeting-pack-preview'
 )
