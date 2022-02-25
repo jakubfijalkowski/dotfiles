@@ -75,6 +75,13 @@ function service() {
 function install_base() {
   section "Installing base packages"
   sudo pacman -S base base-devel git
+
+  section "Installing chaotic keyring"
+  sudo pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
+  sudo pacman-key --lsign-key FBA220DFC880C036
+  sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+  sudo cp "etc/pacman.conf" "/etc/pacman.conf"
+  sudo pacman -Sy
 }
 
 function install_yay() {
@@ -203,7 +210,6 @@ function configure_root() {
   copy "etc/environment"
   copy "etc/lightdm/lightdm.conf"
   copy "etc/lightdm/lightdm-webkit2-greeter.conf"
-  copy "etc/pacman.conf"
   copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
   copy "etc/pam.d/sudo"
   copy "etc/pam.d/lightdm"
