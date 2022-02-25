@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+yay -S lscolors-git
+yay -S neovim-drop-in
+yay -S neovim-git
+yay -S nodejs-neovim
+yay -S python-pynvi
+yay -S fonts-meta-extended-lt
+yay -S matcha-gtk-theme-git
+yay -S paper-gtk-theme-git
+yay -S paper-icon-theme-git
+yay -S i3lock-color
+yay -S picom-git
+yay -S pinentry-dmenu
+yay -S polybar
+yay -S rofi-greenclip
+yay -S google-chrome
+yay -S 1password
+yay -S drive-bin
+yay -S ngrok
+yay -S safeeyes
+yay -S libspotify
+yay -S azuredatastudio-bin
+yay -S rancher-k3d-bin
+yay -S terraform-ls-bin

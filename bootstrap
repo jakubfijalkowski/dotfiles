@@ -94,7 +94,8 @@ function install_yay() {
 
 function install_packages() {
   pushd $dotfiles_dir/packages
-  makepkg -si
+  makepkg -sdf
+  yay -U jakubfijalkowski*.pkg.tar.zst
   ./aur
   popd
 }

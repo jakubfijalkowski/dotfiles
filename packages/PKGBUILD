@@ -40,7 +40,6 @@ depends=(
   'jq'
   'p7zip'
   'ripgrep'
-  'tlp'
   'traceroute'
   'trash-cli'
   'tree'
@@ -115,23 +114,13 @@ depends=(
 
   # Misc apps
   'freerdp'
-  'ngrok'
   'nordvpn-bin'
   'openssh'
   'openvpn'
   'remmina'
-  'safeeyes'
 
   # Music
-  'libspotify'
-  'mpc'
-  'mpd'
-  'ncmpcpp'
   'spotify'
-  'mopidy'
-  'mopidy-spotify'
-  'mopidy-iris'
-  'mopidy-local'
 
   # Music - drivers
   'alsa-utils'
@@ -156,24 +145,14 @@ depends=(
   # Work-related tools
   'acme.sh'
   'azure-cli'
-  'azuredatastudio-bin'
   'helm'
   'kubectl'
   'kubectx'
   'npm'
   'postman-bin'
-  'rancher-k3d-bin'
   'terraform'
-  'terraform-ls-bin'
   'terragrunt'
   'visual-studio-code-bin'
-
-  'aspnet-runtime'
-  'aspnet-targeting-pack'
-  'dotnet-host-bin'
-  'dotnet-runtime'
-  'dotnet-sdk'
-  'dotnet-targeting-pack'
 
   # AUR only or needs packages from AUR are in a separate file
 )

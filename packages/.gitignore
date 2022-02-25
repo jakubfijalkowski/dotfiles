@@ -1,0 +1,8 @@
+pkg
+jakubfijalkowski*
+!*.sh
+!PKGBUILD
+!README.md
+!*/
+!*.diff
+!*.patch
