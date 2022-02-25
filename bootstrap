@@ -72,9 +72,13 @@ function service() {
 
 ##### Actions
 
+function install_base() {
+  section "Installing base packages"
+  sudo pacman -S base base-devel git
+}
+
 function install_yay() {
   section "Installing yay"
-  sudo pacman -S git
   git clone https://aur.archlinux.org/yay.git /tmp/yay
   cd /tmp/yay
   makepkg -si
@@ -85,6 +89,7 @@ function install_packages() {
   yay -Sy base base-devel chaotic-keyring
   pushd $dotfiles_dir/packages
   makepkg -si
+  ./aur
   popd
 }
 
@@ -287,6 +292,7 @@ if [[ "$(whoami)" == "root" ]]; then
   configure_optimus_root
   enable_lightdm
 else
+  install_base
   install_yay
   install_packages
   install_fonts

@@ -38,7 +38,6 @@ depends=(
   'fd'
   'git-delta'
   'jq'
-  'lscolors-git'
   'p7zip'
   'ripgrep'
   'tlp'
@@ -55,14 +54,9 @@ depends=(
   'python'
 
   # Neovim
-  'neovim-drop-in'
-  'neovim-git'
-  'nodejs-neovim'
-  'python-pynvim'
 
   # Fonts
   'adobe-source-code-pro-fonts'
-  'fonts-meta-extended-lt'
   'terminus-font'
   'ttf-liberation'
   'ttf-iosevka'
@@ -80,10 +74,7 @@ depends=(
   'gvfs-goa'
   'gvfs-nfs'
   'gvfs-smb'
-  'matcha-gtk-theme-git'
   'nautilus'
-  'paper-gtk-theme-git'
-  'paper-icon-theme-git'
   'sushi'
 
   # X11/DM
@@ -108,17 +99,12 @@ depends=(
   'flameshot'
   'gsimplecal'
   'i3-gaps'
-  'i3lock-color'
   'i3status'
   'inotify-tools'
-  'picom-git'
-  'pinentry-dmenu'
-  'polybar'
   'python-i3ipc'
   'redshift'
   'rofi'
   'rofi-calc'
-  'rofi-greenclip'
   'xcwd-git'
   'xsel'
   'xss-lock'
@@ -126,11 +112,8 @@ depends=(
   'yubikey-touch-detector'
 
   # Browsers + drivers
-  'google-chrome'
 
   # Misc apps
-  '1password'
-  'drive-bin'
   'freerdp'
   'ngrok'
   'nordvpn-bin'
@@ -191,4 +174,6 @@ depends=(
   'dotnet-runtime'
   'dotnet-sdk'
   'dotnet-targeting-pack'
+
+  # AUR only or needs packages from AUR are in a separate file
 )
