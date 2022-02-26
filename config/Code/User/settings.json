@@ -11,7 +11,6 @@
     "explorer.confirmDragAndDrop": false,
     "extensions.ignoreRecommendations": false,
     "files.eol": "\n",
-    "window.zoomLevel": 0,
     "window.menuBarVisibility": "toggle",
     "gitlens.hovers.currentLine.enabled": false,
     "gitlens.currentLine.enabled": false,
@@ -20,10 +19,6 @@
         "overview",
         "gutter",
         "line"
-    ],
-    "gitlens.recentChanges.highlight.locations": [
-        "gutter",
-        "overview"
     ],
     "gitlens.codeLens.scopes": [
         "blocks",
@@ -36,18 +31,11 @@
         "suppressGitVersionWarning": false,
         "suppressLineUncommittedWarning": false,
         "suppressNoRepositoryWarning": false,
-        "suppressResultsExplorerNotice": false,
-        "suppressShowKeyBindingsNotice": true,
-        "suppressUpdateNotice": true,
-        "suppressWelcomeNotice": false
     },
     "gitlens.strings.codeLens.unsavedChanges.recentChangeAndAuthors": "",
     "gitlens.strings.codeLens.unsavedChanges.recentChangeOnly": "",
     "gitlens.strings.codeLens.unsavedChanges.authorsOnly": "",
     "gitlens.keymap": "chorded",
-    "gitlens.views.repositories.enabled": false,
-    "gitlens.views.fileHistory.enabled": true,
-    "gitlens.views.lineHistory.enabled": true,
     "typescript.check.npmIsInstalled": false,
     "vim.useSystemClipboard": true,
     "vim.foldfix": true,
@@ -87,6 +75,9 @@
     "omnisharp.enableEditorConfigSupport": true,
     "omnisharp.enableRoslynAnalyzers": true,
     "omnisharp.useGlobalMono": "never",
+    "omnisharp.enableAsyncCompletion": true,
+    "omnisharp.organizeImportsOnFormat": true,
+    "omnisharp.useModernNet": true,
     "csharp.semanticHighlighting.enabled": true,
     "omnisharp.enableDecompilationSupport": true,
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 2000,
@@ -108,5 +99,14 @@
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
     },
-    "editor.fontWeight": "300"
+    "editor.fontWeight": "300",
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code"
+    },
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    },
+    "dart.debugExternalPackageLibraries": true,
+    "dart.debugSdkLibraries": true,
+    "dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj"
 }
