@@ -162,6 +162,9 @@ nnoremap <silent> <S-Right> :vertical :resize +1<CR>
 
 tnoremap <Esc> <C-\><C-n>
 
+nnoremap <silent> <C-n> :bprev<CR>
+nnoremap <silent> <C-m> :bnext<CR>
+
 " Plugins
 
 " File mgmt & panels
