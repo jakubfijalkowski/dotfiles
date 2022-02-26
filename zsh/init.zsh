@@ -56,8 +56,8 @@ function z4h() {
   # Custom completions
   local -A completions=(
     _terraform 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/terraform/_terraform'
-    _kubens 'https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh'
-    _kubectx 'https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh'
+    _kubens 'https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubens.zsh'
+    _kubectx 'https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubectx.zsh'
   )
 
   {

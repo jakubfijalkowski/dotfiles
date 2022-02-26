@@ -22,4 +22,3 @@ z4h source $ZSH_CACHE_DIR/az.completion
 z4h source $ZSH_CACHE_DIR/git.plugin.zsh
 z4h source $ZSH_CACHE_DIR/pj.plugin.zsh
 z4h source $ZSH_CACHE_DIR/kubectl.plugin.zsh
-unalias _complete # Kubectl completion aliases the function
