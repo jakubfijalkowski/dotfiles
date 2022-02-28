@@ -4,7 +4,7 @@ yay -S lscolors-git
 yay -S neovim-drop-in
 yay -S neovim-git
 yay -S nodejs-neovim
-yay -S python-pynvi
+yay -S python-pynvim
 yay -S fonts-meta-extended-lt
 yay -S matcha-gtk-theme-git
 yay -S paper-gtk-theme-git
