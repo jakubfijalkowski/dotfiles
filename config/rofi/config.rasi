@@ -98,7 +98,7 @@ element selected.urgent {
 }
 
 element selected.active {
-    background-color: @blackselected;
+    background-color: @blackselect;
     text-color:       @highlightcolor;
 }
 
