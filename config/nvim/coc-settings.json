@@ -26,6 +26,8 @@
         }
     },
 
+    "rust-analyzer.assist.importEnforceGranularity": true,
+    "rust-analyzer.checkOnSave.command": "clippy",
     "rust-analyzer.procMacro.enable": true,
 
     "yaml.format.enable": true,

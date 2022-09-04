@@ -200,20 +200,22 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
 let g:coc_snippet_next = '<tab>'
 
-inoremap <silent><expr> <TAB>
-    \ pumvisible() ? coc#_select_confirm() :
-    \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
+inoremap <silent><expr> <tab>
+    \ coc#pum#visible() ? coc#pum#next(1):
+    \ CheckBackspace() ? "\<Tab>" :
     \ coc#refresh()
+inoremap <expr><s-tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#pum#confirm()
+    \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+inoremap <silent><expr> <c-space> coc#refresh()
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 function! s:show_documentation()
@@ -230,21 +232,6 @@ map s <Plug>(easymotion-bd-f)
 nmap s <Plug>(easymotion-overwin-f)
 map <Leader>j <Plug>(easymotion-jk)
 map <Leader>k <Plug>(easymotion-jk)
-
-" Haskell
-augroup haskell_bindings
-    autocmd!
-
-    autocmd FileType haskell setlocal foldlevel=2
-    autocmd FileType haskell setlocal textwidth=100
-
-    autocmd FileType cabal setlocal foldlevel=2
-    autocmd FileType cabal setlocal tabstop=2
-    autocmd FileType cabal setlocal shiftwidth=2
-
-    autocmd FileType haskell nnoremap <silent> <Leader>hs :%!stylish-haskell<CR>
-    autocmd FileType haskell nnoremap <silent> <leader>hc :!codex update --force<CR>
-augroup END
 
 " Rust
 augroup rust_bindings
