@@ -24,7 +24,7 @@ alias k="kubectl"
 alias kc="kubectx"
 alias kns="kubens"
 
-alias gsm="git switchto master"
+alias gsm="git switchto main"
 
 alias ls="exa -lh --git"
 alias lsa="exa -lah --git"
