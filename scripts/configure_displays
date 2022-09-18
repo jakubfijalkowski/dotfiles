@@ -6,6 +6,9 @@ get_xrdb() {
 
 action="$1"
 
+# Reload display config, just to be sure
+/etc/profile.d/displays.sh
+
 if [ "$action" = "" ]; then
     primary=$(get_xrdb 'screens.primary')
     secondary=$(get_xrdb 'screens.secondary')
