@@ -3,7 +3,7 @@
     "workbench.iconTheme": "vscode-icons",
     "editor.fontFamily": "'Iosevka', 'Source Code Variable', 'Source Code Pro', Consolas, 'Courier New', monospace",
     "editor.rulers": [
-        100
+        120
     ],
     "editor.lineNumbers": "relative",
     "editor.formatOnSave": true,
@@ -106,7 +106,7 @@
         "editor.defaultFormatter": "Dart-Code.dart-code"
     },
     "[csharp]": {
-        "editor.defaultFormatter": "csharpier.csharpier-vscode",
+        "editor.defaultFormatter": "ms-dotnettools.csharp",
         "editor.formatOnSave": true
     },
     "dart.debugExternalPackageLibraries": true,
