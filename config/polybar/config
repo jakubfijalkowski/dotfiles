@@ -52,7 +52,7 @@ font-7 = ${xrdb:polybar.font.fallback:Font Awesome 5 Brands:style=Solid:size=17;
 
 modules-left = i3 xwindow
 modules-center = music
-modules-right = yubikey dnd arch-updates graphics wlan battery headphones audio separator date
+modules-right = github yubikey dnd arch-updates graphics wlan battery headphones audio separator date
 
 tray-position = right
 tray-padding = 2
@@ -122,6 +122,17 @@ tail = false
 interval = 3600
 format = ""
 format-foreground = ${colors.icons}
+
+[module/github]
+type = custom/script
+exec = echo GH
+exec-if = test "$(gh api -q length notifications)" != "0"
+tail = false
+interval = 120
+format = ""
+format-foreground = ${colors.icons}
+
+click-left = xdg-open https://github.com/notifications
 
 [module/xwindow]
 type = internal/xwindow
