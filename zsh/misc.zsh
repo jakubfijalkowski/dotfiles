@@ -64,3 +64,36 @@ function git_current_branch() {
   fi
   echo ${ref#refs/heads/}
 }
+
+: "${SELECT_ENV_SRC_DIR:=$HOME/Work/envs}"
+function select-env() {
+  project="$1"
+  file="$2"
+  env_file="$SELECT_ENV_SRC_DIR/$project/$file"
+  if [[ ! -f "$env_file" ]]; then
+    echo "The env $env_file does not exist"
+  else
+    echo "Sourcing $env_file"
+    source $env_file
+  fi
+}
+
+function _select-env() {
+  local line
+
+  _arguments -C \
+    "*::arg:->args"
+
+  local line_parts=(${(@s: :)line})
+
+  if [[ "${#line_parts}" == "0" ]]; then
+    compadd $(exa --color=never $SELECT_ENV_SRC_DIR)
+  elif [[ "${#line_parts}" == "1" ]]; then
+    local envs="$SELECT_ENV_SRC_DIR/${line_parts[1]}"
+    if [[ -d "$envs" ]]; then
+      compadd $(exa --color=never $envs)
+    fi
+  fi
+}
+
+compdef _select-env select-env
