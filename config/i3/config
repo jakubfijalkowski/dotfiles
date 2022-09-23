@@ -178,6 +178,9 @@ bindsym $mod+grave exec --no-startup-id dunstctl history-pop
 for_window [window_role="pop-up"] floating enable
 for_window [class="1Password"] floating enable
 
+for_window [class="Code"] border none
+for_window [class="Slack"] border none
+
 assign [class="Slack"] workspace number 10
 
 assign [instance="ncmpcpp-player"] workspace number 9
