@@ -12,6 +12,7 @@ z4h source $ZSH_CACHE_DIR/zsh-users/zsh-syntax-highlighting/zsh-syntax-highlight
 
 source "$HOME/.zsh/keybindings.zsh"
 source "$HOME/.zsh/options.zsh"
+source "$HOME/.zsh/atuin.zsh"
 
 # Per-machine config
 if [ -e ~/.local/zshrc ]; then
