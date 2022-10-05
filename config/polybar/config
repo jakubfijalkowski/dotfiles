@@ -128,7 +128,7 @@ type = custom/script
 exec = echo GH
 exec-if = test "$(gh api -q length notifications)" != "0"
 tail = false
-interval = 120
+interval = 60
 format = ""
 format-foreground = ${colors.icons}
 
