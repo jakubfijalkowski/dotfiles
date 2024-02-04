@@ -1,16 +1,15 @@
 {
     "codeLens.enable": true,
+    "codeLens.position": "eol",
     "diagnostic.refreshOnInsertMode": true,
     "diagnostic.virtualText": false,
     "diagnostic.errorSign": "!",
     "diagnostic.checkCurrentLine": false,
     "diagnostic.messageTarget": "float",
-    "suggest.enablePreview": true,
     "list.normalMappings": {
         "<C-j>": "normal:j",
         "<C-k>": "normal:k"
     },
-
     "languageserver": {
         "terraform": {
             "command": "terraform-ls",
@@ -25,16 +24,19 @@
             "settings": {}
         }
     },
-
-    "rust-analyzer.assist.importEnforceGranularity": true,
-    "rust-analyzer.checkOnSave.command": "clippy",
     "rust-analyzer.procMacro.enable": true,
-
     "yaml.format.enable": true,
     "yaml.schemas": {
         "kubernetes": [
             "*.yaml",
             "*.yml"
         ]
-    }
+    },
+    "workspace.ignoredFolders": [
+        "${userHome}",
+        "${userHome}/.cargo/**",
+        "${userHome}/.rustup/**"
+    ],
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.checkThirdParty": false
 }
