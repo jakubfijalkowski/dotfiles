@@ -140,3 +140,4 @@ export ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets) # main syntax highlighting plu
 export ZSH_AUTOSUGGEST_MANUAL_REBIND=1            # disable a very slow obscure feature
 
 export MANPAGER="sh -c 'col -bx | bat -l man -p'" # use bat as pager for man
+export MANROFFOPT="-c"
