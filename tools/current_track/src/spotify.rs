@@ -1,14 +1,15 @@
 extern crate dbus;
 extern crate itertools;
 
-use std::cell::RefCell;
-use std::collections::HashMap;
-use std::iter::FromIterator;
-use std::rc::Rc;
-use std::result::Result;
-use std::time::Duration;
+use std::{
+    collections::HashMap,
+    iter::FromIterator,
+    result::Result,
+    sync::{Arc, Mutex},
+    time::Duration,
+};
 
-use dbus::{arg, arg::RefArg, blocking::Connection, blocking::Proxy};
+use dbus::{arg, arg::RefArg, blocking::Connection, blocking::Proxy, channel::Token, Message};
 
 use itertools::Itertools;
 
@@ -62,13 +63,12 @@ fn as_metadata(src: &Variant) -> Option<Metadata> {
     }
 }
 
-fn format_song(meta: &Option<Metadata>) -> String {
+fn format_song(meta: &Option<Metadata>) -> Option<String> {
     meta.as_ref().map(|m| {
         let artist = opt_refarg_to_str(m.get("xesam:artist"));
         let title = opt_refarg_to_str(m.get("xesam:title"));
         format!("{} - {}", artist, title)
     })
-    .unwrap_or("Spotify: Not playing".to_string())
 }
 
 fn with_proxy<'a, 'b, F, R>(conn: &'a mut Connection, fun: F) -> R
@@ -81,19 +81,20 @@ where
 
 fn attach_signal(
     conn: &mut Connection,
-    current_track: Rc<RefCell<Option<String>>>,
-) -> Result<u32, dbus::Error> {
+    current_track: Arc<Mutex<Option<String>>>,
+) -> Result<Token, dbus::Error> {
     let id = with_proxy(conn, move |p| {
-        let current_track = Rc::clone(&current_track);
+        let current_track = Arc::clone(&current_track);
         p.match_signal(
-            move |h: OrgFreedesktopDBusPropertiesPropertiesChanged, _: &Connection| {
+            move |h: OrgFreedesktopDBusPropertiesPropertiesChanged, _: &Connection, _: &Message| {
                 let meta = h
                     .changed_properties
                     .get("Metadata")
                     .map(as_metadata)
                     .flatten();
-                let track = format_song(&meta);
-                current_track.borrow_mut().replace(track);
+                if let Some(track) = format_song(&meta) {
+                    current_track.lock().unwrap().replace(track);
+                }
                 true
             },
         )
@@ -101,12 +102,12 @@ fn attach_signal(
     Ok(id)
 }
 
-fn get_first_track(conn: &mut Connection) -> Option<String> {
-    with_proxy(conn, |p| match p.get_metadata() {
+fn get_now_playing(conn: &mut Connection) -> Option<String> {
+    with_proxy(conn, |p| match p.metadata() {
         Ok(meta) => {
             let meta = meta.iter().map(|(k, v)| (k.to_string(), v.0.box_clone()));
             let meta = Metadata::from_iter(meta);
-            Some(format_song(&Some(meta)))
+            format_song(&Some(meta))
         }
         Err(err) => handle_error(&err),
     })
@@ -114,20 +115,20 @@ fn get_first_track(conn: &mut Connection) -> Option<String> {
 
 pub struct Spotify {
     connection: Connection,
-    match_id: u32,
-    current_track: Rc<RefCell<Option<String>>>,
+    match_id: Token,
+    current_track: Arc<Mutex<Option<String>>>,
 }
 
 impl Spotify {
     fn prepare_connection() -> Result<Self, dbus::Error> {
         let mut conn = Connection::new_session()?;
-        let current_track = Rc::new(RefCell::new(get_first_track(&mut conn)));
-        let match_id = attach_signal(&mut conn, Rc::clone(&current_track))?;
+        let current_track = Arc::new(Mutex::new(get_now_playing(&mut conn)));
+        let match_id = attach_signal(&mut conn, Arc::clone(&current_track))?;
 
         Ok(Spotify {
             connection: conn,
-            match_id: match_id,
-            current_track: current_track,
+            match_id,
+            current_track,
         })
     }
 
@@ -172,7 +173,11 @@ impl Spotify {
 
     fn get_last_track(&mut self) -> Option<String> {
         if self.is_running() {
-            self.current_track.borrow().as_ref().map(|t| t.to_string())
+            self.current_track
+                .lock()
+                .unwrap()
+                .as_ref()
+                .map(|t| t.to_string())
         } else {
             None
         }
