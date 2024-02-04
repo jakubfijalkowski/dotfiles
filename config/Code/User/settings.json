@@ -14,7 +14,6 @@
     "files.eol": "\n",
     "window.menuBarVisibility": "toggle",
     "gitlens.hovers.currentLine.enabled": false,
-    "gitlens.currentLine.enabled": false,
     "gitlens.hovers.currentLine.over": "line",
     "gitlens.blame.highlight.locations": [
         "overview",
@@ -75,10 +74,8 @@
     "omnisharp.path": "latest",
     "omnisharp.enableEditorConfigSupport": true,
     "omnisharp.enableRoslynAnalyzers": true,
-    "omnisharp.useGlobalMono": "never",
     "omnisharp.enableAsyncCompletion": true,
     "omnisharp.organizeImportsOnFormat": true,
-    "omnisharp.useModernNet": true,
     "csharp.semanticHighlighting.enabled": true,
     "omnisharp.enableDecompilationSupport": true,
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 2000,
@@ -98,18 +95,42 @@
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
     },
-    "editor.fontWeight": "300",
     "[dart]": {
         "editor.defaultFormatter": "Dart-Code.dart-code"
     },
     "[csharp]": {
-        "editor.defaultFormatter": "ms-dotnettools.csharp",
+        "editor.defaultFormatter": "csharpier.csharpier-vscode",
         "editor.formatOnSave": true
     },
+    "editor.fontWeight": "300",
     "dart.debugExternalPackageLibraries": true,
     "dart.debugSdkLibraries": true,
-    "dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj"
+    "dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj",
+    "gitlens.currentLine.enabled": false,
+    "yaml.format.enable": true,
+    "redhat.telemetry.enabled": false,
+    "prettier.requireConfig": true,
+    "prettier.documentSelectors": [
+        "*.{ts,js}"
+    ],
+    "yaml.format.printWidth": 120,
+    "dart.flutterSdkPaths": [
+        "/home/fiolek/fvm/versions/"
+    ],
+    "dart.flutterSdkPath": "/home/fiolek/fvm/default/",
+    "xml.format.maxLineWidth": 160,
+    "omnisharp.enableMsBuildLoadProjectsOnDemand": true,
+    "git.openRepositoryInParentFolders": "never",
+    "zig.path": "",
+    "zig.zls.path": "",
+    "zig.initialSetupDone": true,
+    "[markdown]": {
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    }
 }
