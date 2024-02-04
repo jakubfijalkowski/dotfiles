@@ -137,7 +137,6 @@ function configure_user() {
   link "fdignore"
   link "gitconfig"
   link "vim"
-  link "vimrc"
   link "zsh"
   link "zshrc"
 
@@ -150,7 +149,7 @@ function configure_user() {
   link "gnupg/pinentry-dmenu.conf"
 
   link "config/Dharkael/flameshot.ini"
-  link "config/alacritty/alacritty.yml"
+  link "config/alacritty/alacritty.toml"
   link "config/bat"
   link "config/brave-flags.conf"
   link "config/brave-flags.conf" "~/.config/chromium-flags.conf"
@@ -162,6 +161,7 @@ function configure_user() {
   link "config/mopidy/mopidy.conf"
   link "config/ncmpcpp/config"
   link "config/networkmanager-dmenu/config.ini"
+  link "config/nvim/lua"
   link "config/nvim/init.vim"
   link "config/picom/picom.conf"
   link "config/polybar/config"
