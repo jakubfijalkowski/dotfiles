@@ -1,6 +1,6 @@
 {
-    "allow_postpone": true,
-    "long_break_duration": 120,
+    "allow_postpone": false,
+    "long_break_duration": 60,
     "long_break_interval": 75,
     "long_breaks": [
         {
@@ -77,7 +77,7 @@
             "enabled": false,
             "id": "smartpause",
             "settings": {
-                "idle_time": 5.0,
+                "idle_time": 5,
                 "interpret_idle_as_break": false,
                 "postpone_if_active": false
             },
