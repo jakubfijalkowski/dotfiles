@@ -1,7 +1,7 @@
 vim.o.textwidth = 100
 vim.o.colorcolumn = "+1"
 vim.o.ruler = true
-vim.o.nowrap = true
+vim.o.wrap = false
 
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -33,9 +33,9 @@ indent2("bash")
 indent2("zsh")
 
 -- Line numbering
-vim.o.number = "relativenumber"
+vim.o.number = true
 local numberGroup = vim.api.nvim_create_augroup("NumberToggle", { clear = true })
-vim.api.nvim_create_autocmd({"BufEnter", "FocusGained", "InsertLeave", "WinEnter"}, {
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
   group = numberGroup,
   pattern = "*",
   callback = function()
@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd({"BufEnter", "FocusGained", "InsertLeave", "WinEnter
   end
 })
 
-vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter", "WinLeave"}, {
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
   group = numberGroup,
   pattern = "*",
   callback = function()
@@ -58,4 +58,13 @@ vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter", "WinLeave"}
 vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
   callback = vim.highlight.on_yank
+})
+
+-- Tree sitter
+require("nvim-treesitter.configs").setup({
+  ensure_installed = { "lua", "terraform", "rust" },
+  sync_install = false,
+  highlight = { enable = true },
+  indent = { enable = true },
+  incremental_selection = { enable = false },
 })

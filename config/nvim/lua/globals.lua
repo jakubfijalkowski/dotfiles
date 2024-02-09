@@ -7,13 +7,12 @@ vim.cmd.filetype("plugin indent on")
 vim.cmd.colorscheme("gruvbox")
 
 vim.o.clipboard = "unnamedplus"
-vim.o.nocompatible = true
 vim.o.encoding = "utf-8"
-vim.o.nobomb = true
+vim.o.bomb = false
 vim.o.showmode = true
 vim.o.showcmd = true
-vim.o.noerrorbells = true
-vim.o.nostartofline = true
+vim.o.errorbells = true
+vim.o.startofline = true
 vim.o.title = true
 vim.o.scrolloff = 4
 vim.o.hidden = true

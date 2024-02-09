@@ -3,7 +3,7 @@ require("load_lazy")
 
 require("lazy").setup {
   { "nvim-lua/plenary.nvim" },
-  { "ellisonleao/gruvbox.nvim",       lazy = false, },
+  { "ellisonleao/gruvbox.nvim",        lazy = false, },
 
   { "airblade/vim-gitgutter" },
   { "easymotion/vim-easymotion" },
@@ -12,8 +12,8 @@ require("lazy").setup {
   { "godlygeek/tabular" },
   { "mbbill/undotree" },
   { "nathanaelkane/vim-indent-guides" },
-  { "nvim-lualine/lualine.nvim",      dependencies = { "nvim-tree/nvim-web-devicons" } },
-  { "nvim-telescope/telescope.nvim",  dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-lualine/lualine.nvim",       dependencies = { "nvim-tree/nvim-web-devicons" } },
+  { "nvim-telescope/telescope.nvim",   dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-tree/nvim-web-devicons" },
   { "preservim/nerdcommenter" },
   { "tpope/vim-repeat" },
@@ -23,15 +23,16 @@ require("lazy").setup {
   { "airblade/vim-rooter" },
   { "famiu/bufdelete.nvim" },
   { "rcarriga/nvim-notify" },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 
-  { "neoclide/coc.nvim",              build = "npm ci",                                branch = "master", },
-  { "neoclide/coc-json",              build = "npm install" },
-  { "neoclide/coc-pairs",             build = "yarn install --frozen-lockfile" },
-  { "neoclide/coc-snippets",          build = "yarn install --frozen-lockfile" },
-  { "neoclide/coc-yaml",              build = "npm install" },
-  { "neoclide/coc-yank",              build = "yarn install --frozen-lockfile" },
-  { "josa42/coc-lua",                 build = "npm ci" },
-  { "fannheyward/coc-rust-analyzer",  build = "npm ci" },
+  { "neoclide/coc.nvim",               build = "npm ci",                                branch = "master", },
+  { "neoclide/coc-json",               build = "npm install" },
+  { "neoclide/coc-pairs",              build = "yarn install --frozen-lockfile" },
+  { "neoclide/coc-snippets",           build = "yarn install --frozen-lockfile" },
+  { "neoclide/coc-yaml",               build = "npm install" },
+  { "neoclide/coc-yank",               build = "yarn install --frozen-lockfile" },
+  { "josa42/coc-lua",                  build = "npm ci" },
+  { "fannheyward/coc-rust-analyzer",   build = "npm ci" },
   { "fannheyward/telescope-coc.nvim" },
 }
 
