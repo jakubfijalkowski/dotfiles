@@ -24,6 +24,7 @@ require("lazy").setup {
   { "famiu/bufdelete.nvim" },
   { "rcarriga/nvim-notify" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  { "IndianBoy42/tree-sitter-just" },
 
   { "neoclide/coc.nvim",               build = "npm ci",                                branch = "master", },
   { "neoclide/coc-json",               build = "npm install" },
