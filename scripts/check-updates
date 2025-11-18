@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+checkupdates >/dev/null
+updates=$(yay -Quq | wc -l)
+if [ "$updates" != "0" ]; then
+    echo '{"text":"\uf303","tooltip":"'$updates' available"}'
+else
+    echo ""
+fi

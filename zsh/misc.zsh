@@ -1,5 +1,3 @@
-source /usr/share/LS_COLORS/dircolors.sh
-
 alias cat='bat'
 alias grep='rg --crlf -L'
 
@@ -26,10 +24,10 @@ alias kns="kubens"
 
 alias gsm="git switchto main"
 
-alias ls="exa -lh --git"
-alias lsa="exa -lah --git"
-alias lst="exa --tree -L2"
-alias lsT="exa --tree -L"
+alias ls="eza -lh --git"
+alias lsa="eza -lah --git"
+alias lst="eza --tree -L2"
+alias lsT="eza --tree -L"
 
 function take() {
   mkdir -p $@ && cd ${@:$#}

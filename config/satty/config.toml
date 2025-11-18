@@ -1,0 +1,7 @@
+[general]
+early-exit = true
+save-after-copy = false
+
+[font]
+family = "monospace"
+style = "Regular"

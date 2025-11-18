@@ -1,1 +1,0 @@
-export HEADPHONES_MAC="70:26:05:CF:A4:33"

@@ -1,0 +1,23 @@
+theme = Gruvbox Dark Hard
+
+font-family = terminal
+font-style = Regular
+font-size = 12
+
+window-theme = ghostty
+window-padding-x = 2
+window-padding-y = 2
+confirm-close-surface = false
+resize-overlay = never
+gtk-toolbar-style = flat
+
+cursor-style = "block"
+cursor-style-blink = false
+
+mouse-scroll-multiplier = 1
+
+# Backwards-kill-word
+keybind = ctrl+backspace=text:\x1b\x7f
+
+keybind = ctrl+arrow_up=scroll_page_fractional:-0.3
+keybind = ctrl+arrow_down=scroll_page_fractional:0.3

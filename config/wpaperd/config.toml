@@ -1,0 +1,5 @@
+[default]
+path = "~/.local/share/wallpapers"
+duration = "10m"
+sorting = "random"
+mode = "center"

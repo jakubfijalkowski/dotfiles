@@ -1,5 +1,5 @@
 #%PAM-1.0
-auth		sufficient	pam_u2f.so	cue
+auth            sufficient      pam_u2f.so cue origin=pam://fiolek-pc appid=pam://fiolek-pc
 auth		include		system-auth
 account		include		system-auth
 session		include		system-auth
