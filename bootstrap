@@ -10,7 +10,7 @@ cd "$dotfiles_dir"
 function section() {
   echo ""
   echo "#############################"
-  echo $1
+  echo "$1"
   echo "#############################"
 }
 
@@ -140,10 +140,9 @@ function configure_user() {
   link "config/Code/User/snippets"
 
   # Scripts - link individually to ~/.local/bin
-  mkdir -p "$HOME/.local/bin"
-  ln -sf "$dotfiles_dir/scripts/check-updates" "$HOME/.local/bin/check-updates"
-  ln -sf "$dotfiles_dir/scripts/unblock-docker-bridge" "$HOME/.local/bin/unblock-docker-bridge"
-  ln -sf "$dotfiles_dir/scripts/yubikey-touch-status" "$HOME/.local/bin/yubikey-touch-status"
+  link "$dotfiles_dir/scripts/check-updates" "$HOME/.local/bin/check-updates"
+  link "$dotfiles_dir/scripts/unblock-docker-bridge" "$HOME/.local/bin/unblock-docker-bridge"
+  link "$dotfiles_dir/scripts/yubikey-touch-status" "$HOME/.local/bin/yubikey-touch-status"
 
   section "Importing GPG key"
   chmod 0700 ~/.gnupg
@@ -158,6 +157,7 @@ function configure_user() {
   service "user" "swaync.service"
   service "user" "waybar.service"
   service "user" "yubikey-touch-detector.service"
+
   elephant service enable
 }
 
@@ -186,29 +186,29 @@ function configure_root() {
   copy "etc/sddm.conf.d/wayland.conf"
   copy "etc/sddm.conf.d/hyprland.conf" "/opt/hyprsddm/hyprland.conf"
 
-  # Udev rules
-  copy "etc/udev/rules.d/20-backlight.rules"
-  copy "etc/udev/rules.d/30-security-key.rules"
-
-  echo "Configuring systemd-resolved"
-  ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-
   section "System services"
   systemctl daemon-reload
-  service "system" "systemd-networkd.service"
-  service "system" "systemd-resolved.service"
   service "system" "iwd.service"
   service "system" "pcscd.service"
   service "system" "ufw.service"
-  service "system" "sddm.service"
 
-  section "Misc config"
-  echo "Firewall"
+  section "Configuring network"
+  ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+  service "system" "systemd-networkd.service"
+  service "system" "systemd-resolved.service"
+
+  section "Firewall"
   ufw --force reset >/dev/null
   ufw default allow outgoing
   ufw default deny incoming
   ufw enable
   find /etc/ufw -type f -name '*.rules.*' -delete
+
+  section "udev rules"
+  copy "etc/udev/rules.d/20-backlight.rules"
+  copy "etc/udev/rules.d/30-security-key.rules"
+  udevadm control --reload
+  udevadm trigger
 }
 
 function enable_sddm() {
