@@ -5,8 +5,6 @@ script_name="$(basename "$0")"
 dotfiles_dir="$(cd "$(dirname "$0")"; pwd)"
 cd "$dotfiles_dir"
 
-GPGKEY="0x7896A8C7E3283895"
-
 ##### Helpers
 
 function section() {
@@ -16,43 +14,51 @@ function section() {
   echo "#############################"
 }
 
-# Shamelessly stolen from https://github.com/maximbaz/dotfiles/blob/master/setup
-# :)
-function assign() {
-  op="$1"
-  if [[ "$op" != "link" && "$op" != "copy" ]]; then
-    echo "Unknown operation: $op"
-    exit 1
-  fi
-
-  orig_file="$2"
-  dest_file="$3"
-
-  mkdir -p "$(dirname "$orig_file")"
-  mkdir -p "$(dirname "$dest_file")"
-
-  rm -rf "$dest_file"
-
-  if [[ "$op" == "link" ]]; then
-    ln -s "$orig_file" "$dest_file"
-    echo "$dest_file -> $orig_file"
-  else
-    cp -R "$orig_file" "$dest_file"
-    echo "$dest_file <= $orig_file"
-  fi
-}
-
 function link() {
   from="$1"
   to="$2"
   if [[ -z "$to" ]]; then
     to="$HOME/.$1"
   fi
-  assign "link" "$dotfiles_dir/$from" "$to"
+
+  orig_file="$dotfiles_dir/$from"
+  dest_file="$to"
+
+  # Backup if destination exists
+  if [[ -e "$dest_file" || -L "$dest_file" ]]; then
+    backup_dir="$HOME/.dotfiles.bak"
+    backup_path="$backup_dir$dest_file"
+    mkdir -p "$(dirname "$backup_path")"
+    mv "$dest_file" "$backup_path"
+    echo "Backed up $dest_file to $backup_path"
+  fi
+
+  # Create symlink
+  mkdir -p "$(dirname "$dest_file")"
+  ln -s "$orig_file" "$dest_file"
+  echo "$dest_file -> $orig_file"
 }
 
 function copy() {
-  assign "copy" "$dotfiles_dir/$1" "/$1"
+  from="$dotfiles_dir/$1"
+  to="$2"
+  if [[ -z "$to" ]]; then
+    to="/$1"
+  fi
+
+  # Backup if destination exists
+  if [[ -e "$to" || -L "$to" ]]; then
+    backup_dir="$HOME/.dotfiles.bak"
+    backup_path="$backup_dir$to"
+    mkdir -p "$(dirname "$backup_path")"
+    mv "$to" "$backup_path"
+    echo "Backed up $to to $backup_path"
+  fi
+
+  # Copy file
+  mkdir -p "$(dirname "$to")"
+  cp -R "$from" "$to"
+  echo "$to <= $from"
 }
 
 function service() {
@@ -72,166 +78,120 @@ function service() {
 
 ##### Actions
 
-function install_base() {
-  section "Installing base packages"
-  sudo pacman -S base base-devel git
-
-  section "Installing chaotic keyring"
-  sudo pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
-  sudo pacman-key --lsign-key FBA220DFC880C036
-  sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-  sudo cp "etc/pacman.conf" "/etc/pacman.conf"
-  sudo pacman -Sy
-}
-
-function install_yay() {
-  section "Installing yay"
-  git clone https://aur.archlinux.org/yay.git /tmp/yay
-  cd /tmp/yay
-  makepkg -si
-  rm -rf /tmp/yay
-}
-
-function install_packages() {
-  pushd $dotfiles_dir/packages
-  makepkg -sdf
-  yay -U jakubfijalkowski*.pkg.tar.zst
-  ./aur
-  popd
-}
-
-function install_fonts() {
-  section "Installing fonts"
-  mkdir -p ~/.local/share/fonts
-  cd ~/.local/share/fonts
-
-    echo "SourceCodePro"
-    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf\?raw\=true -o sauce-regular.ttf
-    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete.ttf\?raw\=true -o sauce-medium.ttf
-    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium-Italic/complete/Sauce%20Code%20Pro%20Medium%20Italic%20Nerd%20Font%20Complete.ttf\?raw=true -o sauce-medium-italic.ttf
-    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Bold/complete/Sauce%20Code%20Pro%20Bold%20Nerd%20Font%20Complete.ttf\?raw=true -o sauce-bold.ttf
-    curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Bold-Italic/complete/Sauce%20Code%20Pro%20Bold%20Italic%20Nerd%20Font%20Complete.ttf\?raw=true -o sauce-bold-italics.ttf
-    echo "Material icons"
-    curl -sL https://github.com/google/material-design-icons/blob/master/iconfont/MaterialIcons-Regular.ttf\?raw\=true -o materialicons-regular.ttf
-    echo "Material wifi"
-    curl -sL https://github.com/dcousens/material-wifi-icons/blob/master/material-wifi.ttf\?raw\=true -o materialewifi.ttf
-    echo "Logos"
-    curl -sL https://github.com/lukas-w/font-logos/blob/master/assets/font-logos.ttf\?raw\=true -o font-logos.ttf
-
-    echo "Font Awesome"
-    fa_version="5.15.1"
-    curl -sL https://use.fontawesome.com/releases/v$fa_version/fontawesome-free-$fa_version-desktop.zip -o /tmp/font-awesome.zip
-    unzip -q /tmp/font-awesome.zip -d /tmp/font-awesome
-    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Regular-400.otf" fontawesome-regular.otf
-    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Free-Solid-900.otf" fontawesome-solid.otf
-    cp "/tmp/font-awesome/fontawesome-free-$fa_version-desktop/otfs/Font Awesome 5 Brands-Regular-400.otf" fontawesome-brands.otf
-    rm -rf /tmp/font-awesome.zip /tmp/font-awesome
-    unset fa_version
-
-  fc-cache -frv ~/.local/share/fonts
-  echo "Done"
-}
-
 function configure_user() {
   section "Configuring user dotfiles"
+
+  # Core dotfiles
   link "fdignore"
   link "gitconfig"
-  link "vim"
   link "zsh"
   link "zshrc"
 
-  link "gtkrc-2.0"
-  link "xbindkeysrc"
-  copy "Xresources"
+  # Browser flags
+  link "config/chrome-flags.conf"
+  link "config/electron-flags.conf"
 
+  # GPG configuration
   link "gnupg/gpg-agent.conf"
   link "gnupg/gpg.conf"
-  link "gnupg/pinentry-dmenu.conf"
 
-  link "config/Dharkael/flameshot.ini"
-  link "config/alacritty/alacritty.toml"
-  link "config/bat"
-  link "config/brave-flags.conf"
-  link "config/brave-flags.conf" "~/.config/chromium-flags.conf"
-  link "config/dunst/dunstrc"
+  # Application configurations
+  link "config/bat/bat.conf"
+  link "config/bat/themes/gruvbox.tmTheme"
   link "config/fontconfig/fonts.conf"
-  link "config/gsimplecal/config"
-  link "config/gtk-3.0/settings.ini"
-  link "config/i3/config"
-  link "config/mopidy/mopidy.conf"
-  link "config/ncmpcpp/config"
-  link "config/networkmanager-dmenu/config.ini"
+
+  # Neovim
+  link "config/nvim/init.lua"
+  link "config/nvim/coc-settings.json"
   link "config/nvim/lua"
-  link "config/nvim/init.vim"
-  link "config/picom/picom.conf"
-  link "config/polybar/config"
-  link "config/redshift/redshift.conf"
-  link "config/rofi/config.rasi"
-  link "config/safeeyes"
 
-  link "config/systemd/user/change-wallpaper.service"
-  link "config/systemd/user/change-wallpaper.timer"
-  link "config/systemd/user/mopidy.service"
-  link "config/systemd/user/safeeyes.service"
+  # Wayland/Hyprland setup
+  link "config/hypr/hyprland.conf"
+  link "config/hypr/hyprlock.conf"
+  link "config/hypr/hypridle.conf"
+  link "config/hypr/conf"
 
+  link "config/ghostty/config"
+
+  link "config/waybar/config.jsonc"
+  link "config/waybar/style.css"
+  link "config/waybar/colors.css"
+
+  link "config/walker/config.toml"
+  link "config/walker/themes/custom/style.css"
+  link "config/walker/themes/custom/colors.css"
+
+  link "config/satty/config.toml"
+
+  link "config/swaync/config.json"
+  link "config/swaync/style.css"
+
+  link "config/wpaperd/config.toml"
+
+  link "config/uwsm/env"
+
+  # Systemd user services
+  link "config/systemd/user/ssh-add-keys.service"
+
+  # VS Code configuration
   link "config/Code/User/settings.json"
   link "config/Code/User/locale.json"
   link "config/Code/User/keybindings.json"
   link "config/Code/User/snippets"
 
-  link "scripts" "$HOME/.local/bin/scripts"
+  # Scripts - link individually to ~/.local/bin
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$dotfiles_dir/scripts/check-updates" "$HOME/.local/bin/check-updates"
+  ln -sf "$dotfiles_dir/scripts/unblock-docker-bridge" "$HOME/.local/bin/unblock-docker-bridge"
+  ln -sf "$dotfiles_dir/scripts/yubikey-touch-status" "$HOME/.local/bin/yubikey-touch-status"
 
   section "Importing GPG key"
-  mkdir -p ~/.gnupg
   chmod 0700 ~/.gnupg
   curl -s https://keybase.io/jakubfijalkowski/pgp_keys.asc | gpg --import
 
   section "User services"
   systemctl --user daemon-reload
-  service "user" "greenclip.service"
-  service "user" "redshift.service"
+  service "user" "gnome-keyring-daemon.service"
+  service "user" "hypridle.service"
+  service "user" "ssh-add-keys.service"
+  service "user" "ssh-agent.service"
+  service "user" "swaync.service"
+  service "user" "waybar.service"
   service "user" "yubikey-touch-detector.service"
-  service "user" "dirmngr.service"
-  service "user" "change-wallpaper.timer"
-  service "user" "xdg-user-dirs-update.service"
-  service "user" "safeeyes.service"
-}
-
-function configure_yubikey() {
-  if [[ "$NO_YUBIKEY" != "1" ]]; then
-    section "Configuring YubiKey for sudo access"
-    mkdir -p "$HOME/.config/Yubico"
-    pamu2fcfg -ufiolek > "$HOME/.config/Yubico/u2f_keys"
-    echo "To add backup execute 'pamu2fcfg -ufiolek -n >> ~/.config/Yubico/u2f_keys'"
-  fi
+  elephant service enable
 }
 
 function configure_root() {
   section "Configuring system files"
-  copy "etc/environment"
-  copy "etc/lightdm/lightdm.conf"
-  copy "etc/lightdm/lightdm-webkit2-greeter.conf"
-  copy "etc/pacman.d/hooks/refresh_updates_marker.hook"
+
+  # Network configuration
+  copy "etc/iwd/main.conf"
+  copy "etc/systemd/resolved.conf"
+  copy "etc/systemd/network/19-home.network"
+  copy "etc/systemd/network/20-wireless.network"
+  copy "etc/systemd/network/89-ethernet.network"
+
+  # Package manager
+  copy "etc/pacman.conf"
+  copy "etc/pacman.d/hooks/98-limine.hook"
+  copy "etc/pacman.d/hooks/99-refresh_updates.hook"
+
+  # PAM configuration
   copy "etc/pam.d/sudo"
-  copy "etc/pam.d/lightdm"
-  copy "etc/pam.d/i3lock"
-  copy "etc/profile.d/displays.sh"
-  copy "etc/profile.d/headphones.sh"
-  copy "etc/profile.d/z_user_config.sh"
-  copy "etc/udev/rules.d/10-displays.rules"
+  copy "etc/pam.d/hyprlock"
+  copy "etc/pam.d/sddm"
+
+  # Display manager (SDDM)
+  copy "etc/sddm.conf.d/theme.conf"
+  copy "etc/sddm.conf.d/wayland.conf"
+  copy "etc/sddm.conf.d/hyprland.conf" "/opt/hyprsddm/hyprland.conf"
+
+  # Udev rules
   copy "etc/udev/rules.d/20-backlight.rules"
   copy "etc/udev/rules.d/30-security-key.rules"
-  copy "etc/X11/xorg.conf.d/10-intel.conf"
-  copy "etc/X11/xorg.conf.d/20-nvidia.conf"
-  copy "etc/X11/xorg.conf.d/30-touchpad.conf"
-  copy "etc/sysctl.d/99-inotify.conf"
-  copy "etc/security/limits.conf"
-  copy "etc/iwd/main.conf"
-  copy "etc/optimus-manager/optimus-manager.conf"
-  copy "etc/systemd/resolved.conf"
-  copy "etc/systemd/network/20-wireless.network"
 
-  copy "usr/local/bin/configure_displays"
+  echo "Configuring systemd-resolved"
+  ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
   section "System services"
   systemctl daemon-reload
@@ -240,6 +200,7 @@ function configure_root() {
   service "system" "iwd.service"
   service "system" "pcscd.service"
   service "system" "ufw.service"
+  service "system" "sddm.service"
 
   section "Misc config"
   echo "Firewall"
@@ -248,13 +209,10 @@ function configure_root() {
   ufw default deny incoming
   ufw enable
   find /etc/ufw -type f -name '*.rules.*' -delete
+}
 
-  echo "Reload udev rules"
-  udevadm control --reload
-  udevadm trigger
-
-  echo "Enabling systemd-resolved"
-  ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+function enable_sddm() {
+  service "system" "sddm.service"
 }
 
 function run_root_config() {
@@ -262,50 +220,17 @@ function run_root_config() {
   sudo -s "$dotfiles_dir/$script_name"
 }
 
-function configure_optimus_user() {
-  if [[ "$(lspci)" == *"NVIDIA"* ]]; then
-    section "Configuring Nvidia Optimus & Bluetooth"
-    yay -S nvidia-dkms nvidia-settings nvidia-utils bbswitch-dkms optimus-manager
-  fi
-}
-
-function configure_optimus_root() {
-  if [[ "$(lspci)" == *"NVIDIA"* ]]; then
-    section "Configuring Nvidia Optimus & Bluetooth"
-    service "system" "optimus-manager.service"
-  fi
-}
-
-function configure_power_save() {
-  if [[ "$NO_POWER_SAVE" != "1" ]]; then
-    section "Configuring power save"
-    yay -S tlp tlp-rdw
-  fi
-}
-
-function enable_lightdm() {
-  service "system" "lightdm.service"
-}
-
 function prepare_default_dirs() {
+  section "Making default directories"
   mkdir -p ~/Work
   mkdir -p ~/Documents/GDrive
-  mkdir -p ~/Pictures/Screenshots
 }
 
 if [[ "$(whoami)" == "root" ]]; then
   configure_root
-  configure_optimus_root
-  enable_lightdm
+  enable_sddm
 else
-  install_base
-  install_yay
-  install_packages
-  install_fonts
   configure_user
-  configure_yubikey
-  configure_optimus_user
-  configure_power_save
   prepare_default_dirs
   run_root_config
 fi

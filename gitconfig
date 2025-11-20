@@ -25,7 +25,7 @@
   rebase = true
 
 [commit]
-  gpgsign = true
+  gpgsign = false
 
 [credential]
   helper = /usr/lib/git-core/git-credential-libsecret
