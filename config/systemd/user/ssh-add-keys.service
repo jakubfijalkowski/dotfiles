@@ -1,0 +1,13 @@
+[Unit]
+Description=Load SSH keys into ssh-agent
+After=ssh-agent.service
+Wants=ssh-agent.service
+
+[Service]
+Type=oneshot
+ExecStart=find %h/.ssh -maxdepth 1 -name "id_*" -not -name "*.pub" -type f -exec ssh-add {} \;
+RemainAfterExit=yes
+Environment="SSH_AUTH_SOCK=%t/ssh-agent.socket"
+
+[Install]
+WantedBy=default.target
