@@ -1,10 +1,17 @@
-local _fd_base_str='fd --follow --hidden --type='
+local _fd_base_str='fd --follow --hidden --no-ignore-vcs'
 function _fd_base() {
-  eval $_fd_base_str$1 --max-depth=3 ${@:2}
+  if [[ -n "$1" && ("$1" == "f" || "$1" == "d") ]]; then
+    eval $_fd_base_str --type=$1 ${@:2}
+  elif [[ -n "$1" && "$1" == "fd" ]]; then
+    eval $_fd_base_str ${@:2}
+  else
+    echo "Invalid type filter: $1"
+    return 1
+  fi
 }
 
-export FZF_DEFAULT_COMMAND="${_fd_base_str}f"
-export FZF_ALT_C_COMMAND="${_fd_base_str}d"
+export FZF_DEFAULT_COMMAND="${_fd_base_str}"
+export FZF_ALT_C_COMMAND="${_fd_base_str} --type=d"
 
 function _fd_filter() {
   # Special-case some of the usages
@@ -33,8 +40,11 @@ function _fd_select() {
     'd')
       opts=(--preview='exa -1 --color=always {}' --preview-window=right:50%)
       ;;
+    'fd')
+      opts=(--preview='[[ -f {} ]] && bat --pager=never --color=always --line-range :30 {} || exa -1 --color=always {}' --preview-window=right:70%)
+      ;;
   esac
-  _fd_filter $1 "$2" | fzf \
+  _fd_filter "$1" "$2" | fzf \
     --ansi $opts \
     --select-1 \
     --exit-0 \
@@ -51,7 +61,7 @@ function _fd_execute() {
   # Display FZF manually with a hack to prevent multiple appearances of FZF (i.e. multiple calls to
   # _files and _cd) when cancelling the matching
   if [[ $_matcher_num == 1 ]]; then
-    local result=$(_fd_select $1 $2)
+    local result=$(_fd_select "$1" "$2")
     if [[ "$result" != '' ]]; then
       compadd -f -U -- "$result"
     fi
@@ -73,7 +83,7 @@ function _files() {
     local tokens=(${(z)LBUFFER})
     [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
     local query="${tokens[-1]}"
-    _fd_execute f "$query"
+    _fd_execute 'fd' "$query"
   fi
 }
 function _fzf_compgen_path() { _fs_base f . "$1" }
@@ -85,7 +95,7 @@ function _cd() {
     local tokens=(${(z)LBUFFER})
     [ "${LBUFFER[-1]}" = ' ' ] && tokens+=("")
     local query="${tokens[-1]}"
-    _fd_execute d "$query"
+    _fd_execute "d" "$query"
   fi
 }
 function _fzf_compgen_dir() { _fd_base d . "$1" }
