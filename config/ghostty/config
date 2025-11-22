@@ -21,5 +21,4 @@ keybind = ctrl+backspace=text:\x1b\x7f
 
 keybind = ctrl+arrow_up=scroll_page_fractional:-0.3
 keybind = ctrl+arrow_down=scroll_page_fractional:0.3
-
-keybind = shift+enter=text:"\n"
+keybind = shift+enter=text:\x1b\r

@@ -90,6 +90,7 @@ function configure_user() {
   # Browser flags
   link "config/chrome-flags.conf"
   link "config/electron-flags.conf"
+  link "config/spotify-flags.conf"
 
   # GPG configuration
   link "gnupg/gpg-agent.conf"
