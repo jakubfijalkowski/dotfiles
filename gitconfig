@@ -6,6 +6,7 @@
 [user]
   name = Jakub Fijałkowski
   email = kuba@codinginfinity.me
+  signingkey = 7896A8C7E3283895
 
 [alias]
   undo = "!f() { \\\n git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; \\\n}; f"
