@@ -1,6 +1,7 @@
 [general]
 early-exit = true
 save-after-copy = false
+copy-command = "wl-copy"
 
 [font]
 family = "monospace"
