@@ -28,22 +28,25 @@
     "format-window-separator": " ",
     "window-rewrite-default": "",
     "window-rewrite": {
-      "google-chrome": "\uf268",
-      "chromium": "\uf268",
-      "brave-browser": "\uf268",
+      "google-chrome": "",
+      "chromium": "",
+      "brave-browser": "",
 
-      "pavucontrol": "\uf028",
+      "pavucontrol": "",
       "blueberry.py": "",
 
-      "ghostty": "\uf120",
-      "jetbrains-studio": "\uf121",
-      "org.gnome.nautilus": "\uf0c5",
-      "slack": "\uf198",
-      "spotify": "\uf1bc",
-      "code": "\uf121",
-      "vscode": "\uf121",
-      "1password": "\ueb11",
-      "virt-manager": ""
+      "ghostty": "",
+      "jetbrains-studio": "",
+      "org.gnome.nautilus": "",
+      "slack": "",
+      "spotify": "",
+      "code": "",
+      "vscode": "",
+      "1password": "",
+      "gedit": "󱩽",
+      "virt-manager": "",
+      "obsidian": "",
+      "cursor": ""
     }
   },
 
@@ -127,7 +130,7 @@
   },
   "tray": {
     "icon-size": 16,
-    "spacing": 0
+    "spacing": 8
   },
 
   "custom/notifications": {
