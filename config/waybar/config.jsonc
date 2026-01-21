@@ -33,7 +33,7 @@
       "brave-browser": "",
 
       "pavucontrol": "",
-      "blueberry.py": "",
+      "blueman-manager": "",
 
       "ghostty": "",
       "jetbrains-studio": "",
@@ -114,7 +114,7 @@
     "format": "",
     "format-disabled": "󰂲",
     "format-connected": "",
-    "on-click": "blueberry",
+    "on-click": "blueman-manager",
     "tooltip-format-connected": "{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%"
   },
