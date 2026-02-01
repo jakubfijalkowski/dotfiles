@@ -18,6 +18,8 @@ mouse-scroll-multiplier = 1
 
 # Backwards-kill-word
 keybind = ctrl+backspace=text:\x1b\x7f
+# Forward-kill-word
+keybind = ctrl+delete=text:\x1bd
 
 keybind = ctrl+arrow_up=scroll_page_fractional:-0.3
 keybind = ctrl+arrow_down=scroll_page_fractional:0.3
