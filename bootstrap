@@ -191,7 +191,7 @@ function configure_root() {
   section "System services"
   systemctl daemon-reload
   service "system" "iwd.service"
-  service "system" "pcscd.service"
+  service "system" "pcscd.socket"
   service "system" "ufw.service"
 
   section "Configuring network"
