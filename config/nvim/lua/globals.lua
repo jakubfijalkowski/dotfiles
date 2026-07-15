@@ -26,6 +26,7 @@ vim.o.autoread = true
 vim.o.autowrite = true
 vim.o.signcolumn = "yes"
 vim.o.lazyredraw = true
+vim.o.winborder = "rounded" -- rounded borders for all floats (hover, blink, diagnostics)
 
 vim.o.wildoptions = "pum"
 vim.opt.wildignore = { ".git", "*.lock.json" }

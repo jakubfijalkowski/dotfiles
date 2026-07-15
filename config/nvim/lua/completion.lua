@@ -12,6 +12,18 @@ require("blink.cmp").setup({
     -- actively selected, and otherwise inserts a newline.
     list = { selection = { preselect = false } },
     documentation = { auto_show = true },
+    menu = {
+      draw = {
+        -- Highlight completion labels with treesitter.
+        treesitter = { "lsp" },
+        -- element icon | label + description | kind name
+        columns = {
+          { "kind_icon" },
+          { "label", "label_description", gap = 1 },
+          { "kind" },
+        },
+      },
+    },
   },
 
   signature = { enabled = true },
