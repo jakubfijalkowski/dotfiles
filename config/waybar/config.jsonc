@@ -1,5 +1,6 @@
 {
   "reload_style_on_change": true,
+  "output": "DP-1",
   "layer": "top",
   "position": "top",
   "spacing": 0,
@@ -22,9 +23,7 @@
 
   "hyprland/workspaces": {
     "format": "{icon}: {windows}",
-    "persistent-workspaces": {
-      "*": 5
-    },
+    "all-outputs": true,
     "format-window-separator": " ",
     "window-rewrite-default": "",
     "window-rewrite": {
@@ -51,11 +50,11 @@
   },
 
   "mpris": {
-	"format": " {dynamic}",
-	"format-paused": "{status_icon} {dynamic}",
-	"status-icons": {
-      "paused": "⏸"
-	},
+    "format": " {dynamic}",
+    "format-paused": "{status_icon} {dynamic}",
+    "status-icons": {
+        "paused": "⏸"
+    },
     "dynamic-order": ["artist", "title"]
   },
 
