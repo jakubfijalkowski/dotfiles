@@ -61,11 +61,4 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Tree sitter
-require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "terraform", "rust" },
-  sync_install = false,
-  highlight = { enable = true },
-  indent = { enable = true },
-  incremental_selection = { enable = false },
-})
-require("tree-sitter-just").setup({})
+require("nvim-treesitter").install { "lua", "terraform", "rust" }

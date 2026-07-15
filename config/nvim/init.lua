@@ -23,10 +23,9 @@ require("lazy").setup {
 	{ "airblade/vim-rooter" },
 	{ "famiu/bufdelete.nvim" },
 	{ "rcarriga/nvim-notify" },
-	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-	{ "IndianBoy42/tree-sitter-just" },
+	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate", branch = "main" },
 
-	{ "neoclide/coc.nvim",               build = "npm ci",                                branch = "master", },
+	{ "neoclide/coc.nvim",               build = "npm ci", branch = "master", },
 	{ "neoclide/coc-json",               build = "npm ci" },
 	{ "neoclide/coc-pairs",              build = "npm ci" },
 	{ "neoclide/coc-snippets",           build = "npm ci" },
