@@ -1,9 +1,9 @@
--- Diagnostics (translated from the old coc-settings.json)
+-- Diagnostics
 vim.diagnostic.config({
-  virtual_text = false,    -- diagnostic.virtualText = false
-  update_in_insert = true, -- diagnostic.refreshOnInsertMode = true
+  virtual_text = false,
+  update_in_insert = true,
   severity_sort = true,
-  float = {                -- diagnostic.messageTarget = "float"
+  float = {
     border = "rounded",
     source = true,
   },
@@ -12,7 +12,7 @@ vim.diagnostic.config({
   },
   signs = {
     text = {
-      [vim.diagnostic.severity.ERROR] = "!", -- diagnostic.errorSign = "!"
+      [vim.diagnostic.severity.ERROR] = "!",
       [vim.diagnostic.severity.WARN] = "?",
       [vim.diagnostic.severity.INFO] = "i",
       [vim.diagnostic.severity.HINT] = "h",
@@ -20,14 +20,12 @@ vim.diagnostic.config({
   },
 })
 
--- Make lua_ls aware of the Neovim runtime and plugin APIs. Replaces the manual
--- Lua.workspace.library wiring that used to live in coc_config.lua (and the
--- never-initialised neodev.nvim).
+-- Make lua_ls aware of the Neovim runtime and plugin APIs.
 require("lazydev").setup()
 
--- Rust is owned by rustaceanvim, NOT lspconfig/mason. The rust-analyzer settings
--- moved here from coc-settings.json. Do NOT also enable rust_analyzer through
--- mason-lspconfig (see automatic_enable.exclude below) or you get two clients.
+-- Rust is owned by rustaceanvim, NOT lspconfig/mason. Do NOT also enable
+-- rust_analyzer through mason-lspconfig (see automatic_enable.exclude below) or
+-- you get two clients.
 vim.g.rustaceanvim = {
   server = {
     default_settings = {

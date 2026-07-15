@@ -28,8 +28,8 @@ vim.keymap.set("n", "<Leader>ff", telescopeBuiltin.find_files)
 vim.keymap.set("n", "<Leader>fg", telescopeBuiltin.live_grep)
 vim.keymap.set("n", "<Leader>fb", telescopeBuiltin.buffers)
 
--- LSP pickers (replacing telescope-coc.nvim). Code actions route through
--- vim.ui.select, which telescope-ui-select renders with Telescope.
+-- LSP pickers. Code actions route through vim.ui.select, which
+-- telescope-ui-select renders with Telescope.
 vim.keymap.set("n", "<Leader>fa", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<Leader>fd", function() telescopeBuiltin.diagnostics({ bufnr = 0 }) end)
 vim.keymap.set("n", "<Leader>fr", telescopeBuiltin.lsp_references)
