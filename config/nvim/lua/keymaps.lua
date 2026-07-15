@@ -23,42 +23,37 @@ vim.keymap.set("", "s", "<Plug>(easymotion-bd-f)")
 vim.keymap.set("n", "s", "<Plug>(easymotion-overwin-f)")
 
 -- Telescope
-local telescope = require("telescope")
 local telescopeBuiltin = require("telescope.builtin")
 vim.keymap.set("n", "<Leader>ff", telescopeBuiltin.find_files)
 vim.keymap.set("n", "<Leader>fg", telescopeBuiltin.live_grep)
 vim.keymap.set("n", "<Leader>fb", telescopeBuiltin.buffers)
 
-vim.keymap.set("n", "<Leader>fa", telescope.extensions.coc.code_actions)
-vim.keymap.set("n", "<Leader>fd", telescope.extensions.coc.diagnostics)
-vim.keymap.set("n", "<Leader>fr", telescope.extensions.coc.references)
-vim.keymap.set("n", "<Leader>fs", telescope.extensions.coc.document_symbols)
-vim.keymap.set("n", "<Leader>fws", telescope.extensions.coc.workspace_symbols)
-vim.keymap.set("n", "<Leader>fwd", telescope.extensions.coc.workspace_diagnostics)
+-- LSP pickers (replacing telescope-coc.nvim). Code actions route through
+-- vim.ui.select, which telescope-ui-select renders with Telescope.
+vim.keymap.set("n", "<Leader>fa", vim.lsp.buf.code_action)
+vim.keymap.set("n", "<Leader>fd", function() telescopeBuiltin.diagnostics({ bufnr = 0 }) end)
+vim.keymap.set("n", "<Leader>fr", telescopeBuiltin.lsp_references)
+vim.keymap.set("n", "<Leader>fs", telescopeBuiltin.lsp_document_symbols)
+vim.keymap.set("n", "<Leader>fws", telescopeBuiltin.lsp_dynamic_workspace_symbols)
+vim.keymap.set("n", "<Leader>fwd", telescopeBuiltin.diagnostics)
 
--- Coc
-vim.keymap.set("n", "<F2>", "<Plug>(coc-rename)", { silent = true })
-vim.keymap.set("n", "<F4>", "<Plug>(coc-codelens-action)", { silent = true })
-vim.keymap.set("v", "<F5>", "<Plug>(coc-codeaction-selected)", { silent = true })
-vim.keymap.set("n", "<F5>", "<Plug>(coc-codeaction-selected)l", { silent = true })
-vim.keymap.set("i", "<F5>", function() vim.fn.CocActionAsync("codeAction", "char") end)
+-- LSP / diagnostics
+-- (rename <F2>, code action <F5>, quick-fix <Leader>qf are buffer-local in lsp.lua)
+vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1, float = true }) end, { silent = true })
+vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1, float = true }) end, { silent = true })
 
-vim.keymap.set("n", "<Leader>=", "<Plug>(coc-format)", { silent = true })
-vim.keymap.set("n", "<Leader>qf", "<Plug>(coc-fix-current)", { silent = true })
+vim.keymap.set({ "n", "v" }, "<Leader>=", function()
+  require("conform").format({ async = false, lsp_format = "fallback" })
+end, { silent = true })
 
-vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
-vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
-
-vim.keymap.set("i", "<C-Space>", "coc#refresh()", { silent = true, expr = true })
-
-vim.keymap.set("i", "<Tab>",
-  [[coc#pum#visible() ? coc#pum#next(1): v:lua.coc_check_backspace() ? "\<Tab>" : coc#refresh()]],
-  { silent = true, expr = true })
-vim.keymap.set("i", "<S-Tab>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], { silent = true, expr = true })
-vim.keymap.set("i", "<CR>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]],
-  { silent = true, expr = true })
-
-vim.keymap.set("n", "K", _G.coc_show_docs, { silent = true })
+vim.keymap.set("n", "K", function()
+  local ft = vim.bo.filetype
+  if ft == "vim" or ft == "help" then
+    vim.cmd("help " .. vim.fn.expand("<cword>"))
+  else
+    vim.lsp.buf.hover()
+  end
+end, { silent = true })
 
 -- NVim Tree
 local nvimTree = require("nvim-tree.api")

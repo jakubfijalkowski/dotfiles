@@ -7,13 +7,14 @@ require("lazy").setup {
 
 	{ "airblade/vim-gitgutter" },
 	{ "easymotion/vim-easymotion" },
-	{ "folke/neodev.nvim" },
+	{ "folke/lazydev.nvim" },
 	{ "folke/which-key.nvim" },
 	{ "godlygeek/tabular" },
 	{ "mbbill/undotree" },
 	{ "nathanaelkane/vim-indent-guides" },
-	{ "nvim-lualine/lualine.nvim",       dependencies = { "nvim-tree/nvim-web-devicons" } },
-	{ "nvim-telescope/telescope.nvim",   dependencies = { "nvim-lua/plenary.nvim" } },
+	{ "nvim-lualine/lualine.nvim",              dependencies = { "nvim-tree/nvim-web-devicons" } },
+	{ "nvim-telescope/telescope.nvim",          dependencies = { "nvim-lua/plenary.nvim" } },
+	{ "nvim-telescope/telescope-ui-select.nvim" },
 	{ "nvim-tree/nvim-web-devicons" },
 	{ "preservim/nerdcommenter" },
 	{ "tpope/vim-repeat" },
@@ -23,20 +24,20 @@ require("lazy").setup {
 	{ "airblade/vim-rooter" },
 	{ "famiu/bufdelete.nvim" },
 	{ "rcarriga/nvim-notify" },
-	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate", branch = "main" },
+	{ "nvim-treesitter/nvim-treesitter",        build = ":TSUpdate", branch = "main" },
 
-	{ "neoclide/coc.nvim",               build = "npm ci", branch = "master", },
-	{ "neoclide/coc-json",               build = "npm ci" },
-	{ "neoclide/coc-pairs",              build = "npm ci" },
-	{ "neoclide/coc-snippets",           build = "npm ci" },
-	{ "neoclide/coc-yaml",               build = "npm ci" },
-	{ "josa42/coc-lua",                  build = "npm ci" },
-	{ "fannheyward/coc-rust-analyzer",   build = "npm ci" },
-	{ "fannheyward/telescope-coc.nvim" },
+	{ "neovim/nvim-lspconfig" },
+	{ "mason-org/mason.nvim" },
+	{ "mason-org/mason-lspconfig.nvim" },
+	{ "saghen/blink.cmp",                       version = "*" },
+	{ "mrcjkb/rustaceanvim",                    version = "^6", lazy = false },
+	{ "stevearc/conform.nvim" },
 }
 
 require("globals")
 require("editor")
 require("layout")
-require("coc_config")
+require("completion")
+require("lsp")
+require("formatting")
 require("keymaps")

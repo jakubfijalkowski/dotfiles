@@ -36,13 +36,12 @@ telescope.setup {
     }
   },
   extensions = {
-    coc = {
-      theme = "cursor",
-      prefer_locations = true,
+    ["ui-select"] = {
+      require("telescope.themes").get_cursor()
     }
   }
 }
-telescope.load_extension("coc")
+telescope.load_extension("ui-select")
 
 -- Nvim-tree
 require("nvim-tree").setup({
