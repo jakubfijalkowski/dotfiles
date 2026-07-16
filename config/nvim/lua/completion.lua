@@ -10,6 +10,7 @@ require("blink.cmp").setup({
     -- so a completion never lands by accident.
     list = { selection = { preselect = false, auto_insert = false } },
     documentation = { auto_show = true },
+    ghost_text = { enabled = true },
     menu = {
       draw = {
         -- Highlight completion labels with treesitter.
