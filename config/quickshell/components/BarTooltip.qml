@@ -17,6 +17,9 @@ Scope {
         if (show && text !== "") delay.restart();
         else { delay.stop(); popup.visible = false; }
     }
+    onTextChanged: {
+        if (text === "") { delay.stop(); popup.visible = false; }
+    }
 
     Timer {
         id: delay
