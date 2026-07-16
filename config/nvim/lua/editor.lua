@@ -9,10 +9,20 @@ vim.o.shiftround = true
 vim.o.autoindent = true
 vim.o.expandtab = true
 
-vim.g.indent_guides_guide_size = 1
-vim.g.indent_guides_enable_on_vim_startup = 1
-vim.g.indent_guides_exclude_filetypes = { "help", "NvimTree" }
-vim.g.indent_guides_start_level = 2
+-- Indentation guides (indent-blankline v3). Scope highlighting uses treesitter
+-- (set up below). IblIndent derives from Whitespace and IblScope from LineNr, so
+-- the guides pick up gruvbox's palette and stay subtle.
+require("ibl").setup({
+  indent = { char = "▎" },
+  scope = {
+    show_start = false,
+    show_end = false,
+  },
+  exclude = {
+    -- Merged with ibl's defaults (help, checkhealth, TelescopePrompt, ...).
+    filetypes = { "help", "NvimTree" },
+  },
+})
 
 vim.o.foldmethod = "marker"
 
@@ -57,8 +67,27 @@ vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave"
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
-  callback = vim.highlight.on_yank,
+  callback = vim.hl.on_yank,
 })
 
 -- Tree sitter
-require("nvim-treesitter").install({ "lua", "terraform", "rust" })
+--
+-- On the nvim-treesitter `main` branch, `.install()` ONLY downloads/compiles the
+-- parsers; there is no `.setup({ highlight = ... })`. Highlighting (and treesitter
+-- indentation) must be started per-buffer via a FileType autocmd calling native
+-- `vim.treesitter.start()`. Neovim already ships ftplugins that do this for its
+-- bundled parsers (lua, markdown, ...), so lua worked out of the box, but
+-- terraform/rust silently fell back to legacy regex `:syntax` without this.
+local ts_langs = { "lua", "terraform", "rust" }
+require("nvim-treesitter").install(ts_langs)
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("TreesitterStart", { clear = true }),
+  pattern = ts_langs,
+  callback = function(args)
+    -- Highlighting. Idempotent: harmless if a built-in ftplugin already started it.
+    vim.treesitter.start()
+    -- Treesitter-based indentation (experimental on the main branch).
+    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})

@@ -25,7 +25,6 @@ vim.o.splitright = true
 vim.o.autoread = true
 vim.o.autowrite = true
 vim.o.signcolumn = "yes"
-vim.o.lazyredraw = true
 vim.o.winborder = "rounded" -- rounded borders for all floats (hover, blink, diagnostics)
 
 vim.o.wildoptions = "pum"
@@ -44,8 +43,6 @@ vim.opt.tags = { "tags;/", "codex.tags;/" }
 
 vim.notify = require("notify")
 
-vim.g.rooter_manual_only = 1
-vim.g.rooter_patterns = { ".git/" }
 vim.g.startify_change_to_dir = 1
 vim.g.startify_fortune_use_unicode = 1
 vim.g.startify_session_persistence = 1

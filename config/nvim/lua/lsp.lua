@@ -8,7 +8,11 @@ vim.diagnostic.config({
     source = true,
   },
   jump = {
-    float = true,
+    -- `jump.float = true` was deprecated in 0.12; on_jump is the documented
+    -- equivalent (open a cursor-scoped, unfocused diagnostic float after jumping).
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
+    end,
   },
   signs = {
     text = {
@@ -81,22 +85,24 @@ vim.lsp.codelens.enable(true)
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
   callback = function(args)
-    local opts = { buffer = args.buf, silent = true }
     local client = vim.lsp.get_client_by_id(args.data.client_id)
+    local function map(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = args.buf, silent = true, desc = desc })
+    end
 
-    vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
-    vim.keymap.set({ "n", "v" }, "<F5>", vim.lsp.buf.code_action, opts)
+    map("n", "<F2>", vim.lsp.buf.rename, "Rename symbol")
+    map({ "n", "v" }, "<F5>", vim.lsp.buf.code_action, "Code action")
 
-    vim.keymap.set("n", "<Leader>qf", function()
+    map("n", "<Leader>qf", function()
       vim.lsp.buf.code_action({
         apply = true,
         context = { only = { "quickfix" } },
       })
-    end, opts)
+    end, "Quick fix")
 
     -- Run the code lens under the cursor (only for servers that provide lenses).
     if client and client:supports_method("textDocument/codeLens") then
-      vim.keymap.set("n", "<F4>", vim.lsp.codelens.run, opts)
+      map("n", "<F4>", vim.lsp.codelens.run, "Run code lens")
     end
   end,
 })
