@@ -73,11 +73,16 @@ require("mason-lspconfig").setup({
   },
 })
 
+-- CodeLens: display lenses (rendered as virtual lines above the code) for
+-- servers that provide them, e.g. rust-analyzer. Managed, so it auto-refreshes.
+vim.lsp.codelens.enable(true)
+
 -- Buffer-local LSP keymaps, applied when a server attaches.
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
   callback = function(args)
     local opts = { buffer = args.buf, silent = true }
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
 
     vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
     vim.keymap.set({ "n", "v" }, "<F5>", vim.lsp.buf.code_action, opts)
@@ -88,5 +93,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
         context = { only = { "quickfix" } },
       })
     end, opts)
+
+    -- Run the code lens under the cursor (only for servers that provide lenses).
+    if client and client:supports_method("textDocument/codeLens") then
+      vim.keymap.set("n", "<F4>", vim.lsp.codelens.run, opts)
+    end
   end,
 })
