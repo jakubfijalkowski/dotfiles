@@ -17,15 +17,13 @@ Personal Neovim config in a dotfiles repo (`config/nvim`), managed with
 3. **Lua is the configuration language.** Everything is Lua — no Vimscript beyond
    unavoidable `vim.cmd` / `<Plug>` bridges. New config goes in a `lua/` module.
 
-## Consequences of "latest Neovim + native APIs"
+## Working with native APIs
 
-Use these; avoid the deprecated equivalents:
-
-- LSP setup: `vim.lsp.config()` / `vim.lsp.enable()` — never `require('lspconfig').xxx.setup{}`.
-- Diagnostics jump: `vim.diagnostic.jump({ count = ... })` — not `goto_next` / `goto_prev`.
-- CodeLens: `vim.lsp.codelens.enable(true)` — not `codelens.refresh()` (deprecated, gone in 0.13).
-- Snippets: native `vim.snippet` — no snippet-engine plugin.
-- Capability checks: `client:supports_method("...")`.
+Neovim's built-in APIs move quickly. Prefer the current native API for a task
+over a plugin or an older idiom, and treat deprecation warnings as work to do.
+Before copying a pattern from a blog post or an existing config, confirm it is
+not deprecated (`:help news`, `:help deprecated`, `:checkhealth`) — many
+widely-shared snippets predate their native replacements.
 
 ## Layout
 
@@ -67,12 +65,6 @@ modules below in load order:
 - Lua style is enforced by `.stylua.toml` (2-space indent, 100 column width,
   double quotes) — it mirrors the editor settings. Run stylua / `<Leader>=` on
   Lua before committing.
-
-## Keymaps (LSP)
-
-`F2` rename · `F4` run codelens · `F5` code action · `K` hover · `[g`/`]g`
-diagnostics · `<Leader>=` format · `<Leader>qf` quickfix · `<Leader>f{a,d,r,s,ws,wd}`
-telescope LSP pickers.
 
 ## Repo conventions
 
