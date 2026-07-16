@@ -110,7 +110,7 @@ hl.window_rule({
   name = "file-dialog",
   match = {
     class = "xdg-desktop-portal-gtk",
-    title = "^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to [open|save].*|[C|c]hoose.*)",
+    title = "^(Open.*Files?|Open [Ff]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to (open|save).*|[Cc]hoose.*)",
   },
 
   float = true,
@@ -132,7 +132,7 @@ hl.window_rule({
 -- Slack
 hl.window_rule({
   name = "slack-screenshare",
-  match = { class = "^ss:^([sS]lack)$" },
+  match = { class = "^([sS]lack)$" },
 
   no_screen_share = true,
 })
@@ -173,13 +173,4 @@ hl.window_rule({
   float = true,
   center = true,
   pin = true,
-})
-
--- GeForceNow
-hl.window_rule({
-  name = "geforcenow",
-  match = { title = "^(.+GeForce NOW.+)$" },
-
-  immediate = true,
-  tag = "geforce",
 })

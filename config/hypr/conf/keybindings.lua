@@ -45,7 +45,7 @@ hl.bind(
 hl.bind(
   mainMod .. " + C",
   hl.dsp.exec_cmd("uwsm-app -- walker --provider clipboard"),
-  { description = "Launch cmd" }
+  { description = "Clipboard history" }
 )
 
 hl.bind(
@@ -152,12 +152,12 @@ hl.bind(
 hl.bind(
   "XF86AudioMute",
   hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-  { locked = true, repeating = true }
+  { locked = true }
 )
 hl.bind(
   "XF86AudioMicMute",
   hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-  { locked = true, repeating = true }
+  { locked = true }
 )
 hl.bind(
   "XF86MonBrightnessUp",
