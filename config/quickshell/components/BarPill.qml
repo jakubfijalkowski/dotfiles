@@ -16,6 +16,8 @@ Rectangle {
     property string tooltipText: ""
     property bool tooltipRich: false
     property alias tooltipTextPixelSize: tooltip.textPixelSize
+    // Active-state overlay, e.g. while the module's popup is open
+    property bool highlighted: false
 
     signal clicked(var mouse)
     signal wheelUp()
@@ -27,6 +29,14 @@ Rectangle {
     implicitHeight: Theme.pillHeight
 
     Behavior on color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
+
+    Rectangle {
+        anchors.fill: parent
+        radius: parent.radius
+        color: Theme.alpha(Theme.text, root.highlighted ? 0.12 : 0)
+
+        Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+    }
 
     Text {
         id: label

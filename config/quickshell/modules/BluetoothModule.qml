@@ -57,11 +57,21 @@ BarPill {
         }
     }
 
+    // Lift the pill slightly while its popup is open
+    highlighted: devicePopup.open
+
     BarPopup {
         id: devicePopup
         anchorItem: root
         anchorWindow: root.barWindow
+        accent: Theme.blue
+        neckColor: root.bg.a > 0 ? root.bg : Theme.base
 
-        BluetoothDeviceList {}
+        onOpenChanged: if (open) deviceList.opened()
+
+        BluetoothDeviceList {
+            id: deviceList
+            onCloseRequested: devicePopup.open = false
+        }
     }
 }

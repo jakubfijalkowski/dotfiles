@@ -48,6 +48,7 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 qt6-wayland
+quickshell
 reflector
 ripgrep
 rustup
@@ -70,7 +71,6 @@ ufw
 uwsm
 vdpauinfo
 vulkan-tools
-waybar
 wget
 wl-clipboard
 wpaperd

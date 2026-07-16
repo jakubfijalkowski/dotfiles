@@ -115,9 +115,7 @@ function configure_user() {
 
   link "config/ghostty/config"
 
-  link "config/waybar/config.jsonc"
-  link "config/waybar/style.css"
-  link "config/waybar/colors.css"
+  link "config/quickshell"
 
   link "config/walker/config.toml"
   link "config/walker/themes/custom/style.css"
