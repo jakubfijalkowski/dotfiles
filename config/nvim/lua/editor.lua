@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnte
     if vim.o.number then
       vim.o.relativenumber = true
     end
-  end
+  end,
 })
 
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
@@ -52,13 +52,13 @@ vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave"
     if vim.o.number then
       vim.o.relativenumber = false
     end
-  end
+  end,
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
-  callback = vim.highlight.on_yank
+  callback = vim.highlight.on_yank,
 })
 
 -- Tree sitter
-require("nvim-treesitter").install { "lua", "terraform", "rust" }
+require("nvim-treesitter").install({ "lua", "terraform", "rust" })

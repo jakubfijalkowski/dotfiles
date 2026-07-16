@@ -1,7 +1,7 @@
 local helpers = require("helpers")
 
 -- Status line plugin
-require("lualine").setup {
+require("lualine").setup({
   options = {
     theme = "gruvbox",
     globalstatus = true,
@@ -12,7 +12,7 @@ require("lualine").setup {
     lualine_c = { "filename" },
     lualine_x = { "diagnostics" },
     lualine_y = { "encoding", "fileformat", "filetype" },
-    lualine_z = { "progress", "location" }
+    lualine_z = { "progress", "location" },
   },
   tabline = {
     lualine_a = { "buffers" },
@@ -20,27 +20,27 @@ require("lualine").setup {
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    lualine_z = {}
+    lualine_z = {},
   },
-  extensions = { "nvim-tree" }
-}
+  extensions = { "nvim-tree" },
+})
 
 -- Telescope
 local telescope = require("telescope")
-telescope.setup {
+telescope.setup({
   defaults = {
     mappings = {
       i = {
-        ["<Esc>"] = require("telescope.actions").close
-      }
-    }
+        ["<Esc>"] = require("telescope.actions").close,
+      },
+    },
   },
   extensions = {
     ["ui-select"] = {
-      require("telescope.themes").get_cursor()
-    }
-  }
-}
+      require("telescope.themes").get_cursor(),
+    },
+  },
+})
 telescope.load_extension("ui-select")
 
 -- Nvim-tree
@@ -60,9 +60,9 @@ require("nvim-tree").setup({
     enable = true,
     show_on_dirs = true,
     severity = {
-      min = vim.diagnostic.severity.WARN
-    }
-  }
+      min = vim.diagnostic.severity.WARN,
+    },
+  },
 })
 
 -- Undotree

@@ -15,7 +15,9 @@ vim.keymap.set("n", "<S-Right>", ":vertical :resize +1<CR>", { silent = true })
 vim.keymap.set("n", "<C-p>", ":bprev<CR>", { silent = true })
 vim.keymap.set("n", "<C-n>", ":bnext<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>bd", function() require("bufdelete").bufdelete(0) end)
+vim.keymap.set("n", "<Leader>bd", function()
+  require("bufdelete").bufdelete(0)
+end)
 
 -- Easymotion
 vim.g.EasyMotion_do_mapping = 0
@@ -31,7 +33,9 @@ vim.keymap.set("n", "<Leader>fb", telescopeBuiltin.buffers)
 -- LSP pickers. Code actions route through vim.ui.select, which
 -- telescope-ui-select renders with Telescope.
 vim.keymap.set("n", "<Leader>fa", vim.lsp.buf.code_action)
-vim.keymap.set("n", "<Leader>fd", function() telescopeBuiltin.diagnostics({ bufnr = 0 }) end)
+vim.keymap.set("n", "<Leader>fd", function()
+  telescopeBuiltin.diagnostics({ bufnr = 0 })
+end)
 vim.keymap.set("n", "<Leader>fr", telescopeBuiltin.lsp_references)
 vim.keymap.set("n", "<Leader>fs", telescopeBuiltin.lsp_document_symbols)
 vim.keymap.set("n", "<Leader>fws", telescopeBuiltin.lsp_dynamic_workspace_symbols)
@@ -39,8 +43,12 @@ vim.keymap.set("n", "<Leader>fwd", telescopeBuiltin.diagnostics)
 
 -- LSP / diagnostics
 -- (rename <F2>, code action <F5>, quick-fix <Leader>qf are buffer-local in lsp.lua)
-vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1, float = true }) end, { silent = true })
-vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1, float = true }) end, { silent = true })
+vim.keymap.set("n", "[g", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { silent = true })
+vim.keymap.set("n", "]g", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { silent = true })
 
 vim.keymap.set({ "n", "v" }, "<Leader>=", function()
   require("conform").format({ async = false, lsp_format = "fallback" })
