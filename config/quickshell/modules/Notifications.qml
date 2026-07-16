@@ -26,8 +26,8 @@ BarPill {
     text: icons[alt] ?? ""
     fontFamily: Theme.mdiFontFamily
     fontPixelSize: Theme.iconFontSize
-    bg: hasNotifications ? Theme.mauve : Theme.alpha(Theme.surface0, 0.5)
-    fg: hasNotifications ? Theme.crust : Theme.text
+    accent: Theme.mauve
+    neutral: !hasNotifications
     tooltipText: tip
 
     onClicked: mouse => {

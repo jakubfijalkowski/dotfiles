@@ -10,7 +10,7 @@ BarPill {
     property int nrFailed: 0
 
     visible: nrFailed > 0
-    bg: Theme.reallyRed
+    accent: Theme.reallyRed
     text: "✗ " + nrFailed
 
     Process {

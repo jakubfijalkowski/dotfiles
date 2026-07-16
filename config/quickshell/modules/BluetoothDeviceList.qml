@@ -53,9 +53,12 @@ Column {
         width: 38
         height: 20
         radius: height / 2
-        color: checked ? Theme.blue : Theme.surface1
+        color: checked ? Theme.alpha(Theme.blue, 0.15) : Theme.alpha(Theme.surface0, 0.35)
+        border.width: 1
+        border.color: checked ? Theme.alpha(Theme.blue, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
 
         Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+        Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 
         Rectangle {
             width: 14
@@ -63,7 +66,7 @@ Column {
             radius: 7
             y: 3
             x: toggle.checked ? toggle.width - width - 3 : 3
-            color: toggle.checked ? Theme.crust : Theme.overlay1
+            color: toggle.checked ? Theme.blue : Theme.overlay1
 
             Behavior on x {
                 NumberAnimation {
@@ -94,15 +97,18 @@ Column {
             width: 30
             height: 30
             radius: 9
-            color: root.adapterOn ? Theme.blue : Theme.surface1
+            color: root.adapterOn ? Theme.alpha(Theme.blue, 0.1) : Theme.alpha(Theme.surface0, 0.35)
+            border.width: 1
+            border.color: root.adapterOn ? Theme.alpha(Theme.blue, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
 
             Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+            Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 
             Text {
                 anchors.centerIn: parent
                 font.family: Theme.mdiFontFamily
                 font.pixelSize: 17
-                color: root.adapterOn ? Theme.crust : Theme.subtext0
+                color: root.adapterOn ? Theme.blue : Theme.subtext0
                 // nf-md-bluetooth
                 text: "\u{F00AF}"
 
@@ -202,13 +208,13 @@ Column {
 
             width: root.listWidth
             height: statusText !== "" ? 48 : 40
-            radius: 10
-            color: isConnected ? Theme.alpha(Theme.green, 0.14)
-                 : cardMouse.containsMouse && root.adapterOn ? Theme.alpha(Theme.surface1, 0.6)
-                 : Theme.alpha(Theme.surface0, 0.45)
+            radius: Theme.cardRadius
+            color: isConnected ? Theme.alpha(Theme.green, 0.08)
+                 : cardMouse.containsMouse && root.adapterOn ? Theme.cardHoverBg
+                 : Theme.cardBg
             border.width: 1
-            border.color: isConnected ? Theme.alpha(Theme.green, 0.4)
-                        : Theme.alpha(Theme.surface1, 0.5)
+            border.color: isConnected ? Theme.alpha(Theme.green, 0.6)
+                        : Theme.cardBorder
             opacity: (root.adapterOn ? 1 : 0.4) * entrance
 
             Behavior on height {
@@ -273,22 +279,29 @@ Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 6
                 anchors.verticalCenter: parent.verticalCenter
+                readonly property bool hinting: cardMouse.containsMouse && root.adapterOn
+                    && !deviceCard.busy && !deviceCard.isConnected
+
                 width: 28
                 height: 28
                 radius: 8
-                color: deviceCard.isConnected ? Theme.green
-                     : cardMouse.containsMouse && root.adapterOn && !deviceCard.busy ? Theme.alpha(Theme.blue, 0.85)
-                     : Theme.surface1
+                color: deviceCard.isConnected ? Theme.alpha(Theme.green, 0.1)
+                     : hinting ? Theme.alpha(Theme.blue, 0.1)
+                     : Theme.alpha(Theme.surface0, 0.35)
+                border.width: 1
+                border.color: deviceCard.isConnected ? Theme.alpha(Theme.green, 0.75)
+                            : hinting ? Theme.alpha(Theme.blue, 0.75)
+                            : Theme.alpha(Theme.overlay0, 0.5)
 
                 Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+                Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
 
                 Text {
                     anchors.centerIn: parent
                     font.family: Theme.mdiFontFamily
                     font.pixelSize: 16
-                    color: deviceCard.isConnected
-                        || (cardMouse.containsMouse && root.adapterOn && !deviceCard.busy)
-                        ? Theme.crust : Theme.subtext1
+                    color: deviceCard.isConnected ? Theme.green
+                         : iconChip.hinting ? Theme.blue : Theme.subtext1
                     text: root.deviceIcon(deviceCard.modelData.icon)
 
                     Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
@@ -330,7 +343,9 @@ Column {
                         width: batteryLabel.implicitWidth + 10
                         height: 14
                         radius: 7
-                        color: Theme.alpha(root.batteryColor(deviceCard.modelData.battery), 0.25)
+                        color: Theme.alpha(root.batteryColor(deviceCard.modelData.battery), 0.1)
+                        border.width: 1
+                        border.color: Theme.alpha(root.batteryColor(deviceCard.modelData.battery), 0.6)
 
                         Text {
                             id: batteryLabel
@@ -363,9 +378,13 @@ Column {
                     visible: deviceCard.isConnected && !deviceCard.busy
                     radius: height / 2
                     color: disconnectMouse.containsMouse
-                        ? Theme.alpha(Theme.red, 0.35) : Theme.alpha(Theme.surface1, 0.6)
+                        ? Theme.alpha(Theme.red, 0.12) : Theme.alpha(Theme.surface0, 0.35)
+                    border.width: 1
+                    border.color: disconnectMouse.containsMouse
+                        ? Theme.alpha(Theme.red, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
 
                     Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+                    Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
 
                     Text {
                         anchors.centerIn: parent
@@ -394,8 +413,10 @@ Column {
     Rectangle {
         width: root.listWidth
         height: 30
-        radius: 10
-        color: footerMouse.containsMouse ? Theme.alpha(Theme.blue, 0.3) : Theme.alpha(Theme.blue, 0.15)
+        radius: Theme.cardRadius
+        color: footerMouse.containsMouse ? Theme.alpha(Theme.blue, 0.15) : Theme.alpha(Theme.blue, 0.06)
+        border.width: 1
+        border.color: Theme.alpha(Theme.blue, 0.6)
 
         Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
 

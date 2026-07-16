@@ -24,8 +24,7 @@ BarPill {
     visible: sink !== null
     // #wireplumber { min-width: 28pt }
     minContentWidth: 37
-    bg: muted ? Theme.lavender : Theme.flamingo
-    fg: Theme.crust
+    accent: muted ? Theme.lavender : Theme.flamingo
     contentWidth: content.implicitWidth
 
     // The icon renders as a Symbols Nerd Font run, the text as Iosevka,

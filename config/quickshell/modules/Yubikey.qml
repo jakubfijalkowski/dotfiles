@@ -12,8 +12,7 @@ BarPill {
     property string status: ""
 
     visible: status !== ""
-    bg: Theme.peach
-    fg: Theme.crust
+    accent: Theme.peach
     text: status
     // the script emits "\u{F030B}" (key icon, Material Design Icons)
     fontFamily: Theme.mdiFontFamily

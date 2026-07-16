@@ -14,8 +14,7 @@ BarPill {
     property string tip: ""
 
     visible: status !== ""
-    bg: Theme.yellow
-    fg: Theme.crust
+    accent: Theme.yellow
     text: status
     // the script emits "" (Arch logo, Symbols Nerd Font)
     fontFamily: Theme.iconFontFamily

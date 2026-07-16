@@ -9,8 +9,7 @@ import qs.components
 BarPill {
     id: root
 
-    bg: Theme.teal
-    fg: Theme.crust
+    accent: Theme.teal
     text: clock.date.toLocaleDateString(Theme.dateLocale, "dd MMMM yy")
 
     tooltipRich: true

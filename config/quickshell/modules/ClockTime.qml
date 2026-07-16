@@ -5,8 +5,7 @@ import qs.components
 
 // clock#time: "{:%H:%M}"
 BarPill {
-    bg: Theme.sapphire
-    fg: Theme.crust
+    accent: Theme.sapphire
     text: Qt.formatDateTime(clock.date, "HH:mm")
 
     SystemClock {

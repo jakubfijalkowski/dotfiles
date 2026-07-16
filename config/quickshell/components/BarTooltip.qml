@@ -41,10 +41,10 @@ Scope {
             anchors.centerIn: parent
             implicitWidth: label.implicitWidth + 26
             implicitHeight: label.implicitHeight + 14
-            color: Theme.alpha(Theme.mantle, 0.97)
-            border.color: Theme.surface1
+            color: Theme.popupBg
+            border.color: Theme.popupBorder
             border.width: 1
-            radius: Theme.pillRadius
+            radius: Math.min(Theme.popupRadius, 10)
 
             Text {
                 id: label

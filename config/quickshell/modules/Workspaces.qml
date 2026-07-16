@@ -79,12 +79,15 @@ Item {
                 required property var modelData
 
                 readonly property var windowIcons: root.windowsFor(modelData)
-                readonly property color labelColor: modelData.urgent ? Theme.crust : Theme.text
+                readonly property color labelColor: modelData.urgent ? Theme.crust
+                    : modelData.focused ? Theme.wsActiveFg : Theme.text
 
                 color: modelData.urgent ? Theme.alpha(Theme.yellow, 0.8)
-                     : modelData.focused ? Theme.alpha(Theme.surface2, 0.8)
-                     : Theme.alpha(Theme.surface0, 0.5)
-                radius: Theme.pillRadius
+                     : modelData.focused ? Theme.wsActiveBg
+                     : Theme.wsIdleBg
+                border.width: modelData.focused && Theme.wsActiveBorder.a > 0 ? 1 : 0
+                border.color: modelData.focused ? Theme.wsActiveBorder : "transparent"
+                radius: Theme.wsRadius
                 anchors.verticalCenter: parent.verticalCenter
                 implicitWidth: Math.max(content.implicitWidth, 13) + 14
                 implicitHeight: Theme.pillHeight - 3

@@ -23,7 +23,8 @@ Item {
         property string tooltip: ""
         required property var command
 
-        implicitWidth: buttonLabel.implicitWidth + 2 * Theme.pillPaddingH
+        // Integer width so pills to the left keep whole-pixel positions
+        implicitWidth: Math.round(buttonLabel.implicitWidth + 2 * Theme.pillPaddingH)
         implicitHeight: Theme.pillHeight
 
         Text {

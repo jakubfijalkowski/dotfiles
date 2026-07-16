@@ -24,7 +24,9 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.alpha(Theme.base, 0.4)
+        color: Theme.barBg
+        border.width: 1
+        border.color: Theme.barBorder
     }
 
     Workspaces {

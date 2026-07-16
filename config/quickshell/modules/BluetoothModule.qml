@@ -24,11 +24,12 @@ BarPill {
     // format-disabled is an MDI glyph, the others come from Symbols NF
     fontFamily: adapter && !adapter.enabled ? Theme.mdiFontFamily : Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
-    bg: {
-        if (!adapter) return Theme.reallyRed;
-        return connected ? Theme.green : Theme.base;
-    }
-    fg: connected ? Theme.crust : Theme.text
+    // While the popup is open the pill takes the popup's blue ring and
+    // morphs into its cap, so the two read as one shape.
+    accent: devicePopup.open ? Theme.blue
+          : !adapter ? Theme.reallyRed : Theme.green
+    neutral: !devicePopup.open && adapter && !connected
+    popupAttached: devicePopup.open
 
     // tooltip-format-enumerate-connected: "{device_alias}\t{device_battery_percentage}%"
     tooltipText: {
@@ -57,15 +58,11 @@ BarPill {
         }
     }
 
-    // Lift the pill slightly while its popup is open
-    highlighted: devicePopup.open
-
     BarPopup {
         id: devicePopup
         anchorItem: root
         anchorWindow: root.barWindow
-        accent: Theme.blue
-        neckColor: root.bg.a > 0 ? root.bg : Theme.base
+        ringColor: Theme.pillBorder(Theme.blue, false)
 
         onOpenChanged: if (open) deviceList.opened()
 

@@ -2,7 +2,9 @@ pragma Singleton
 import Quickshell
 import QtQuick
 
-// Shared look & feel for the bar (colors from waybar's colors.css).
+// Shared look & feel for the bar and its popups — "Neon" style:
+// dark crust bar, outlined pills that carry each module's color in
+// their border and text, matching outlined popup surfaces.
 Singleton {
     id: root
 
@@ -52,11 +54,44 @@ Singleton {
     readonly property int barHeight: 30
     readonly property int pillHeight: 26
     readonly property int pillPaddingH: 13
-    readonly property int pillRadius: 5
     readonly property int moduleSpacing: 5
 
     // transition: all 0.3s ease-in-out
     readonly property int transitionDuration: 300
+
+    // Bar surface
+    readonly property color barBg: alpha(crust, 0.55)
+    readonly property color barBorder: alpha(surface0, 0.9)
+
+    // Module pills: outline style — accent lives in border and text
+    readonly property real pillRadius: 7
+    function pillBg(accent: color, neutral: bool): color {
+        return neutral ? alpha(surface0, 0.35) : alpha(accent, 0.1);
+    }
+    function pillFg(accent: color, neutral: bool): color {
+        return neutral ? text : accent;
+    }
+    function pillBorder(accent: color, neutral: bool): color {
+        return neutral ? alpha(overlay0, 0.5) : alpha(accent, 0.75);
+    }
+
+    // Workspace buttons
+    readonly property color wsIdleBg: pillBg(text, true)
+    readonly property color wsActiveBg: alpha(lavender, 0.12)
+    readonly property color wsActiveFg: lavender
+    readonly property color wsActiveBorder: alpha(lavender, 0.75)
+    readonly property real wsRadius: 6
+
+    // Popup / tooltip surfaces
+    readonly property color popupBg: alpha(crust, 0.95)
+    readonly property color popupBorder: surface1
+    readonly property real popupRadius: 12
+
+    // Cards inside popups
+    readonly property color cardBg: alpha(surface0, 0.25)
+    readonly property color cardHoverBg: alpha(surface1, 0.45)
+    readonly property color cardBorder: alpha(overlay0, 0.55)
+    readonly property real cardRadius: 8
 
     // The clock follows LC_TIME like waybar's locale-aware formats
     readonly property var dateLocale: {

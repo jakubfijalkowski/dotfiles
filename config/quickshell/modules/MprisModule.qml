@@ -7,6 +7,8 @@ import qs.components
 BarPill {
     id: root
 
+    bare: true
+
     // status-icons from config.jsonc; playing/stopped have no icon there
     readonly property var statusIcons: ({
         "playing": "",
