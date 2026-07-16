@@ -1,16 +1,14 @@
 require("blink.cmp").setup({
-  -- <Tab> accepts the menu or jumps the snippet placeholder forward,
-  -- <S-Tab> jumps it backward.
+  -- C-y accepts; C-n/C-p or arrows move the selection; Tab/S-Tab jump snippet
+  -- placeholders. Enter stays a plain newline.
   keymap = {
-    preset = "super-tab",
-    ["<CR>"] = { "accept", "fallback" },
-    ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+    preset = "default",
   },
 
   completion = {
-    -- With Enter-to-accept, don't preselect: <CR> then only accepts what you
-    -- actively selected, and otherwise inserts a newline.
-    list = { selection = { preselect = false } },
+    -- Nothing is preselected or inserted until you explicitly accept with C-y,
+    -- so a completion never lands by accident.
+    list = { selection = { preselect = false, auto_insert = false } },
     documentation = { auto_show = true },
     menu = {
       draw = {
