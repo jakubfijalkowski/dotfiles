@@ -1,21 +1,26 @@
 import Quickshell
+import Quickshell.Io
 import QtQuick
 import qs
 import qs.components
 
 // clock#date: "{:L%d %B %y}" with a calendar tooltip.
-// Actions: scroll shifts the calendar, right-click toggles month/year
-// mode, middle-click resets (mode-mon-col: 3).
+// Actions: left-click opens the calendar drawer (also: qs ipc call calendar
+// toggle), scroll shifts the calendar, right-click toggles month/year mode,
+// middle-click resets (mode-mon-col: 3).
 BarPill {
     id: root
 
+    readonly property var barWindow: QsWindow.window
+
     accent: Theme.teal
     text: clock.date.toLocaleDateString(Theme.dateLocale, "dd MMMM yy")
+    highlighted: calendarDrawer.open
 
     tooltipRich: true
-    // <tt><small>{calendar}</small></tt>
+    // <tt><small>{calendar}</small></tt> — hidden while the drawer is open.
     tooltipTextPixelSize: Theme.calendarFontSize
-    tooltipText: calendarMarkup()
+    tooltipText: calendarDrawer.open ? "" : calendarMarkup()
 
     property string mode: "month"  // "month" | "year"
     property int shift: 0          // months in month mode, years in year mode
@@ -23,8 +28,51 @@ BarPill {
     onWheelUp: shift += 1
     onWheelDown: shift -= 1
     onClicked: mouse => {
-        if (mouse.button === Qt.RightButton) mode = (mode === "month" ? "year" : "month");
+        if (mouse.button === Qt.LeftButton) calendarDrawer.toggle();
+        else if (mouse.button === Qt.RightButton) mode = (mode === "month" ? "year" : "month");
         else if (mouse.button === Qt.MiddleButton) { shift = 0; mode = "month"; }
+    }
+
+    IpcHandler {
+        target: "calendar"
+        function toggle(): void { calendarDrawer.toggle(); }
+    }
+
+    // Drops down from the top-right corner (flush with the bar + right edge),
+    // like BarDrawer. Placeholder content for now — the full calendar lands next.
+    EdgeDrawer {
+        id: calendarDrawer
+        screen: root.barWindow ? root.barWindow.screen : null
+        anchorWindow: root.barWindow
+
+        Column {
+            spacing: 10
+
+            Text {
+                text: "Calendar"
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSize + 3
+                color: Theme.text
+            }
+
+            Rectangle {
+                width: 320
+                height: 380
+                radius: Theme.cardRadius
+                color: Theme.cardBg
+                border.width: 1
+                border.color: Theme.cardBorder
+
+                Text {
+                    anchors.centerIn: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    text: "calendar content\ncoming soon"
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize
+                    color: Theme.subtext0
+                }
+            }
+        }
     }
 
     SystemClock {
