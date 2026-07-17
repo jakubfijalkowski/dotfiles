@@ -39,39 +39,18 @@ BarPill {
     }
 
     // Drops down from the top-right corner (flush with the bar + right edge),
-    // like BarDrawer. Placeholder content for now — the full calendar lands next.
+    // like BarDrawer, holding the full calendar view.
     EdgeDrawer {
         id: calendarDrawer
         screen: root.barWindow ? root.barWindow.screen : null
         anchorWindow: root.barWindow
 
-        Column {
-            spacing: 10
+        // Reset to the current month each time the drawer opens.
+        onOpenChanged: if (open) calendarView.reset()
 
-            Text {
-                text: "Calendar"
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize + 3
-                color: Theme.text
-            }
-
-            Rectangle {
-                width: 320
-                height: 380
-                radius: Theme.cardRadius
-                color: Theme.cardBg
-                border.width: 1
-                border.color: Theme.cardBorder
-
-                Text {
-                    anchors.centerIn: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    text: "calendar content\ncoming soon"
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize
-                    color: Theme.subtext0
-                }
-            }
+        CalendarView {
+            id: calendarView
+            accent: root.accent
         }
     }
 

@@ -94,6 +94,21 @@ Singleton {
     readonly property color cardBorder: alpha(overlay0, 0.55)
     readonly property real cardRadius: 8
 
+    // Calendar drawer (continuous Monday-first month strip)
+    readonly property int calDayCellWidth: 34
+    readonly property int calCellHeight: 28
+    readonly property int calWeekColWidth: 30
+    readonly property int calCellSpacing: 2
+    readonly property int calMonthGap: 10
+    readonly property real calCellRadius: 6
+    readonly property color calHeaderFg: subtext0
+    readonly property color calWeekNumFg: overlay0
+    readonly property color calDayFg: text
+    readonly property color calAdjacentFg: overlay0
+    readonly property color calWeekendBg: alpha(surface2, 0.22)
+    function calTodayBg(accent: color): color { return alpha(accent, 0.20); }
+    function calTodayBorder(accent: color): color { return alpha(accent, 0.85); }
+
     // The clock follows LC_TIME like waybar's locale-aware formats
     readonly property var dateLocale: {
         const lc = Quickshell.env("LC_TIME") || Quickshell.env("LC_ALL") || Quickshell.env("LANG") || "";
