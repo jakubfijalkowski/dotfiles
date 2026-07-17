@@ -60,13 +60,28 @@ picks up the fix on the next save. The autostart process runs as
 
 ## Managing
 
-- IPC endpoints (also handy for keybinds):
-  `qs ipc call bluetooth toggle|connect <name>|disconnect <name>` and
-  `qs ipc call updates refresh` (wire it to a pacman hook for instant
+- IPC endpoints (also handy for keybinds and for testing, below): every popup
+  exposes a `toggle` on its module's target —
+  `qs ipc call bluetooth toggle`, `qs ipc call updates toggle`,
+  `qs ipc call audio toggle` — plus
+  `qs ipc call bluetooth connect <name>|disconnect <name>` and
+  `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
   update-count refreshes).
-- Popups can be driven through IPC for headless testing; verify visuals with
-  `grim -o DP-1 out.png` (hyprshot hangs on its clipboard step). Nothing can
-  be captured while hyprlock is up.
+- **Testing interactive changes is a do → screenshot → undo cycle** — never
+  just eyeball the code. Save the file (it hot-reloads; give it a second),
+  drive the state you want to inspect, capture it, then reverse the action so
+  the bar is left exactly as the user had it. For popups this is:
+  1. **Do** — open it via IPC, e.g. `qs ipc call audio toggle`. Prefer IPC
+     over faking a click; it's the same code path and works headless.
+  2. **Wait** — the open spring and size-morph run ~350ms, so `sleep 0.5`
+     before capturing or you'll photograph a mid-animation frame.
+  3. **Screenshot** — `grim -o DP-1 out.png`, then Read the PNG. Capture the
+     whole DP-1 output, not a region: popups are xdg-popups that extend past
+     their pill. hyprshot hangs on its clipboard step, and nothing can be
+     captured while hyprlock is up.
+  4. **Undo** — `qs ipc call audio toggle` again to close it. Leave no popup
+     open behind you. (Tooltips and other hover-only states have no IPC
+     toggle — reverse those by whatever means opened them.)
 - Blur is configured in Hyprland, not here. The bar is a layer surface with
   namespace `quickshell`; its popups/tooltips are xdg-popups of that same
   layer (not their own surfaces), so `blur` alone won't reach them:

@@ -13,6 +13,16 @@ hl.layer_rule({
   ignore_alpha = 0.2,
 })
 
+-- Hyprland's window animation is a spring (see looknfeel.lua); applied to the
+-- bar's popups it makes drawer resizes (e.g. expanding a section) overshoot.
+-- The popups animate themselves in QML, so disable Hyprland's animation here.
+hl.layer_rule({
+  name = "quickshell-noanim",
+  match = { namespace = "quickshell" },
+
+  no_anim = true,
+})
+
 -- Tagging for future use
 
 -- Browser

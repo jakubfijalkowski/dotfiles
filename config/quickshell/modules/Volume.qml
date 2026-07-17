@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 import QtQuick
 import qs
@@ -12,6 +13,7 @@ BarPill {
     readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property real volume: sink?.audio?.volume ?? 0
+    readonly property var barWindow: QsWindow.window
 
     readonly property string icon: {
         if (muted) return "\u{EEE8}";
@@ -24,7 +26,8 @@ BarPill {
     visible: sink !== null
     // #wireplumber { min-width: 28pt }
     minContentWidth: 37
-    accent: muted ? Theme.lavender : Theme.flamingo
+    accent: audioPopup.open ? Theme.flamingo : muted ? Theme.lavender : Theme.flamingo
+    highlighted: audioPopup.open
     contentWidth: content.implicitWidth
 
     // The icon renders as a Symbols Nerd Font run, the text as Iosevka,
@@ -59,13 +62,30 @@ BarPill {
     }
 
     onClicked: mouse => {
-        if (!sink?.audio) return;
         if (mouse.button === Qt.LeftButton)
+            audioPopup.toggle();
+        else if (mouse.button === Qt.RightButton && sink?.audio)
             sink.audio.muted = !sink.audio.muted;
-        else if (mouse.button === Qt.RightButton)
-            Quickshell.execDetached(["uwsm", "app", "pavucontrol"]);
     }
 
     onWheelUp: if (sink?.audio) sink.audio.volume = Math.min(1, sink.audio.volume + 0.05)
     onWheelDown: if (sink?.audio) sink.audio.volume = Math.max(0, sink.audio.volume - 0.05)
+
+    BarDrawer {
+        id: audioPopup
+        anchorItem: root
+        anchorWindow: root.barWindow
+
+        onOpenChanged: if (open) audioControls.opened()
+
+        AudioControls {
+            id: audioControls
+            onCloseRequested: audioPopup.open = false
+        }
+    }
+
+    IpcHandler {
+        target: "audio"
+        function toggle(): void { audioPopup.toggle(); }
+    }
 }

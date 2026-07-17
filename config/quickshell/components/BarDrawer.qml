@@ -54,40 +54,39 @@ Scope {
         // Top of the popup window sits `topOffset` below the pill's bottom,
         // i.e. at the bar's bottom edge, so the drawer clears the pill.
         anchor.rect.height: root.anchorItem.height + root.topOffset
-        visible: root.open || reveal.height > 0.5
+        visible: root.open || openProgress > 0.001
         color: "transparent"
         implicitWidth: Math.ceil(bodyWidth) + 2 * (root.flareRadius + root.sideMargin)
         implicitHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
 
-        // Content-resize morph — smooth, no spring.
-        Behavior on implicitWidth {
-            enabled: popup.visible
-            NumberAnimation { duration: 260; easing.type: Easing.OutCubic }
+        // Open/close reveal driven by a 0→1 progress, kept separate from the
+        // size so that resizing (expanding a section) tracks implicitHeight
+        // directly instead of a second animation chasing a moving target.
+        property real openProgress: root.open ? 1 : 0
+        Behavior on openProgress {
+            NumberAnimation {
+                duration: root.open ? 300 : 220
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: root.open
+                    ? [0.05, 0.7, 0.1, 1.0, 1, 1]   // M3 emphasized decelerate
+                    : [0.3, 0.0, 0.8, 0.15, 1, 1]   // M3 emphasized accelerate
+            }
         }
-        Behavior on implicitHeight {
-            enabled: popup.visible
-            NumberAnimation { duration: 260; easing.type: Easing.OutCubic }
-        }
+
+        // No resize animation: when content changes (expanding a section) the
+        // window snaps to fit so nothing slides around. Only open/close is
+        // animated, via openProgress below.
 
         // Drawer reveal: a top-anchored clip whose height rolls open from 0 to
         // full (and back on close), so the panel slides out of the bar like a
-        // shade — no scale, no spring.
+        // shade — no scale, no spring. Height = progress × full, so once open
+        // it equals the window height and resizes track it instantly.
         Item {
             id: reveal
             anchors.top: parent.top
             width: parent.width
-            height: root.open ? parent.height : 0
+            height: popup.openProgress * parent.height
             clip: true
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: root.open ? 300 : 220
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: root.open
-                        ? [0.05, 0.7, 0.1, 1.0, 1, 1]   // M3 emphasized decelerate
-                        : [0.3, 0.0, 0.8, 0.15, 1, 1]   // M3 emphasized accelerate
-                }
-            }
 
             Canvas {
                 id: surface
