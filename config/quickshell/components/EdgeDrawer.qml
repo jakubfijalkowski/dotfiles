@@ -14,23 +14,32 @@ import qs
 // panel drops down out of the bar. Content-sized (width + height follow it).
 //
 // API mirrors BarPopup / BarDrawer (open / toggle() + default content). Pass
-// `screen` to pin it to the bar's monitor and `anchorWindow` (the bar) so a
-// click on the launching pill toggles it cleanly through the shared focus grab.
+// `screen` to pin it to the bar's monitor; a click anywhere outside the drawer
+// (including on the bar) dismisses it through the focus grab.
 Scope {
     id: root
 
     property var screen: null
-    property var anchorWindow: null
     property bool open: false
     // Fill colour — the bar's translucent crust, so the drawer reads as the bar
     // flowing out (relies on the Hyprland blur reaching the popup via
     // `blurpopups` to gain body).
     property color surfaceColor: Theme.barBg
+    // Launching module's accent, laid along the seam where the drawer meets
+    // the bar (see onPaint), so the drawer reads as the pill's colour flowing
+    // out — matching BarDrawer.
+    required property color accent
     default property alias contentData: contentSlot.data
 
     readonly property int padding: 16
     // Concave fillet radius where the body detaches from the bar / screen edge.
     readonly property int flareRadius: 22
+    // Seam trim along the top edge: a crisp accent core plus a soft glow that
+    // bleeds down into the body.
+    readonly property real seamLine: 1.5
+    readonly property real seamLineAlpha: 0.9
+    readonly property real seamGlow: 10
+    readonly property real seamGlowAlpha: 0.28
     // Convex free (bottom-left) corner radius.
     readonly property int bottomRadius: 16
     // Overshoot/blur breathing room beside the left fillet and below the body.
@@ -145,6 +154,21 @@ Scope {
 
                         ctx.fillStyle = css(root.surfaceColor);
                         ctx.fill();
+
+                        // Neon seam trim along the top edge where the drawer
+                        // meets the bar — mirrors BarDrawer (see the rationale
+                        // there). Clipped to the shape so it can't spill past
+                        // the fillets. The top edge runs ms..rightX at topY.
+                        ctx.clip();
+                        const a = root.accent;
+                        const argb = `${Math.round(a.r * 255)}, ${Math.round(a.g * 255)}, ${Math.round(a.b * 255)}`;
+                        const glow = ctx.createLinearGradient(0, topY, 0, topY + root.seamGlow);
+                        glow.addColorStop(0, `rgba(${argb}, ${root.seamGlowAlpha})`);
+                        glow.addColorStop(1, `rgba(${argb}, 0)`);
+                        ctx.fillStyle = glow;
+                        ctx.fillRect(ms, topY, rightX - ms, root.seamGlow);
+                        ctx.fillStyle = `rgba(${argb}, ${root.seamLineAlpha})`;
+                        ctx.fillRect(ms, topY, rightX - ms, root.seamLine);
                     }
                 }
 
@@ -162,7 +186,7 @@ Scope {
 
     HyprlandFocusGrab {
         active: root.open
-        windows: root.anchorWindow ? [win, root.anchorWindow] : [win]
+        windows: [win]
         onCleared: root.open = false
     }
 }

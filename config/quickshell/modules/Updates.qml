@@ -12,7 +12,6 @@ BarPill {
 
     property string status: ""
     property string tip: ""
-    readonly property var barWindow: QsWindow.window
 
     visible: status !== ""
     accent: Theme.yellow
@@ -32,7 +31,7 @@ BarPill {
     BarDrawer {
         id: updatesPopup
         anchorItem: root
-        anchorWindow: root.barWindow
+        accent: root.accent
 
         onOpenChanged: if (open) updatesList.opened()
 

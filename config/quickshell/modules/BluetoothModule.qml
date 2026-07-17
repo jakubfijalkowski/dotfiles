@@ -14,7 +14,6 @@ BarPill {
     readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
     readonly property var connectedDevices: Bluetooth.devices.values.filter(d => d.connected)
     readonly property bool connected: connectedDevices.length > 0
-    readonly property var barWindow: QsWindow.window
 
     text: {
         if (!adapter) return "";
@@ -61,7 +60,7 @@ BarPill {
     BarDrawer {
         id: devicePopup
         anchorItem: root
-        anchorWindow: root.barWindow
+        accent: root.accent
 
         onOpenChanged: if (open) deviceList.opened()
 

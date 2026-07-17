@@ -16,7 +16,6 @@ BarPill {
     accent: Theme.mauve
     highlighted: drawer.open
 
-    readonly property var barWindow: QsWindow.window
     readonly property var allPlayers: Mpris.players.values
 
     // How "worth showing" a player is: prefer one that's playing, then one
@@ -115,7 +114,7 @@ BarPill {
     BarDrawer {
         id: drawer
         anchorItem: root
-        anchorWindow: root.barWindow
+        accent: root.accent
 
         onOpenChanged: if (open) controls.opened()
 

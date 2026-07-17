@@ -42,9 +42,16 @@ picks up the fix on the next save. The autostart process runs as
 - **New popups reuse `BarPopup`** — a plain rounded-rectangle `Rectangle`
   (native `radius` + `border`, colored by `ringColor`) that opens `gap` px
   below the pill. It provides outside-click dismissal via `HyprlandFocusGrab`,
-  a springy scale-from-top open and size-morph animations. Pass the bar window
-  as `anchorWindow` so clicking the pill toggles cleanly (the bar joins the
-  focus grab, so a pill click closes instead of dismiss-then-reopen).
+  a springy scale-from-top open and size-morph animations. A click anywhere
+  outside the popup — including on the bar or the launching pill — dismisses
+  it; the focus grab holds only the popup itself.
+- **Drawers (`BarDrawer`, `EdgeDrawer`) flow out of the bar** rather than
+  floating below it: their top edge meets the bar and they open like a shade.
+  Each takes a `required` `accent` (the launching module's colour), painted as
+  a neon seam trim (crisp core + soft glow) along that top edge — this both
+  masks the faint blur-mismatch line where two translucent surfaces meet and
+  makes the drawer read as the pill's colour flowing out. Every instance must
+  pass `accent`; dismissal matches `BarPopup`.
 - **Popups have no drop shadow, by design** — depth comes from the translucent
   fill plus the border under the Hyprland blur. Don't add one: `MultiEffect`
   / `DropShadow` resample the whole surface and fatten the 1px border. The

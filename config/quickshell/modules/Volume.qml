@@ -13,7 +13,6 @@ BarPill {
     readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property real volume: sink?.audio?.volume ?? 0
-    readonly property var barWindow: QsWindow.window
 
     readonly property string icon: {
         if (muted) return "\u{EEE8}";
@@ -74,7 +73,7 @@ BarPill {
     BarDrawer {
         id: audioPopup
         anchorItem: root
-        anchorWindow: root.barWindow
+        accent: root.accent
 
         onOpenChanged: if (open) audioControls.opened()
 

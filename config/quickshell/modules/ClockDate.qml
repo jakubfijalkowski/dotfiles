@@ -43,7 +43,7 @@ BarPill {
     EdgeDrawer {
         id: calendarDrawer
         screen: root.barWindow ? root.barWindow.screen : null
-        anchorWindow: root.barWindow
+        accent: root.accent
 
         // Reset to the current month each time the drawer opens.
         onOpenChanged: if (open) calendarView.reset()

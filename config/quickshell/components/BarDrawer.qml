@@ -8,24 +8,33 @@ import qs
 // look), so the bar and popup read as one continuous surface. No border.
 // It opens like a shade: a top-anchored clip rolls its height open.
 //
-// Same API surface as BarPopup (anchorItem / anchorWindow / open / toggle()
-// + default content), so modules can swap between the two.
+// Same API surface as BarPopup (anchorItem / open / toggle() + default
+// content), so modules can swap between the two. A click anywhere outside the
+// drawer — including on the bar or its pill — dismisses it via the focus grab.
 Scope {
     id: root
 
     required property Item anchorItem
-    // The window owning anchorItem; clicks on it won't dismiss the popup.
-    property var anchorWindow: null
     property bool open: false
     // Fill colour — the same translucent surface as the bar, so the drawer
     // reads as the bar flowing out (relies on the Hyprland blur layer, which
     // must reach the popup via `blurpopups`, to gain body).
     property color surfaceColor: Theme.barBg
+    // Launching module's accent, laid along the seam where the drawer meets
+    // the bar (see onPaint) so the drawer reads as the pill's colour flowing
+    // out — the bar's outline language.
+    required property color accent
     default property alias contentData: contentSlot.data
 
     readonly property int padding: 14
     // Concave fillet radius where the body meets the bar.
     readonly property int flareRadius: 22
+    // Seam trim along the top edge: a crisp accent core plus a soft glow that
+    // bleeds down into the body.
+    readonly property real seamLine: 1.5
+    readonly property real seamLineAlpha: 0.9
+    readonly property real seamGlow: 10
+    readonly property real seamGlowAlpha: 0.28
     // Convex bottom corner radius.
     readonly property int bottomRadius: 16
     // Overshoot/blur breathing room beside the flares and below the body.
@@ -133,6 +142,24 @@ Scope {
 
                     ctx.fillStyle = css(root.surfaceColor);
                     ctx.fill();
+
+                    // Neon seam trim. The top edge is two independently-blurred
+                    // surfaces meeting, which leaves a faint mismatch line.
+                    // Rather than hide it, own it: lay the accent along the join
+                    // — a soft glow bleeding into the body plus a crisp core — so
+                    // the intentional line dominates the accidental one and the
+                    // drawer reads as the pill's colour flowing out. Reuse the
+                    // shape as a clip so the trim can't spill past the fillets.
+                    ctx.clip();
+                    const a = root.accent;
+                    const argb = `${Math.round(a.r * 255)}, ${Math.round(a.g * 255)}, ${Math.round(a.b * 255)}`;
+                    const glow = ctx.createLinearGradient(0, top, 0, top + root.seamGlow);
+                    glow.addColorStop(0, `rgba(${argb}, ${root.seamGlowAlpha})`);
+                    glow.addColorStop(1, `rgba(${argb}, 0)`);
+                    ctx.fillStyle = glow;
+                    ctx.fillRect(left, top, right - left, root.seamGlow);
+                    ctx.fillStyle = `rgba(${argb}, ${root.seamLineAlpha})`;
+                    ctx.fillRect(left, top, right - left, root.seamLine);
                 }
             }
 
@@ -148,7 +175,7 @@ Scope {
 
     HyprlandFocusGrab {
         active: root.open
-        windows: root.anchorWindow ? [popup, root.anchorWindow] : [popup]
+        windows: [popup]
         onCleared: root.open = false
     }
 }

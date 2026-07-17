@@ -5,14 +5,12 @@ import qs
 
 // Reusable popup bubble for bar modules: a rounded-rectangle surface that
 // opens just below its anchor pill. Opens with a springy scale from the top
-// edge (so it reads as dropping out of the pill); closes on outside click.
+// edge (so it reads as dropping out of the pill); a click anywhere outside the
+// bubble (including on the bar or its pill) dismisses it via the focus grab.
 Scope {
     id: root
 
     required property Item anchorItem
-    // The window owning anchorItem; clicks on it won't dismiss the popup
-    // (lets the pill's own click handler toggle it instead).
-    property var anchorWindow: null
     property bool open: false
     // Outline of the bubble; match it to the anchor pill's ring so the
     // popup reads as belonging to the same module.
@@ -118,7 +116,7 @@ Scope {
 
     HyprlandFocusGrab {
         active: root.open
-        windows: root.anchorWindow ? [popup, root.anchorWindow] : [popup]
+        windows: [popup]
         onCleared: root.open = false
     }
 }
