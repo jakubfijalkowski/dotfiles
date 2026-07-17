@@ -49,17 +49,10 @@ Column {
     }
 
     // Resolve a stream node to a themed application icon path, or "" if none
-    // is found (the entry then falls back to a monogram tile). Every lookup
-    // passes check=true so a missing icon yields "" instead of a broken image.
+    // is found (the entry then falls back to a monogram tile).
     function resolveIcon(node) {
         const p = node.properties ?? ({});
-        const cands = [p["application.icon-name"], p["application.name"], node.name];
-        for (let c of cands) {
-            if (!c) continue;
-            const path = Quickshell.iconPath(String(c).toLowerCase().replace(/ /g, "-"), true);
-            if (path) return path;
-        }
-        return "";
+        return Icons.resolve([p["application.icon-name"], p["application.name"], node.name]);
     }
 
     spacing: 8

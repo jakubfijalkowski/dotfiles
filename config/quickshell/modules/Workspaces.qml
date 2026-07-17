@@ -2,45 +2,19 @@ import Quickshell.Hyprland
 import QtQuick
 import qs
 
-// hyprland/workspaces: "{id}: {window icons}" pills, all outputs.
+// hyprland/workspaces: "{id}: {window icons}" pills, all outputs. Each window
+// is shown as its real themed desktop icon, resolved from the window class.
 Item {
     id: root
 
-    // window-rewrite: matched case-insensitively against the window class
-    readonly property var windowRewrite: [
-        ["google-chrome", "\u{F268}"],
-        ["chromium", "\u{F268}"],
-        ["brave-browser", "\u{F268}"],
-
-        ["pavucontrol", "\u{F028}"],
-        ["blueman-manager", "\u{F294}"],
-
-        ["ghostty", "\u{F120}"],
-        ["jetbrains-studio", "\u{F121}"],
-        ["org.gnome.nautilus", "\u{F0C5}"],
-        ["slack", "\u{F198}"],
-        ["spotify", "\u{F1BC}"],
-        ["code", "\u{F121}"],
-        ["vscode", "\u{F121}"],
-        ["1password", "\u{EB11}"],
-        ["gedit", "\u{F1A7D}"],
-        ["virt-manager", "\u{F4A9}"],
-        ["obsidian", "\u{F219}"],
-        ["cursor", "\u{F246}"]
-    ]
-    readonly property string windowRewriteDefault: "\u{F059}"
-
-    function iconFor(windowClass: string): string {
-        for (const [pattern, icon] of windowRewrite) {
-            if (windowClass.match(new RegExp(pattern, "i")))
-                return icon;
-        }
-        return windowRewriteDefault;
-    }
+    // Icon glyph shown when a window class has no themed icon at all.
+    readonly property string fallbackGlyph: "\u{F059}"
+    // Rendered edge of each app icon (the pill's inner height leaves room).
+    readonly property int iconSize: 17
 
     function windowsFor(ws): var {
         return ws.toplevels.values
-            .map(t => iconFor(t.lastIpcObject?.class ?? ""));
+            .map(t => t.lastIpcObject?.class ?? "");
     }
 
     implicitWidth: row.implicitWidth
@@ -78,7 +52,7 @@ Item {
                 id: button
                 required property var modelData
 
-                readonly property var windowIcons: root.windowsFor(modelData)
+                readonly property var windowClasses: root.windowsFor(modelData)
                 readonly property color labelColor: modelData.urgent ? Theme.crust
                     : modelData.focused ? Theme.wsActiveFg : Theme.text
 
@@ -97,28 +71,55 @@ Item {
                 Row {
                     id: content
                     anchors.centerIn: parent
+                    spacing: 4
 
                     Text {
                         id: buttonLabel
+                        height: root.iconSize
+                        verticalAlignment: Text.AlignVCenter
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSize
                         color: button.labelColor
                         textFormat: Text.PlainText
-                        text: button.modelData.id + ": "
+                        text: button.modelData.id + ":"
 
                         Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
                     }
 
-                    Text {
-                        anchors.baseline: buttonLabel.baseline
-                        visible: button.windowIcons.length > 0
-                        font.family: Theme.iconFontFamily
-                        font.pixelSize: Theme.iconFontSize
-                        color: button.labelColor
-                        textFormat: Text.PlainText
-                        text: button.windowIcons.join(" ")
+                    Repeater {
+                        model: button.windowClasses
 
-                        Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+                        Item {
+                            id: iconSlot
+                            required property string modelData
+                            width: root.iconSize
+                            height: root.iconSize
+
+                            Image {
+                                id: iconImg
+                                anchors.fill: parent
+                                source: Icons.resolve(iconSlot.modelData, "application-x-executable")
+                                sourceSize.width: 2 * root.iconSize
+                                sourceSize.height: 2 * root.iconSize
+                                fillMode: Image.PreserveAspectFit
+                                smooth: true
+                                mipmap: true
+                                asynchronous: true
+                                cache: true
+                                visible: status === Image.Ready
+                            }
+
+                            // Generic glyph when no themed icon resolves at all.
+                            Text {
+                                anchors.centerIn: parent
+                                visible: iconImg.status !== Image.Ready
+                                font.family: Theme.iconFontFamily
+                                font.pixelSize: Theme.iconFontSize
+                                color: button.labelColor
+                                textFormat: Text.PlainText
+                                text: root.fallbackGlyph
+                            }
+                        }
                     }
                 }
 
