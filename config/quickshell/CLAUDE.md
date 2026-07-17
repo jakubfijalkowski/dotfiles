@@ -19,10 +19,16 @@ picks up the fix on the next save. The autostart process runs as
 
 ## Layout
 
-- `shell.qml` → `Bar.qml` — the panel window and module layout
+- `shell.qml` → `Bar.qml` (the panel window + module layout) and
+  `NotificationOverlay.qml` (the transient toast stack)
 - `Theme.qml` — singleton: palette, fonts, metrics, all style tokens
+- `Notifs.qml` — singleton: the freedesktop notification server, do-not-disturb
+  state, and the live-toast list
+- `Icons.qml` — singleton: shared app-icon resolution
 - `components/` — building blocks: `BarPill` (a module pill), `BarPopup`
-  (rounded-rectangle popup that opens below a pill), `BarTooltip`, `Spinner`
+  (rounded-rectangle popup that opens below a pill), `BarDrawer` / `EdgeDrawer`
+  (shade drawers that flow out of the bar), `BarTooltip`, `NotificationToast`,
+  `Spinner`
 - `modules/` — one file per bar module (workspaces, clock, volume, …)
 
 ## Rules to preserve
@@ -52,6 +58,17 @@ picks up the fix on the next save. The autostart process runs as
   masks the faint blur-mismatch line where two translucent surfaces meet and
   makes the drawer read as the pill's colour flowing out. Every instance must
   pass `accent`; dismissal matches `BarPopup`.
+- **Notifications are transient toasts, not a panel.** `Notifs` runs the
+  freedesktop server (no history, no persistence) and feeds a *local*
+  `ListModel` to `NotificationOverlay`; drive the toast Repeater from that,
+  never straight from the server's `trackedNotifications` — removing a non-tail
+  entry there rebuilds every delegate and flashes the just-closed toast. The
+  overlay is a **fixed-size** masked layer surface that never resizes as toasts
+  come and go: they reflow *within* it (resizing the surface per toast visibly
+  jitters the stack). A toast slides in from the right, auto-dismisses after
+  its lifetime (`Theme`-configured default, or the sender's; critical stays),
+  and on close collapses its own height so the rest slide up. Colour follows
+  urgency via `Theme.notifAccent`.
 - **Popups have no drop shadow, by design** — depth comes from the translucent
   fill plus the border under the Hyprland blur. Don't add one: `MultiEffect`
   / `DropShadow` resample the whole surface and fatten the 1px border. The
@@ -73,7 +90,10 @@ picks up the fix on the next save. The autostart process runs as
   `qs ipc call audio toggle` — plus
   `qs ipc call bluetooth connect <name>|disconnect <name>` and
   `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
-  update-count refreshes).
+  update-count refreshes). Notifications expose
+  `qs ipc call notifs dismissAll|dismissLast|toggleDnd` and
+  `qs ipc call notifs dnd <on|off>` — `dismissAll` / `toggleDnd` are bound to
+  keys in Hyprland (`conf/keybindings.lua`).
 - **Testing interactive changes is a do → screenshot → undo cycle** — never
   just eyeball the code. Save the file (it hot-reloads; give it a second),
   drive the state you want to inspect, capture it, then reverse the action so

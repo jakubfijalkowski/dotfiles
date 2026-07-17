@@ -75,21 +75,21 @@ hl.bind(
   { description = "Window screenshot" }
 )
 
--- Notifications
+-- Notifications (handled by the QuickShell notification server)
 hl.bind(
   mainMod .. " + COMMA",
-  hl.dsp.exec_cmd("swaync-client --toggle-panel --skip-wait"),
-  { description = "Toggle notifications panel" }
+  hl.dsp.exec_cmd("qs ipc call notifs toggleDnd"),
+  { description = "Toggle do-not-disturb" }
 )
 hl.bind(
   mainMod .. " + ALT + COMMA",
-  hl.dsp.exec_cmd("swaync-client --hide-latest --skip-wait"),
+  hl.dsp.exec_cmd("qs ipc call notifs dismissLast"),
   { description = "Dismiss last notification" }
 )
 hl.bind(
   mainMod .. " + SHIFT + COMMA",
-  hl.dsp.exec_cmd("swaync-client --close-all --skip-wait"),
-  { description = "Close all notification" }
+  hl.dsp.exec_cmd("qs ipc call notifs dismissAll"),
+  { description = "Dismiss all notifications" }
 )
 
 -- Movements

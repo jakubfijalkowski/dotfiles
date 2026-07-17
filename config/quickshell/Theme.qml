@@ -109,6 +109,24 @@ Singleton {
     function calTodayBg(accent: color): color { return alpha(accent, 0.20); }
     function calTodayBorder(accent: color): color { return alpha(accent, 0.85); }
 
+    // Notification toasts — transient popups stacked in the top-right corner
+    // just below the bar (see NotificationOverlay / NotificationToast). No
+    // persistence: a toast shows for its lifetime, then it's gone.
+    readonly property int notifWidth: 380
+    readonly property int notifGap: 8          // between stacked toasts
+    readonly property int notifEdgeGap: 8      // inset from the bar / screen edge
+    readonly property int notifPadding: 13
+    readonly property int notifIconSize: 30
+    // Accent per freedesktop urgency (Low=0, Normal=1, Critical=2), so the toast
+    // carries its urgency in the same neon-outline language as the pills.
+    function notifAccent(urgency: int): color {
+        switch (urgency) {
+            case 2: return red;       // Critical
+            case 0: return overlay2;  // Low
+            default: return mauve;    // Normal
+        }
+    }
+
     // The clock follows LC_TIME like waybar's locale-aware formats
     readonly property var dateLocale: {
         const lc = Quickshell.env("LC_TIME") || Quickshell.env("LC_ALL") || Quickshell.env("LANG") || "";

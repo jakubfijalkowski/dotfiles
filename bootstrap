@@ -123,9 +123,6 @@ function configure_user() {
 
   link "config/satty/config.toml"
 
-  link "config/swaync/config.json"
-  link "config/swaync/style.css"
-
   link "config/wpaperd/config.toml"
 
   link "config/uwsm/env"
@@ -154,7 +151,6 @@ function configure_user() {
   service "user" "hypridle.service"
   service "user" "ssh-add-keys.service"
   service "user" "ssh-agent.service"
-  service "user" "swaync.service"
   service "user" "waybar.service"
   service "user" "yubikey-touch-detector.service"
 
