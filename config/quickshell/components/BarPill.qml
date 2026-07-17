@@ -23,9 +23,6 @@ Rectangle {
     property alias tooltipTextPixelSize: tooltip.textPixelSize
     // Active-state overlay, e.g. while the module's popup is open
     property bool highlighted: false
-    // While the module's popup is open the pill morphs into its "cap":
-    // bottom corners square off and the fill matches the popup surface.
-    property bool popupAttached: false
 
     // Effective colors, exposed for popups that bleed the pill color
     readonly property color bg: bare ? "transparent" : Theme.pillBg(accent, neutral)
@@ -35,20 +32,16 @@ Rectangle {
     signal wheelUp()
     signal wheelDown()
 
-    color: popupAttached ? Theme.popupBg : bg
+    color: bg
     radius: Theme.pillRadius
-    bottomLeftRadius: popupAttached ? 0 : Theme.pillRadius
-    bottomRightRadius: popupAttached ? 0 : Theme.pillRadius
     border.width: !bare && Theme.pillBorder(accent, neutral).a > 0 ? 1 : 0
     border.color: bare ? "transparent" : Theme.pillBorder(accent, neutral)
-    // Even integer width: xdg popups get positioned in whole pixels, so
-    // this keeps an attached popup's neck perfectly centered on the pill.
+    // Even integer width keeps a module's popup centered on it exactly, since
+    // xdg popups are positioned in whole pixels.
     implicitWidth: 2 * Math.round((Math.max(contentWidth, minContentWidth) + 2 * Theme.pillPaddingH) / 2)
     implicitHeight: Theme.pillHeight
 
     Behavior on color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
-    Behavior on bottomLeftRadius { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-    Behavior on bottomRightRadius { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
     Behavior on border.color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
 
     Rectangle {

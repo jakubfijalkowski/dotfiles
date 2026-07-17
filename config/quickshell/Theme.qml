@@ -59,8 +59,8 @@ Singleton {
     // transition: all 0.3s ease-in-out
     readonly property int transitionDuration: 300
 
-    // Bar surface
-    readonly property color barBg: alpha(crust, 0.55)
+    // Bar surface — translucent so a Hyprland blur layer shows through
+    readonly property color barBg: alpha(crust, 0.40)
     readonly property color barBorder: alpha(surface0, 0.9)
 
     // Module pills: outline style — accent lives in border and text
@@ -82,8 +82,9 @@ Singleton {
     readonly property color wsActiveBorder: alpha(lavender, 0.75)
     readonly property real wsRadius: 6
 
-    // Popup / tooltip surfaces
-    readonly property color popupBg: alpha(crust, 0.95)
+    // Popup / tooltip surfaces — match the bar: same translucent crust so
+    // both share one look under the Hyprland blur layer, set off by a border.
+    readonly property color popupBg: barBg
     readonly property color popupBorder: surface1
     readonly property real popupRadius: 12
 

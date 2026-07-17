@@ -1,3 +1,18 @@
+-- Layer rules
+
+-- QuickShell bar and its popups (bluetooth list, tooltips) are xdg-popups of
+-- the same layer, so blur_popups is needed in addition to blur to reach them.
+hl.layer_rule({
+  name = "quickshell-blur",
+  match = { namespace = "quickshell" },
+
+  blur = true,
+  blur_popups = true,
+  -- Keep below the bar/popup surface alpha so blur still applies to the fill,
+  -- while skipping the fully-transparent shadow margin around rounded corners.
+  ignore_alpha = 0.2,
+})
+
 -- Tagging for future use
 
 -- Browser
