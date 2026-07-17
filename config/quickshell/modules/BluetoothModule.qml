@@ -58,11 +58,10 @@ BarPill {
         }
     }
 
-    BarPopup {
+    BarDrawer {
         id: devicePopup
         anchorItem: root
         anchorWindow: root.barWindow
-        ringColor: Theme.pillBorder(Theme.blue, false)
 
         onOpenChanged: if (open) deviceList.opened()
 
