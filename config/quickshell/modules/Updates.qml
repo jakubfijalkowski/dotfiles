@@ -12,6 +12,7 @@ BarPill {
 
     property string status: ""
     property string tip: ""
+    readonly property var barWindow: QsWindow.window
 
     visible: status !== ""
     accent: Theme.yellow
@@ -19,11 +20,26 @@ BarPill {
     // the script emits "" (Arch logo, Symbols Nerd Font)
     fontFamily: Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
-    tooltipText: tip
+    // suppress the tooltip while the drawer shows the same info in full
+    tooltipText: updatesPopup.open ? "" : tip
+    highlighted: updatesPopup.open
 
     onClicked: mouse => {
         if (mouse.button === Qt.LeftButton)
-            Quickshell.execDetached(["xdg-terminal-exec", "--", "yay", "-Syu", "--devel"]);
+            updatesPopup.toggle();
+    }
+
+    BarDrawer {
+        id: updatesPopup
+        anchorItem: root
+        anchorWindow: root.barWindow
+
+        onOpenChanged: if (open) updatesList.opened()
+
+        UpdatesList {
+            id: updatesList
+            onCloseRequested: updatesPopup.open = false
+        }
     }
 
     function parse(output: string) {
@@ -58,5 +74,6 @@ BarPill {
     IpcHandler {
         target: "updates"
         function refresh(): void { checkProcess.running = true; }
+        function toggle(): void { updatesPopup.toggle(); }
     }
 }
