@@ -53,9 +53,9 @@ Column {
         width: 38
         height: 20
         radius: height / 2
-        color: checked ? Theme.alpha(Theme.blue, 0.15) : Theme.alpha(Theme.surface0, 0.35)
+        color: Theme.chipBg(Theme.blue, checked)
         border.width: 1
-        border.color: checked ? Theme.alpha(Theme.blue, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
+        border.color: Theme.chipBorder(Theme.blue, checked)
 
         Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
         Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
@@ -97,9 +97,9 @@ Column {
             width: 30
             height: 30
             radius: 9
-            color: root.adapterOn ? Theme.alpha(Theme.blue, 0.1) : Theme.alpha(Theme.surface0, 0.35)
+            color: Theme.chipBg(Theme.blue, root.adapterOn)
             border.width: 1
-            border.color: root.adapterOn ? Theme.alpha(Theme.blue, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
+            border.color: Theme.chipBorder(Theme.blue, root.adapterOn)
 
             Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
             Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
@@ -108,7 +108,7 @@ Column {
                 anchors.centerIn: parent
                 font.family: Theme.mdiFontFamily
                 font.pixelSize: 17
-                color: root.adapterOn ? Theme.blue : Theme.subtext0
+                color: Theme.chipFg(Theme.blue, root.adapterOn)
                 // nf-md-bluetooth
                 text: "\u{F00AF}"
 
@@ -134,7 +134,7 @@ Column {
 
             Text {
                 font.family: Theme.fontFamily
-                font.pixelSize: 11
+                font.pixelSize: Theme.popupCaptionSize
                 color: Theme.subtext0
                 text: {
                     if (!root.adapterOn) return "Off";
@@ -176,7 +176,7 @@ Column {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             font.family: Theme.fontFamily
-            font.pixelSize: 12
+            font.pixelSize: Theme.popupBodySize
             color: Theme.subtext0
             text: "Pair devices with blueman"
         }
@@ -285,13 +285,11 @@ Column {
                 width: 28
                 height: 28
                 radius: 8
-                color: deviceCard.isConnected ? Theme.alpha(Theme.green, 0.1)
-                     : hinting ? Theme.alpha(Theme.blue, 0.1)
-                     : Theme.alpha(Theme.surface0, 0.35)
+                color: Theme.chipBg(deviceCard.isConnected ? Theme.green : Theme.blue,
+                                    deviceCard.isConnected || hinting)
                 border.width: 1
-                border.color: deviceCard.isConnected ? Theme.alpha(Theme.green, 0.75)
-                            : hinting ? Theme.alpha(Theme.blue, 0.75)
-                            : Theme.alpha(Theme.overlay0, 0.5)
+                border.color: Theme.chipBorder(deviceCard.isConnected ? Theme.green : Theme.blue,
+                                               deviceCard.isConnected || hinting)
 
                 Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
                 Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
@@ -300,8 +298,8 @@ Column {
                     anchors.centerIn: parent
                     font.family: Theme.mdiFontFamily
                     font.pixelSize: 16
-                    color: deviceCard.isConnected ? Theme.green
-                         : iconChip.hinting ? Theme.blue : Theme.subtext1
+                    color: Theme.chipFg(deviceCard.isConnected ? Theme.green : Theme.blue,
+                                        deviceCard.isConnected || iconChip.hinting)
                     text: root.deviceIcon(deviceCard.modelData.icon)
 
                     Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
@@ -331,7 +329,7 @@ Column {
                     Text {
                         visible: deviceCard.statusText !== ""
                         font.family: Theme.fontFamily
-                        font.pixelSize: 11
+                        font.pixelSize: Theme.popupCaptionSize
                         color: deviceCard.isConnected && !deviceCard.busy ? Theme.green : Theme.sapphire
                         text: deviceCard.statusText
                     }
@@ -343,15 +341,15 @@ Column {
                         width: batteryLabel.implicitWidth + 10
                         height: 14
                         radius: 7
-                        color: Theme.alpha(root.batteryColor(deviceCard.modelData.battery), 0.1)
+                        color: Theme.chipBg(root.batteryColor(deviceCard.modelData.battery), true)
                         border.width: 1
-                        border.color: Theme.alpha(root.batteryColor(deviceCard.modelData.battery), 0.6)
+                        border.color: Theme.chipBorder(root.batteryColor(deviceCard.modelData.battery), true)
 
                         Text {
                             id: batteryLabel
                             anchors.centerIn: parent
                             font.family: Theme.fontFamily
-                            font.pixelSize: 10
+                            font.pixelSize: Theme.popupMicroSize
                             color: root.batteryColor(deviceCard.modelData.battery)
                             text: Math.round(deviceCard.modelData.battery * 100) + "%"
                         }
@@ -377,11 +375,9 @@ Column {
                     anchors.fill: parent
                     visible: deviceCard.isConnected && !deviceCard.busy
                     radius: height / 2
-                    color: disconnectMouse.containsMouse
-                        ? Theme.alpha(Theme.red, 0.12) : Theme.alpha(Theme.surface0, 0.35)
+                    color: Theme.chipBg(Theme.red, disconnectMouse.containsMouse)
                     border.width: 1
-                    border.color: disconnectMouse.containsMouse
-                        ? Theme.alpha(Theme.red, 0.75) : Theme.alpha(Theme.overlay0, 0.5)
+                    border.color: Theme.chipBorder(Theme.red, disconnectMouse.containsMouse)
 
                     Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
                     Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
@@ -390,7 +386,7 @@ Column {
                         anchors.centerIn: parent
                         font.family: Theme.mdiFontFamily
                         font.pixelSize: 13
-                        color: disconnectMouse.containsMouse ? Theme.red : Theme.subtext1
+                        color: Theme.chipFg(Theme.red, disconnectMouse.containsMouse)
                         // nf-md-close
                         text: "\u{F0156}"
                     }
@@ -410,46 +406,15 @@ Column {
     Item { width: 1; height: 2 }
 
     // Footer: open the full manager
-    Rectangle {
+    ActionButton {
         width: root.listWidth
-        height: 30
-        radius: Theme.cardRadius
-        color: footerMouse.containsMouse ? Theme.alpha(Theme.blue, 0.15) : Theme.alpha(Theme.blue, 0.06)
-        border.width: 1
-        border.color: Theme.alpha(Theme.blue, 0.6)
-
-        Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 7
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.mdiFontFamily
-                font.pixelSize: 13
-                color: Theme.blue
-                // nf-md-cog
-                text: "\u{F0493}"
-            }
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.fontFamily
-                font.pixelSize: 12
-                color: Theme.blue
-                text: "Bluetooth settings"
-            }
-        }
-
-        MouseArea {
-            id: footerMouse
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                Quickshell.execDetached(["blueman-manager"]);
-                root.closeRequested();
-            }
+        label: "Bluetooth settings"
+        tint: Theme.blue
+        // nf-md-cog
+        glyph: "\u{F0493}"
+        onActivated: {
+            Quickshell.execDetached(["blueman-manager"]);
+            root.closeRequested();
         }
     }
 }

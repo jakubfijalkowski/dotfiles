@@ -19,8 +19,6 @@ Rectangle {
     // modules with composite content (e.g. icon + text runs) override this
     property real contentWidth: label.implicitWidth
     property string tooltipText: ""
-    property bool tooltipRich: false
-    property alias tooltipTextPixelSize: tooltip.textPixelSize
     // Active-state overlay, e.g. while the module's popup is open
     property bool highlighted: false
 
@@ -44,10 +42,13 @@ Rectangle {
     Behavior on color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
     Behavior on border.color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
 
+    // Hover / active overlay: a faint lift on hover, stronger while the
+    // module's popup is open.
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
-        color: Theme.alpha(Theme.text, root.highlighted ? 0.12 : 0)
+        color: Theme.alpha(Theme.text,
+            root.highlighted ? 0.12 : mouseArea.containsMouse ? 0.05 : 0)
 
         Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
     }
@@ -79,7 +80,6 @@ Rectangle {
         id: tooltip
         target: root
         text: root.tooltipText
-        rich: root.tooltipRich
         show: mouseArea.containsMouse
     }
 }

@@ -1,7 +1,6 @@
 import Quickshell
 import Quickshell.Services.Pipewire
 import QtQuick
-import QtQuick.Controls
 import qs
 import qs.components
 
@@ -10,6 +9,12 @@ import qs.components
 // default device is switched via `wpctl set-default`.
 Column {
     id: root
+
+    // Set by the parent drawer: true while it's open. Gates the PipeWire
+    // node tracking so the shell doesn't keep every audio node's properties
+    // synced while the drawer is closed (the Volume pill tracks the default
+    // sink on its own).
+    property bool active: false
 
     // Asks the parent drawer to close.
     signal closeRequested()
@@ -40,7 +45,7 @@ Column {
     readonly property var streams: audioNodes.filter(n => n.isStream && root.mediaClass(n) === "Stream/Output/Audio")
 
     PwObjectTracker {
-        objects: root.audioNodes
+        objects: root.active ? root.audioNodes : []
     }
 
     function nodeLabel(n) {
@@ -59,40 +64,6 @@ Column {
 
     // ---- Reusable pieces -------------------------------------------------
 
-    component LevelSlider: Slider {
-        id: sl
-        property color tint: Theme.flamingo
-        from: 0
-        to: 1
-        implicitHeight: 18
-
-        background: Rectangle {
-            x: sl.leftPadding
-            y: sl.topPadding + sl.availableHeight / 2 - height / 2
-            width: sl.availableWidth
-            height: 5
-            radius: 3
-            color: Theme.alpha(Theme.surface2, 0.6)
-
-            Rectangle {
-                width: sl.position * parent.width
-                height: parent.height
-                radius: 3
-                color: sl.tint
-            }
-        }
-        handle: Rectangle {
-            x: sl.leftPadding + sl.visualPosition * (sl.availableWidth - width)
-            y: sl.topPadding + sl.availableHeight / 2 - height / 2
-            width: 14
-            height: 14
-            radius: 7
-            color: sl.tint
-            border.width: 2
-            border.color: Theme.crust
-        }
-    }
-
     component IconToggle: Rectangle {
         id: ic
         property string glyph: ""
@@ -103,9 +74,9 @@ Column {
         width: 30
         height: 30
         radius: 9
-        color: active ? Theme.alpha(tint, 0.1) : Theme.alpha(Theme.surface0, 0.35)
+        color: Theme.chipBg(tint, active)
         border.width: 1
-        border.color: active ? Theme.alpha(tint, 0.7) : Theme.alpha(Theme.overlay0, 0.5)
+        border.color: Theme.chipBorder(tint, active)
 
         Behavior on color { ColorAnimation { duration: 160; easing.type: Easing.InOutQuad } }
         Behavior on border.color { ColorAnimation { duration: 160; easing.type: Easing.InOutQuad } }
@@ -114,7 +85,7 @@ Column {
             anchors.centerIn: parent
             font.family: Theme.mdiFontFamily
             font.pixelSize: 17
-            color: ic.active ? ic.tint : Theme.subtext0
+            color: Theme.chipFg(ic.tint, ic.active)
             text: ic.glyph
         }
 
@@ -148,7 +119,7 @@ Column {
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             font.family: Theme.fontFamily
-            font.pixelSize: 12
+            font.pixelSize: Theme.popupBodySize
             color: opt.current ? opt.tint : Theme.subtext1
             elide: Text.ElideRight
             text: root.nodeLabel(opt.node)
@@ -207,8 +178,7 @@ Column {
                     onActivated: if (root.sink?.audio) root.sink.audio.muted = !root.sink.audio.muted
                 }
 
-                LevelSlider {
-                    id: outSlider
+                StyledSlider {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - 30 - 44 - 2 * parent.spacing
                     tint: Theme.flamingo
@@ -222,7 +192,7 @@ Column {
                     width: 44
                     horizontalAlignment: Text.AlignRight
                     font.family: Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.popupBodySize
                     color: Theme.subtext1
                     text: Math.round((root.sink?.audio?.volume ?? 0) * 100) + "%"
                 }
@@ -242,7 +212,7 @@ Column {
                     anchors.rightMargin: 6
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.subtext0
                     elide: Text.ElideRight
                     text: "Output · " + root.nodeLabel(root.sink)
@@ -314,7 +284,7 @@ Column {
                     onActivated: if (root.source?.audio) root.source.audio.muted = !root.source.audio.muted
                 }
 
-                LevelSlider {
+                StyledSlider {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - 30 - 44 - 2 * parent.spacing
                     tint: Theme.sapphire
@@ -328,7 +298,7 @@ Column {
                     width: 44
                     horizontalAlignment: Text.AlignRight
                     font.family: Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.popupBodySize
                     color: Theme.subtext1
                     text: Math.round((root.source?.audio?.volume ?? 0) * 100) + "%"
                 }
@@ -347,7 +317,7 @@ Column {
                     anchors.rightMargin: 6
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.subtext0
                     elide: Text.ElideRight
                     text: "Input · " + root.nodeLabel(root.source)
@@ -430,7 +400,7 @@ Column {
                     anchors.rightMargin: 6
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.popupBodySize
                     font.weight: Font.DemiBold
                     color: Theme.text
                     text: "Applications · " + root.streams.length
@@ -465,7 +435,7 @@ Column {
                     topPadding: 4
                     bottomPadding: 6
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.subtext0
                     text: "Nothing is playing"
                 }
@@ -475,145 +445,114 @@ Column {
 
                     Item {
                         id: appEntry
-                    required property var modelData
-                    width: appCol.width
-                    height: appInner.implicitHeight + 8
+                        required property var modelData
+                        width: appCol.width
+                        height: appInner.implicitHeight + 8
 
-                    readonly property string appName: {
-                        const p = modelData.properties;
-                        return (p && (p["application.name"] || p["node.name"])) || modelData.name || "App";
-                    }
-
-                    // Bigger left/right margins than the header, plus an app icon.
-                    Row {
-                        id: appInner
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: 8
-                        anchors.rightMargin: 8
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 10
-
-                        Item {
-                            id: appIconSlot
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 26
-                            height: 26
-
-                            Image {
-                                id: appImg
-                                anchors.fill: parent
-                                sourceSize.width: 52
-                                sourceSize.height: 52
-                                fillMode: Image.PreserveAspectFit
-                                source: root.resolveIcon(appEntry.modelData)
-                                visible: status === Image.Ready
-                            }
-                            // Monogram tile when the app has no themed icon.
-                            Rectangle {
-                                anchors.fill: parent
-                                visible: appImg.status !== Image.Ready
-                                radius: 7
-                                color: Theme.alpha(Theme.mauve, 0.15)
-                                border.width: 1
-                                border.color: Theme.alpha(Theme.mauve, 0.4)
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: 13
-                                    font.weight: Font.DemiBold
-                                    color: Theme.mauve
-                                    text: (appEntry.appName.charAt(0) || "?").toUpperCase()
-                                }
-                            }
+                        readonly property string appName: {
+                            const p = modelData.properties;
+                            return (p && (p["application.name"] || p["node.name"])) || modelData.name || "App";
                         }
 
-                        Column {
+                        // Bigger left/right margins than the header, plus an app icon.
+                        Row {
+                            id: appInner
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: 8
+                            anchors.rightMargin: 8
                             anchors.verticalCenter: parent.verticalCenter
-                            width: parent.width - appIconSlot.width - parent.spacing
-                            spacing: 4
+                            spacing: 10
 
-                            Text {
-                                width: parent.width
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 11
-                                color: Theme.subtext1
-                                elide: Text.ElideRight
-                                text: appEntry.appName
+                            Item {
+                                id: appIconSlot
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 26
+                                height: 26
+
+                                Image {
+                                    id: appImg
+                                    anchors.fill: parent
+                                    sourceSize.width: 52
+                                    sourceSize.height: 52
+                                    fillMode: Image.PreserveAspectFit
+                                    source: root.resolveIcon(appEntry.modelData)
+                                    visible: status === Image.Ready
+                                }
+                                // Monogram tile when the app has no themed icon.
+                                Rectangle {
+                                    anchors.fill: parent
+                                    visible: appImg.status !== Image.Ready
+                                    radius: 7
+                                    color: Theme.alpha(Theme.mauve, 0.15)
+                                    border.width: 1
+                                    border.color: Theme.alpha(Theme.mauve, 0.4)
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.family: Theme.fontFamily
+                                        font.pixelSize: 13
+                                        font.weight: Font.DemiBold
+                                        color: Theme.mauve
+                                        text: (appEntry.appName.charAt(0) || "?").toUpperCase()
+                                    }
+                                }
                             }
 
-                            Row {
-                                width: parent.width
-                                spacing: 8
+                            Column {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: parent.width - appIconSlot.width - parent.spacing
+                                spacing: 4
 
-                                LevelSlider {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: parent.width - 44 - parent.spacing
-                                    tint: Theme.mauve
-                                    value: appEntry.modelData.audio.volume
-                                    onMoved: appEntry.modelData.audio.volume = value
-                                }
                                 Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: 44
-                                    horizontalAlignment: Text.AlignRight
+                                    width: parent.width
                                     font.family: Theme.fontFamily
-                                    font.pixelSize: 12
+                                    font.pixelSize: Theme.popupCaptionSize
                                     color: Theme.subtext1
-                                    text: Math.round(appEntry.modelData.audio.volume * 100) + "%"
+                                    elide: Text.ElideRight
+                                    text: appEntry.appName
+                                }
+
+                                Row {
+                                    width: parent.width
+                                    spacing: 8
+
+                                    StyledSlider {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: parent.width - 44 - parent.spacing
+                                        tint: Theme.mauve
+                                        value: appEntry.modelData.audio.volume
+                                        onMoved: appEntry.modelData.audio.volume = value
+                                    }
+                                    Text {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: 44
+                                        horizontalAlignment: Text.AlignRight
+                                        font.family: Theme.fontFamily
+                                        font.pixelSize: Theme.popupBodySize
+                                        color: Theme.subtext1
+                                        text: Math.round(appEntry.modelData.audio.volume * 100) + "%"
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            }
         }
     }
 
     // ---- Footer ----------------------------------------------------------
 
-    Rectangle {
+    ActionButton {
         width: root.listWidth
-        height: 30
-        radius: Theme.cardRadius
-        color: footerMouse.containsMouse ? Theme.alpha(Theme.flamingo, 0.15) : Theme.alpha(Theme.flamingo, 0.06)
-        border.width: 1
-        border.color: Theme.alpha(Theme.flamingo, 0.6)
-
-        Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 7
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.mdiFontFamily
-                font.pixelSize: 14
-                color: Theme.flamingo
-                // nf-md-cog
-                text: "\u{F0493}"
-            }
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.fontFamily
-                font.pixelSize: 12
-                color: Theme.flamingo
-                text: "Sound settings"
-            }
-        }
-
-        MouseArea {
-            id: footerMouse
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                Quickshell.execDetached(["uwsm", "app", "pavucontrol"]);
-                root.closeRequested();
-            }
+        label: "Sound settings"
+        tint: Theme.flamingo
+        // nf-md-cog
+        glyph: "\u{F0493}"
+        onActivated: {
+            Quickshell.execDetached(["uwsm", "app", "pavucontrol"]);
+            root.closeRequested();
         }
     }
 }

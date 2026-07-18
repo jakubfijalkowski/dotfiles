@@ -1,7 +1,6 @@
 import Quickshell
 import Quickshell.Services.Mpris
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Effects
 import qs
 import qs.components
@@ -16,6 +15,11 @@ Column {
     property var player: null
     // Players worth listing in the picker.
     property var players: []
+    // Set by the parent drawer: true while it's open. Gates the position
+    // poll so the shell doesn't tick twice a second while music plays with
+    // the drawer closed.
+    property bool active: false
+    onActiveChanged: if (active) syncPosition()
 
     // Asks the module to pin a player (by dbusName); "" follows the most active.
     signal selectRequested(string id)
@@ -48,7 +52,7 @@ Column {
     Timer {
         interval: 500
         repeat: true
-        running: root.player !== null && (root.player?.isPlaying ?? false)
+        running: root.active && (root.player?.isPlaying ?? false)
         onTriggered: root.syncPosition()
     }
 
@@ -95,38 +99,6 @@ Column {
         }
     }
 
-    component SeekBar: Slider {
-        id: sk
-        implicitHeight: 16
-
-        background: Rectangle {
-            x: sk.leftPadding
-            y: sk.topPadding + sk.availableHeight / 2 - height / 2
-            width: sk.availableWidth
-            height: 4
-            radius: 2
-            color: Theme.alpha(Theme.surface2, 0.6)
-
-            Rectangle {
-                width: sk.position * parent.width
-                height: parent.height
-                radius: 2
-                color: root.accent
-            }
-        }
-        handle: Rectangle {
-            x: sk.leftPadding + sk.visualPosition * (sk.availableWidth - width)
-            y: sk.topPadding + sk.availableHeight / 2 - height / 2
-            width: 12
-            height: 12
-            radius: 6
-            color: root.accent
-            border.width: 2
-            border.color: Theme.crust
-            visible: sk.enabled
-        }
-    }
-
     // ---- Player picker (only with more than one active player) -----------
 
     Flow {
@@ -146,10 +118,10 @@ Column {
                 height: 26
                 width: chipRow.implicitWidth + 20
                 radius: 13
-                color: current ? Theme.alpha(root.accent, 0.15)
+                color: current ? Theme.chipBg(root.accent, true)
                      : chipMouse.containsMouse ? Theme.cardHoverBg : Theme.cardBg
                 border.width: 1
-                border.color: current ? Theme.alpha(root.accent, 0.7) : Theme.cardBorder
+                border.color: current ? Theme.chipBorder(root.accent, true) : Theme.cardBorder
 
                 Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
                 Behavior on border.color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
@@ -171,7 +143,7 @@ Column {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         font.family: Theme.fontFamily
-                        font.pixelSize: 12
+                        font.pixelSize: Theme.popupBodySize
                         color: chip.current ? root.accent : Theme.subtext1
                         text: chip.name
                     }
@@ -286,7 +258,7 @@ Column {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 15
+                    font.pixelSize: Theme.popupTitleSize
                     font.weight: Font.DemiBold
                     color: Theme.text
                     elide: Text.ElideRight
@@ -297,7 +269,7 @@ Column {
                     horizontalAlignment: Text.AlignHCenter
                     visible: text.length > 0
                     font.family: Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.popupBodySize
                     color: Theme.subtext1
                     elide: Text.ElideRight
                     text: root.player?.trackArtist ?? ""
@@ -307,7 +279,7 @@ Column {
                     horizontalAlignment: Text.AlignHCenter
                     visible: text.length > 0
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.subtext0
                     elide: Text.ElideRight
                     text: root.player?.trackAlbum ?? ""
@@ -320,9 +292,13 @@ Column {
                 spacing: 2
                 visible: (root.player?.lengthSupported ?? false) && (root.player?.length ?? 0) > 0
 
-                SeekBar {
+                StyledSlider {
                     id: seek
                     width: parent.width
+                    tint: root.accent
+                    trackThickness: 4
+                    handleDiameter: 12
+                    hideHandleWhenDisabled: true
                     from: 0
                     to: Math.max(1, root.player?.length ?? 1)
                     enabled: root.player?.canSeek ?? false
@@ -344,7 +320,7 @@ Column {
 
                     Text {
                         font.family: Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Theme.popupMicroSize
                         color: Theme.subtext0
                         text: root.fmtTime(seek.pressed ? seek.value : root.positionNow)
                     }
@@ -353,7 +329,7 @@ Column {
                         width: 40
                         horizontalAlignment: Text.AlignRight
                         font.family: Theme.fontFamily
-                        font.pixelSize: 10
+                        font.pixelSize: Theme.popupMicroSize
                         color: Theme.subtext0
                         text: root.fmtTime(root.player?.length ?? 0)
                     }

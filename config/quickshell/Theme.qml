@@ -14,6 +14,8 @@ Singleton {
     readonly property color pink: "#f5c2e7"
     readonly property color mauve: "#cba6f7"
     readonly property color red: "#f38ba8"
+    // Catppuccin Latte red — deliberately harsher than Mocha red, for
+    // hard-error states (failed units, missing adapter).
     readonly property color reallyRed: "#d20f39"
     readonly property color maroon: "#eba0ac"
     readonly property color peach: "#fab387"
@@ -48,7 +50,13 @@ Singleton {
     readonly property int fontSize: 14        // px; matches waybar's 11pt metrics
     readonly property int iconFontSize: 15    // px; icons keep the full 11pt size
     readonly property int powerIconFontSize: 17  // px; #group-power label is 13pt
-    readonly property int calendarFontSize: 12   // px; calendar tooltip <small>
+
+    // Type scale for text inside drawers/popups. Icon glyph sizes stay local
+    // to their control (they're tied to the chip/button dimensions).
+    readonly property int popupTitleSize: 15
+    readonly property int popupBodySize: 12
+    readonly property int popupCaptionSize: 11
+    readonly property int popupMicroSize: 10
 
     // Bar metrics (px)
     readonly property int barHeight: 30
@@ -93,6 +101,28 @@ Singleton {
     readonly property color cardHoverBg: alpha(surface1, 0.45)
     readonly property color cardBorder: alpha(overlay0, 0.55)
     readonly property real cardRadius: 8
+
+    // Small tinted chips inside popups (icon badges, toggles, tags): the
+    // pills' outline language, one notch smaller.
+    function chipBg(tint: color, active: bool): color {
+        return active ? alpha(tint, 0.1) : alpha(surface0, 0.35);
+    }
+    function chipFg(tint: color, active: bool): color {
+        return active ? tint : subtext0;
+    }
+    function chipBorder(tint: color, active: bool): color {
+        return active ? alpha(tint, 0.75) : alpha(overlay0, 0.5);
+    }
+
+    // Drawer shape + neon seam trim (BarDrawer / EdgeDrawer)
+    readonly property int drawerFlareRadius: 22   // concave fillet at the bar
+    readonly property int drawerBottomRadius: 16  // convex free corners
+    readonly property int drawerSideMargin: 10    // blur breathing room, sides
+    readonly property int drawerBottomMargin: 16  // blur breathing room, below
+    readonly property real drawerSeamLine: 1.5    // crisp accent core height
+    readonly property real drawerSeamLineAlpha: 0.9
+    readonly property real drawerSeamGlow: 10     // soft glow bleed height
+    readonly property real drawerSeamGlowAlpha: 0.28
 
     // Calendar drawer (continuous Monday-first month strip)
     readonly property int calDayCellWidth: 34

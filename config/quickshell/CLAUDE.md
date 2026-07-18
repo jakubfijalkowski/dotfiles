@@ -24,11 +24,16 @@ picks up the fix on the next save. The autostart process runs as
 - `Theme.qml` — singleton: palette, fonts, metrics, all style tokens
 - `Notifs.qml` — singleton: the freedesktop notification server, do-not-disturb
   state, and the live-toast list
-- `Icons.qml` — singleton: shared app-icon resolution
-- `components/` — building blocks: `BarPill` (a module pill), `BarPopup`
-  (rounded-rectangle popup that opens below a pill), `BarDrawer` / `EdgeDrawer`
-  (shade drawers that flow out of the bar), `BarTooltip`, `NotificationToast`,
-  `Spinner`
+- `Icons.qml` — singleton: shared app-icon resolution (memoizes hits; misses
+  are retried since desktop entries scan in asynchronously)
+- `Time.qml` — singleton: the one shared `SystemClock` (clock pills, calendar)
+- `Screens.qml` — singleton: which monitor the shell lives on; every window
+  resolves its `screen` through `Screens.primary`
+- `components/` — building blocks: `BarPill` (a module pill), `BarDrawer` /
+  `EdgeDrawer` (shade drawers that flow out of the bar; shared seam painting
+  lives in `drawerShapes.js`), `BarTooltip`, `NotificationToast`,
+  `ActionButton` (tinted footer button), `StyledSlider` (the shared slider
+  look), `ExpandArea`, `Spinner`
 - `modules/` — one file per bar module (workspaces, clock, volume, …)
 
 ## Rules to preserve
@@ -45,19 +50,17 @@ picks up the fix on the next save. The autostart process runs as
   every visible item in the bar's right row needs an integer width. This keeps
   the popup centered on its pill: xdg popups are placed in whole pixels, so a
   fractional or odd-width pill shifts the popup by a pixel.
-- **New popups reuse `BarPopup`** — a plain rounded-rectangle `Rectangle`
-  (native `radius` + `border`, colored by `ringColor`) that opens `gap` px
-  below the pill. It provides outside-click dismissal via `HyprlandFocusGrab`,
-  a springy scale-from-top open and size-morph animations. A click anywhere
-  outside the popup — including on the bar or the launching pill — dismisses
-  it; the focus grab holds only the popup itself.
-- **Drawers (`BarDrawer`, `EdgeDrawer`) flow out of the bar** rather than
+- **New popups are drawers** — reuse `BarDrawer` (drops below its pill) or
+  `EdgeDrawer` (top-right corner). They flow out of the bar rather than
   floating below it: their top edge meets the bar and they open like a shade.
   Each takes a `required` `accent` (the launching module's colour), painted as
   a neon seam trim (crisp core + soft glow) along that top edge — this both
   masks the faint blur-mismatch line where two translucent surfaces meet and
   makes the drawer read as the pill's colour flowing out. Every instance must
-  pass `accent`; dismissal matches `BarPopup`.
+  pass `accent`. A click anywhere outside the drawer — including on the bar
+  or the launching pill — dismisses it via `HyprlandFocusGrab`; the grab
+  holds only the drawer itself. Shape + seam tokens live in `Theme`
+  (`drawer*`), the seam painting in `components/drawerShapes.js`.
 - **Notifications are transient toasts, not a panel.** `Notifs` runs the
   freedesktop server (no history, no persistence) and feeds a *local*
   `ListModel` to `NotificationOverlay`; drive the toast Repeater from that,
@@ -68,26 +71,29 @@ picks up the fix on the next save. The autostart process runs as
   jitters the stack). A toast slides in from the right, auto-dismisses after
   its lifetime (`Theme`-configured default, or the sender's; critical stays),
   and on close collapses its own height so the rest slide up. Colour follows
-  urgency via `Theme.notifAccent`.
+  urgency via `Theme.notifAccent`. Left-click on the card invokes the sender's
+  *default* action; any other actions render as accent chips below the body.
 - **Popups have no drop shadow, by design** — depth comes from the translucent
   fill plus the border under the Hyprland blur. Don't add one: `MultiEffect`
   / `DropShadow` resample the whole surface and fatten the 1px border. The
-  transparent `margin` around the bubble is only breathing room so the open
-  spring's overshoot past scale 1.0 isn't clipped by the window bounds.
+  transparent margins around the drawer body are only breathing room for the
+  seam glow and the blur, not shadow space.
 - **Motion uses the Material 3 expressive curves** already present in the
   code (springy `[0.42, 1.67, 0.21, 0.90]` for spatial moves, ~200ms
   decelerate for fades, quick accelerate for exits). Match them.
 - Behaviors that must keep working: module actions (clicks, wheel scrolling),
-  the calendar tooltip (scroll shifts months, right click toggles month/year,
-  middle click resets), locale-aware date via `LC_TIME`, and the custom
-  scripts in `~/.local/bin` (`check-updates`, `yubikey-touch-status`).
+  the calendar drawer (wheel over the pill or the calendar shifts months,
+  middle click resets to the current month), locale-aware date via `LC_TIME`,
+  and the custom scripts in `~/.local/bin` (`check-updates`,
+  `yubikey-touch-status`).
 
 ## Managing
 
 - IPC endpoints (also handy for keybinds and for testing, below): every popup
   exposes a `toggle` on its module's target —
   `qs ipc call bluetooth toggle`, `qs ipc call updates toggle`,
-  `qs ipc call audio toggle` — plus
+  `qs ipc call audio toggle`, `qs ipc call mpris toggle`,
+  `qs ipc call calendar toggle` — plus
   `qs ipc call bluetooth connect <name>|disconnect <name>` and
   `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
   update-count refreshes). Notifications expose

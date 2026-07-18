@@ -1,4 +1,3 @@
-import Quickshell
 import QtQuick
 import qs
 
@@ -21,7 +20,7 @@ Item {
     // Months away from the real current month (0 = current).
     property int monthOffset: 0
 
-    readonly property date today: clock.date
+    readonly property date today: Time.now
     // First day of the focused month (current month + offset).
     readonly property date focusDate: new Date(today.getFullYear(), today.getMonth() + monthOffset, 1)
     // Day-granular stamp so the grid only rebuilds at midnight, not every tick.
@@ -37,11 +36,6 @@ Item {
 
     function shiftMonth(delta: int) { monthOffset += delta; }
     function reset() { monthOffset = 0; }
-
-    SystemClock {
-        id: clock
-        precision: SystemClock.Hours
-    }
 
     // --- date helpers ---
     function addDays(d: var, n: int): var {

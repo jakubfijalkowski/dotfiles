@@ -1,3 +1,4 @@
+import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import qs
@@ -21,7 +22,9 @@ Item {
     implicitHeight: Theme.pillHeight
 
     // Toplevel IPC data (window class) is not always fetched eagerly;
-    // refresh it on startup and whenever windows change.
+    // refresh it on startup and whenever the window *set* changes. Title
+    // changes (windowtitlev2) are deliberately ignored — they fire constantly
+    // and can't alter a window's class.
     Component.onCompleted: Hyprland.refreshToplevels()
 
     Connections {
@@ -31,7 +34,6 @@ Item {
             case "openwindow":
             case "closewindow":
             case "movewindowv2":
-            case "windowtitlev2":
                 Hyprland.refreshToplevels();
                 break;
             }
@@ -44,9 +46,14 @@ Item {
         spacing: Theme.moduleSpacing
 
         Repeater {
-            model: [...Hyprland.workspaces.values]
-                .filter(ws => ws.id > 0)
-                .sort((a, b) => a.id - b.id)
+            // ScriptModel diffs by object identity, so workspace pills (and
+            // their icon rows) persist when the list changes instead of every
+            // delegate being rebuilt.
+            model: ScriptModel {
+                values: [...Hyprland.workspaces.values]
+                    .filter(ws => ws.id > 0)
+                    .sort((a, b) => a.id - b.id)
+            }
 
             Rectangle {
                 id: button
@@ -58,6 +65,7 @@ Item {
 
                 color: modelData.urgent ? Theme.alpha(Theme.yellow, 0.8)
                      : modelData.focused ? Theme.wsActiveBg
+                     : wsMouse.containsMouse ? Theme.cardHoverBg
                      : Theme.wsIdleBg
                 border.width: modelData.focused && Theme.wsActiveBorder.a > 0 ? 1 : 0
                 border.color: modelData.focused ? Theme.wsActiveBorder : "transparent"
@@ -124,7 +132,9 @@ Item {
                 }
 
                 MouseArea {
+                    id: wsMouse
                     anchors.fill: parent
+                    hoverEnabled: true
                     onClicked: button.modelData.activate()
                 }
             }

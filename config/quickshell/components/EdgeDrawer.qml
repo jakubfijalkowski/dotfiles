@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import qs
+import "drawerShapes.js" as DrawerShapes
 
 // A drawer that flows out of the TOP-RIGHT CORNER — the counterpart to
 // BarDrawer, sharing its "dynamic-island" look but hinged on two edges instead
@@ -13,7 +14,7 @@ import qs
 // It opens like a shade: a top-anchored clip rolls its height open, so the
 // panel drops down out of the bar. Content-sized (width + height follow it).
 //
-// API mirrors BarPopup / BarDrawer (open / toggle() + default content). Pass
+// API mirrors BarDrawer (open / toggle() + default content). Pass
 // `screen` to pin it to the bar's monitor; a click anywhere outside the drawer
 // (including on the bar) dismisses it through the focus grab.
 Scope {
@@ -32,19 +33,11 @@ Scope {
     default property alias contentData: contentSlot.data
 
     readonly property int padding: 16
-    // Concave fillet radius where the body detaches from the bar / screen edge.
-    readonly property int flareRadius: 22
-    // Seam trim along the top edge: a crisp accent core plus a soft glow that
-    // bleeds down into the body.
-    readonly property real seamLine: 1.5
-    readonly property real seamLineAlpha: 0.9
-    readonly property real seamGlow: 10
-    readonly property real seamGlowAlpha: 0.28
-    // Convex free (bottom-left) corner radius.
-    readonly property int bottomRadius: 16
-    // Overshoot/blur breathing room beside the left fillet and below the body.
-    readonly property int sideMargin: 10
-    readonly property int bottomMargin: 16
+    // Shape metrics + seam trim are shared style tokens (see Theme).
+    readonly property int flareRadius: Theme.drawerFlareRadius
+    readonly property int bottomRadius: Theme.drawerBottomRadius
+    readonly property int sideMargin: Theme.drawerSideMargin
+    readonly property int bottomMargin: Theme.drawerBottomMargin
     // Top edge sits at the bar's bottom, so the drawer flows from the bar.
     readonly property int topEdge: Theme.barHeight
 
@@ -116,10 +109,7 @@ Scope {
                     Connections {
                         target: root
                         function onSurfaceColorChanged() { surface.requestPaint() }
-                    }
-
-                    function css(c: color): string {
-                        return `rgba(${Math.round(c.r * 255)}, ${Math.round(c.g * 255)}, ${Math.round(c.b * 255)}, ${c.a})`;
+                        function onAccentChanged() { surface.requestPaint() }
                     }
 
                     onPaint: {
@@ -128,7 +118,7 @@ Scope {
 
                         const ms = root.sideMargin, mb = root.bottomMargin;
                         const rc = root.flareRadius, rb = root.bottomRadius;
-                        const k = 0.5523; // cubic-bezier quarter-circle constant
+                        const k = DrawerShapes.K;
 
                         const topY = root.topEdge;         // top edge, meets the bar
                         const rightX = width;              // right edge, meets the screen
@@ -152,23 +142,15 @@ Scope {
                         ctx.bezierCurveTo(bodyLeft, topY + rc - k * rc, ms + k * rc, topY, ms, topY);
                         ctx.closePath();
 
-                        ctx.fillStyle = css(root.surfaceColor);
+                        ctx.fillStyle = DrawerShapes.css(root.surfaceColor);
                         ctx.fill();
 
                         // Neon seam trim along the top edge where the drawer
-                        // meets the bar — mirrors BarDrawer (see the rationale
-                        // there). Clipped to the shape so it can't spill past
-                        // the fillets. The top edge runs ms..rightX at topY.
+                        // meets the bar (see drawerShapes.js), clipped to the
+                        // shape so it can't spill past the fillets. The top
+                        // edge runs ms..rightX at topY.
                         ctx.clip();
-                        const a = root.accent;
-                        const argb = `${Math.round(a.r * 255)}, ${Math.round(a.g * 255)}, ${Math.round(a.b * 255)}`;
-                        const glow = ctx.createLinearGradient(0, topY, 0, topY + root.seamGlow);
-                        glow.addColorStop(0, `rgba(${argb}, ${root.seamGlowAlpha})`);
-                        glow.addColorStop(1, `rgba(${argb}, 0)`);
-                        ctx.fillStyle = glow;
-                        ctx.fillRect(ms, topY, rightX - ms, root.seamGlow);
-                        ctx.fillStyle = `rgba(${argb}, ${root.seamLineAlpha})`;
-                        ctx.fillRect(ms, topY, rightX - ms, root.seamLine);
+                        DrawerShapes.paintSeam(ctx, root.accent, ms, rightX, topY, Theme);
                     }
                 }
 

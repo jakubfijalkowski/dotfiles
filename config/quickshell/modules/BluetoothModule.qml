@@ -5,7 +5,7 @@ import QtQuick
 import qs
 import qs.components
 
-// bluetooth: "" / disabled "󰂲" / connected "".
+// bluetooth: idle "" / disabled "󰂲" / connected "󰂱".
 // Clicking opens a popup listing known devices with connect/disconnect
 // controls (also toggleable via: qs ipc call bluetooth toggle).
 BarPill {
@@ -17,11 +17,13 @@ BarPill {
 
     text: {
         if (!adapter) return "";
-        if (!adapter.enabled) return "\u{F00B2}";
-        return connected ? "\u{F294}" : "\u{F294}";
+        if (!adapter.enabled) return "\u{F00B2}";   // mdi bluetooth-off
+        return connected ? "\u{F00B1}"              // mdi bluetooth-connect
+                         : "\u{F294}";              // nf-fa-bluetooth
     }
-    // format-disabled is an MDI glyph, the others come from Symbols NF
-    fontFamily: adapter && !adapter.enabled ? Theme.mdiFontFamily : Theme.iconFontFamily
+    // disabled/connected are MDI glyphs, idle comes from Symbols NF
+    fontFamily: adapter && (!adapter.enabled || connected)
+        ? Theme.mdiFontFamily : Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
     // While the popup is open the pill takes the popup's blue ring, tying
     // the two together by colour.

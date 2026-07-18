@@ -25,7 +25,9 @@ BarPill {
     visible: sink !== null
     // #wireplumber { min-width: 28pt }
     minContentWidth: 37
-    accent: audioPopup.open ? Theme.flamingo : muted ? Theme.lavender : Theme.flamingo
+    // Muted shows lavender, except while the drawer is open — then the pill
+    // matches the drawer's flamingo seam.
+    accent: muted && !audioPopup.open ? Theme.lavender : Theme.flamingo
     highlighted: audioPopup.open
     contentWidth: content.implicitWidth
 
@@ -79,6 +81,7 @@ BarPill {
 
         AudioControls {
             id: audioControls
+            active: audioPopup.open
             onCloseRequested: audioPopup.open = false
         }
     }

@@ -9,9 +9,6 @@ Scope {
     required property Item target
     property bool show: false
     property string text: ""
-    // Rich (pango-like markup) content, used by the calendar tooltip
-    property bool rich: false
-    property int textPixelSize: Theme.fontSize
 
     onShowChanged: {
         if (show && text !== "") delay.restart();
@@ -46,13 +43,24 @@ Scope {
             border.width: 1
             radius: Math.min(Theme.popupRadius, 10)
 
+            // Quick fade-in once the window maps (hide is instant — the
+            // window unmaps before a fade could show).
+            opacity: popup.visible ? 1 : 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 150
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: [0.34, 0.80, 0.34, 1.00, 1, 1]
+                }
+            }
+
             Text {
                 id: label
                 anchors.centerIn: parent
                 font.family: Theme.fontFamily
-                font.pixelSize: root.textPixelSize
+                font.pixelSize: Theme.fontSize
                 color: Theme.text
-                textFormat: root.rich ? Text.RichText : Text.PlainText
+                textFormat: Text.PlainText
                 text: root.text
             }
         }

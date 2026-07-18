@@ -19,13 +19,7 @@ import qs.components
 PanelWindow {
     id: overlay
 
-    screen: {
-        for (const s of Quickshell.screens) {
-            if (s.name === "DP-1")
-                return s;
-        }
-        return Quickshell.screens[0] ?? null;
-    }
+    screen: Screens.primary
 
     anchors {
         top: true

@@ -26,6 +26,12 @@ Column {
     property bool loading: false
     property int aurCount: 0
 
+    // Fetching hits the network (checkupdates syncs a private pacman DB copy,
+    // `yay -Qua` queries the AUR), so a fresh-enough result is reused instead
+    // of refetching on every drawer open.
+    readonly property int refreshTtlMs: 5 * 60 * 1000
+    property double lastFetched: 0
+
     ListModel { id: updatesModel }
 
     // checkupdates = repo diffs, `yay -Qua` = AUR diffs; both print
@@ -41,11 +47,15 @@ Column {
     }
 
     function refresh() {
-        if (!listProc.running)
-            listProc.running = true;
+        if (listProc.running)
+            return;
+        if (lastFetched > 0 && Date.now() - lastFetched < refreshTtlMs)
+            return;
+        listProc.running = true;
     }
 
     function populate(text: string) {
+        lastFetched = Date.now();
         const re = /^(\S+)\s+(\S+)\s*->\s*(\S+)/;
         const rows = [];
         let aur = false;
@@ -68,51 +78,6 @@ Column {
 
     spacing: 6
 
-    // Reusable footer action button
-    component ActionButton: Rectangle {
-        id: btn
-        property string label: ""
-        property string glyph: ""
-        property color tint: Theme.yellow
-        signal activated()
-
-        height: 30
-        radius: Theme.cardRadius
-        color: btnMouse.containsMouse ? Theme.alpha(tint, 0.15) : Theme.alpha(tint, 0.06)
-        border.width: 1
-        border.color: Theme.alpha(tint, 0.6)
-
-        Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 7
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.mdiFontFamily
-                font.pixelSize: 14
-                color: btn.tint
-                text: btn.glyph
-            }
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.family: Theme.fontFamily
-                font.pixelSize: 12
-                color: btn.tint
-                text: btn.label
-            }
-        }
-
-        MouseArea {
-            id: btnMouse
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: btn.activated()
-        }
-    }
-
     // Header: Arch badge, title + count, refresh spinner
     Item {
         width: root.listWidth
@@ -125,17 +90,17 @@ Column {
             width: 30
             height: 30
             radius: 9
-            color: Theme.alpha(Theme.yellow, 0.1)
+            color: Theme.chipBg(Theme.yellow, true)
             border.width: 1
-            border.color: Theme.alpha(Theme.yellow, 0.75)
+            border.color: Theme.chipBorder(Theme.yellow, true)
 
             Text {
                 anchors.centerIn: parent
                 font.family: Theme.iconFontFamily
                 font.pixelSize: 15
                 color: Theme.yellow
-                // nf-fa-arch (matches the bar pill glyph)
-                text: ""
+                // nf-linux-archlinux (matches the bar pill glyph)
+                text: "\u{F303}"
             }
         }
 
@@ -156,7 +121,7 @@ Column {
             }
             Text {
                 font.family: Theme.fontFamily
-                font.pixelSize: 11
+                font.pixelSize: Theme.popupCaptionSize
                 color: Theme.subtext0
                 text: {
                     if (updatesModel.count === 0)
@@ -253,7 +218,7 @@ Column {
                     width: Math.min(implicitWidth,
                         nameGroup.width - (aurChip.visible ? aurChip.width + nameGroup.spacing : 0))
                     font.family: Theme.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.popupBodySize
                     color: Theme.text
                     elide: Text.ElideRight
                     text: row.name
@@ -264,17 +229,17 @@ Column {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: row.aur
                     width: aurText.implicitWidth + 10
-                    height: 15
+                    height: 16
                     radius: 4
-                    color: Theme.alpha(Theme.mauve, 0.15)
+                    color: Theme.chipBg(Theme.mauve, true)
                     border.width: 1
-                    border.color: Theme.alpha(Theme.mauve, 0.5)
+                    border.color: Theme.chipBorder(Theme.mauve, true)
 
                     Text {
                         id: aurText
                         anchors.centerIn: parent
                         font.family: Theme.fontFamily
-                        font.pixelSize: 9
+                        font.pixelSize: Theme.popupMicroSize
                         font.weight: Font.DemiBold
                         color: Theme.mauve
                         text: "AUR"
@@ -292,21 +257,21 @@ Column {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.subtext0
                     text: row.oldVer
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     color: Theme.overlay1
                     text: "→"
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontFamily
-                    font.pixelSize: 11
+                    font.pixelSize: Theme.popupCaptionSize
                     font.weight: Font.DemiBold
                     color: Theme.yellow
                     text: row.newVer

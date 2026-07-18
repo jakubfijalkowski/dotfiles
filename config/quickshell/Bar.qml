@@ -3,16 +3,11 @@ import QtQuick
 import qs
 import qs.modules
 
-// Top bar on DP-1, replicating the waybar layout.
+// Top bar on the primary monitor (Screens), replicating the waybar layout.
 PanelWindow {
     id: bar
 
-    screen: {
-        for (const s of Quickshell.screens) {
-            if (s.name === "DP-1") return s;
-        }
-        return Quickshell.screens[0] ?? null;
-    }
+    screen: Screens.primary
 
     anchors {
         top: true

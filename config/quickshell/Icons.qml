@@ -10,6 +10,12 @@ import QtQuick
 Singleton {
     id: root
 
+    // Successful lookups are memoized: resolution touches the icon theme on
+    // disk and callers re-resolve on every model rebuild. Misses are NOT
+    // cached — desktop entries scan in asynchronously at startup, so an
+    // early miss may become a hit moments later.
+    property var cache: new Map()
+
     // The first themed icon path matching any candidate, else `fallback`
     // resolved as an icon name, else "". `candidates` may be a single value or
     // an array; empty/undefined entries are skipped. Each candidate is tried
@@ -17,6 +23,18 @@ Singleton {
     // desktop-entry heuristic on its name.
     function resolve(candidates, fallback): string {
         const list = Array.isArray(candidates) ? candidates : [candidates];
+        const key = list.map(c => String(c ?? "")).join("\x1f")
+                  + "\x1f\x1f" + String(fallback ?? "");
+        const hit = cache.get(key);
+        if (hit !== undefined)
+            return hit;
+        const path = lookup(list, fallback);
+        if (path)
+            cache.set(key, path);
+        return path;
+    }
+
+    function lookup(list, fallback): string {
         for (const cand of list) {
             if (!cand) continue;
             const name = String(cand);

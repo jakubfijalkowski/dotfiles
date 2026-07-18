@@ -25,7 +25,10 @@ Item {
         const t = notif.expireTimeout;
         return t > 0 ? t : Notifs.defaultTimeout;
     }
-    readonly property bool hovered: cardMouse.containsMouse || closeMouse.containsMouse
+    // A HoverHandler rather than the MouseAreas' containsMouse: hover is
+    // exclusive between stacked MouseAreas, so hovering an action chip would
+    // un-hover the card and let the toast expire mid-aim.
+    readonly property bool hovered: cardHover.hovered
 
     property bool shown: false
     property bool closing: false
@@ -34,6 +37,11 @@ Item {
     readonly property string iconSource: notif.image !== ""
         ? notif.image
         : Icons.resolve([notif.appIcon, notif.desktopEntry, notif.appName], "")
+
+    // Sender actions other than the default (which lives on the card itself)
+    // render as chips below the body.
+    readonly property var extraActions:
+        [...notif.actions].filter(a => a.identifier !== "default")
 
     width: card.width
     height: closing ? 0 : card.height + Theme.notifGap
@@ -139,10 +147,11 @@ Item {
             NumberAnimation { duration: root.closing ? 200 : 220 }
         }
 
+        HoverHandler { id: cardHover }
+
         MouseArea {
             id: cardMouse
             anchors.fill: parent
-            hoverEnabled: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onClicked: mouse => {
                 // Left-click triggers the notification's default action (if any),
@@ -239,7 +248,59 @@ Item {
                     color: Theme.subtext0
                     // Body may carry limited freedesktop markup (<b>, <i>, links).
                     textFormat: Text.StyledText
+                    linkColor: Theme.blue
                     text: root.notif.body
+                    onLinkActivated: link => Qt.openUrlExternally(link)
+                }
+
+                // Non-default sender actions as chips in the urgency accent.
+                // (This sits above the card's MouseArea, so chip clicks never
+                // reach the default-action handler.)
+                Flow {
+                    width: parent.width
+                    spacing: 6
+                    visible: root.extraActions.length > 0
+
+                    Repeater {
+                        model: root.extraActions
+
+                        Rectangle {
+                            id: actionChip
+                            required property var modelData
+
+                            width: actionLabel.implicitWidth + 18
+                            height: 22
+                            radius: 11
+                            color: actionMouse.containsMouse
+                                ? Theme.alpha(root.accent, 0.18)
+                                : Theme.chipBg(root.accent, true)
+                            border.width: 1
+                            border.color: Theme.chipBorder(root.accent, true)
+
+                            Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.InOutQuad } }
+
+                            Text {
+                                id: actionLabel
+                                anchors.centerIn: parent
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.popupCaptionSize
+                                color: root.accent
+                                textFormat: Text.PlainText
+                                text: actionChip.modelData.text
+                            }
+
+                            MouseArea {
+                                id: actionMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    actionChip.modelData.invoke();
+                                    root.close(false);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

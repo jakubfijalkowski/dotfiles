@@ -2,15 +2,16 @@ import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import qs
+import "drawerShapes.js" as DrawerShapes
 
 // A popup that flows out of the bar. Its top edge meets the bar and curves
 // down into the body through concave fillets (a "notch" / dynamic-island
 // look), so the bar and popup read as one continuous surface. No border.
 // It opens like a shade: a top-anchored clip rolls its height open.
 //
-// Same API surface as BarPopup (anchorItem / open / toggle() + default
-// content), so modules can swap between the two. A click anywhere outside the
-// drawer — including on the bar or its pill — dismisses it via the focus grab.
+// API: anchorItem / open / toggle() + default content (EdgeDrawer mirrors
+// it). A click anywhere outside the drawer — including on the bar or its
+// pill — dismisses it via the focus grab.
 Scope {
     id: root
 
@@ -27,19 +28,11 @@ Scope {
     default property alias contentData: contentSlot.data
 
     readonly property int padding: 14
-    // Concave fillet radius where the body meets the bar.
-    readonly property int flareRadius: 22
-    // Seam trim along the top edge: a crisp accent core plus a soft glow that
-    // bleeds down into the body.
-    readonly property real seamLine: 1.5
-    readonly property real seamLineAlpha: 0.9
-    readonly property real seamGlow: 10
-    readonly property real seamGlowAlpha: 0.28
-    // Convex bottom corner radius.
-    readonly property int bottomRadius: 16
-    // Overshoot/blur breathing room beside the flares and below the body.
-    readonly property int sideMargin: 10
-    readonly property int bottomMargin: 16
+    // Shape metrics + seam trim are shared style tokens (see Theme).
+    readonly property int flareRadius: Theme.drawerFlareRadius
+    readonly property int bottomRadius: Theme.drawerBottomRadius
+    readonly property int sideMargin: Theme.drawerSideMargin
+    readonly property int bottomMargin: Theme.drawerBottomMargin
     // Distance below the pill's bottom to place the drawer's top edge. The
     // pill is centered in the bar, so ~2px drops the top to the bar's bottom
     // edge — the drawer flows from the bar without overlapping the pill.
@@ -109,10 +102,7 @@ Scope {
                 Connections {
                     target: root
                     function onSurfaceColorChanged() { surface.requestPaint() }
-                }
-
-                function css(c: color): string {
-                    return `rgba(${Math.round(c.r * 255)}, ${Math.round(c.g * 255)}, ${Math.round(c.b * 255)}, ${c.a})`;
+                    function onAccentChanged() { surface.requestPaint() }
                 }
 
                 onPaint: {
@@ -121,7 +111,7 @@ Scope {
 
                     const ms = root.sideMargin, mb = root.bottomMargin;
                     const rc = root.flareRadius, rb = root.bottomRadius;
-                    const k = 0.5523; // cubic-bezier quarter-circle constant
+                    const k = DrawerShapes.K;
 
                     const left = ms, right = width - ms;      // outer top corners, meet the bar
                     const bl = ms + rc, br = width - ms - rc;  // straight body sides
@@ -140,26 +130,14 @@ Scope {
                     ctx.bezierCurveTo(br, top + rc - k * rc, right - k * rc, top, right, top);
                     ctx.closePath();
 
-                    ctx.fillStyle = css(root.surfaceColor);
+                    ctx.fillStyle = DrawerShapes.css(root.surfaceColor);
                     ctx.fill();
 
-                    // Neon seam trim. The top edge is two independently-blurred
-                    // surfaces meeting, which leaves a faint mismatch line.
-                    // Rather than hide it, own it: lay the accent along the join
-                    // — a soft glow bleeding into the body plus a crisp core — so
-                    // the intentional line dominates the accidental one and the
-                    // drawer reads as the pill's colour flowing out. Reuse the
-                    // shape as a clip so the trim can't spill past the fillets.
+                    // Neon seam trim along the bar join (see drawerShapes.js
+                    // for the rationale), clipped to the shape so it can't
+                    // spill past the fillets.
                     ctx.clip();
-                    const a = root.accent;
-                    const argb = `${Math.round(a.r * 255)}, ${Math.round(a.g * 255)}, ${Math.round(a.b * 255)}`;
-                    const glow = ctx.createLinearGradient(0, top, 0, top + root.seamGlow);
-                    glow.addColorStop(0, `rgba(${argb}, ${root.seamGlowAlpha})`);
-                    glow.addColorStop(1, `rgba(${argb}, 0)`);
-                    ctx.fillStyle = glow;
-                    ctx.fillRect(left, top, right - left, root.seamGlow);
-                    ctx.fillStyle = `rgba(${argb}, ${root.seamLineAlpha})`;
-                    ctx.fillRect(left, top, right - left, root.seamLine);
+                    DrawerShapes.paintSeam(ctx, root.accent, left, right, top, Theme);
                 }
             }
 

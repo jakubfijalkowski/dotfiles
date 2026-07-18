@@ -122,6 +122,7 @@ BarPill {
             id: controls
             player: root.player
             players: root.activePlayers
+            active: drawer.open
             onSelectRequested: id => root.selectedId = id
             onCloseRequested: drawer.open = false
         }
