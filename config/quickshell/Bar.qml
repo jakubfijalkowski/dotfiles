@@ -48,6 +48,6 @@ PanelWindow {
         ClockTime {}
         Notifications {}
         TrayModule {}
-        PowerGroup {}
+        PowerButton {}
     }
 }

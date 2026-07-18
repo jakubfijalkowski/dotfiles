@@ -3,10 +3,13 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
+import qs
 
-// Notification hub — owns the freedesktop server. Deliberately transient: no
-// history, no control-center; a notification is tracked only while its toast
-// shows. IPC: qs ipc call notifs {toggleDnd,dnd <on|off>,dismissAll,dismissLast}.
+// Notification hub — owns the freedesktop server. Toasts stay transient (no
+// control-center, nothing persisted to disk); alongside them a small in-memory
+// ring of the most recent notifications is kept so the power drawer can page
+// back through what just arrived. IPC:
+// qs ipc call notifs {toggleDnd,dnd <on|off>,dismissAll,dismissLast}.
 Singleton {
     id: root
 
@@ -21,6 +24,15 @@ Singleton {
     ListModel { id: toasts }
     readonly property ListModel model: toasts
     readonly property int count: toasts.count
+
+    // Recent-notification ring, newest first — plain field copies, not the live
+    // Notification objects (those are freed once untracked). Feeds the power
+    // drawer's history view only; capped, in-memory, gone on reload.
+    ListModel { id: history }
+    readonly property ListModel historyModel: history
+    readonly property int maxHistory: 20
+    // Bumped on every incoming notification so views can jump back to newest.
+    property int received: 0
 
     // Ask toast(s) to animate out — a specific Notification, or all when null.
     signal closeRequested(var target)
@@ -56,8 +68,27 @@ Singleton {
         actionIconsSupported: false
 
         onNotification: notif => {
-            // DND swallows it. Otherwise track it (keeps it alive while shown)
-            // and add to the list; the toast calls forget() to drop it.
+            // Record every arrival in history first (even DND-swallowed ones —
+            // the drawer is where you catch up on what you missed). Store field
+            // copies: the object is freed once it stops being tracked.
+            history.insert(0, {
+                appName: notif.appName || notif.desktopEntry || "Notification",
+                desktopEntry: notif.desktopEntry || "",
+                summary: notif.summary,
+                body: notif.body,
+                urgency: notif.urgency,
+                iconSource: notif.image !== ""
+                    ? notif.image
+                    : Icons.resolve([notif.appIcon, notif.desktopEntry, notif.appName], ""),
+                // Epoch seconds (fits an int role; ms would overflow).
+                time: Math.floor(Date.now() / 1000)
+            });
+            while (history.count > root.maxHistory)
+                history.remove(history.count - 1);
+            root.received++;
+
+            // DND swallows the toast. Otherwise track it (keeps it alive while
+            // shown) and add to the list; the toast calls forget() to drop it.
             if (root.dnd)
                 return;
             notif.tracked = true;

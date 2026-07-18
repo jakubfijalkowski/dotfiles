@@ -62,17 +62,21 @@ picks up the fix on the next save. The autostart process runs as
   holds only the drawer itself. Shape + seam tokens live in `Theme`
   (`drawer*`), the seam painting in `components/drawerShapes.js`.
 - **Notifications are transient toasts, not a panel.** `Notifs` runs the
-  freedesktop server (no history, no persistence) and feeds a *local*
-  `ListModel` to `NotificationOverlay`; drive the toast Repeater from that,
-  never straight from the server's `trackedNotifications` — removing a non-tail
-  entry there rebuilds every delegate and flashes the just-closed toast. The
-  overlay is a **fixed-size** masked layer surface that never resizes as toasts
-  come and go: they reflow *within* it (resizing the surface per toast visibly
-  jitters the stack). A toast slides in from the right, auto-dismisses after
-  its lifetime (`Theme`-configured default, or the sender's; critical stays),
-  and on close collapses its own height so the rest slide up. Colour follows
-  urgency via `Theme.notifAccent`. Left-click on the card invokes the sender's
-  *default* action; any other actions render as accent chips below the body.
+  freedesktop server (no on-disk persistence, no control-center) and feeds a
+  *local* `ListModel` to `NotificationOverlay`; drive the toast Repeater from
+  that, never straight from the server's `trackedNotifications` — removing a
+  non-tail entry there rebuilds every delegate and flashes the just-closed
+  toast. The overlay is a **fixed-size** masked layer surface that never
+  resizes as toasts come and go: they reflow *within* it (resizing the surface
+  per toast visibly jitters the stack). A toast slides in from the right,
+  auto-dismisses after its lifetime (`Theme`-configured default, or the
+  sender's; critical stays), and on close collapses its own height so the rest
+  slide up. Colour follows urgency via `Theme.notifAccent`. Left-click on the
+  card invokes the sender's *default* action; any other actions render as
+  accent chips below the body. Alongside the toasts, `Notifs` also keeps a
+  bounded in-memory `historyModel` ring (field copies of the last ~20, newest
+  first — the live objects are freed once untracked) that the power drawer's
+  "Recent" pager reads; it is not persisted and clears on reload.
 - **Popups have no drop shadow, by design** — depth comes from the translucent
   fill plus the border under the Hyprland blur. Don't add one: `MultiEffect`
   / `DropShadow` resample the whole surface and fatten the 1px border. The
@@ -93,7 +97,7 @@ picks up the fix on the next save. The autostart process runs as
   exposes a `toggle` on its module's target —
   `qs ipc call bluetooth toggle`, `qs ipc call updates toggle`,
   `qs ipc call audio toggle`, `qs ipc call mpris toggle`,
-  `qs ipc call calendar toggle` — plus
+  `qs ipc call calendar toggle`, `qs ipc call power toggle` — plus
   `qs ipc call bluetooth connect <name>|disconnect <name>` and
   `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
   update-count refreshes). Notifications expose
