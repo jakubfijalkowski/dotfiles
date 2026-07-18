@@ -25,10 +25,7 @@ BarPill {
     fontFamily: adapter && (!adapter.enabled || connected)
         ? Theme.mdiFontFamily : Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
-    // While the popup is open the pill takes the popup's blue ring, tying
-    // the two together by colour.
-    accent: devicePopup.open ? Theme.blue
-          : !adapter ? Theme.reallyRed : Theme.green
+    accent: !adapter ? Theme.reallyRed : Theme.blue
     neutral: !devicePopup.open && adapter && !connected
     highlighted: devicePopup.open
 
