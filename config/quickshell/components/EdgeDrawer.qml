@@ -47,17 +47,21 @@ Scope {
         readonly property real bodyWidth: contentSlot.childrenRect.width + 2 * root.padding
         readonly property real bodyHeight: contentSlot.childrenRect.height + 2 * root.padding
 
+        // Exact height the drawer body needs right now — tracks the live
+        // content (e.g. a month with more week rows) frame by frame. The
+        // painted shape, reveal clip and input mask use this so the body
+        // grows/shrinks smoothly, while the window itself stays a fixed size
+        // (see implicitHeight).
+        readonly property real contentHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
+
         screen: root.screen
         // Pin to the top-right corner; the right edge is flush with the screen
         // (no right margin). A top margin of one bar-height drops the window's
         // top edge to the bar's bottom, so the drawer flows out of the bar
-        // WITHOUT overlapping it. That overlap is what a naive full-height window
-        // gets wrong: HyprlandFocusGrab holds the whole window *geometry* (not its
-        // input region — masking it out doesn't help), so any window covering the
-        // bar swallows clicks on the bar above the drawer and never dismisses.
-        // Kept outside the bar, a click there lands outside the grab and closes
-        // the drawer, exactly like BarDrawer's popup. Ignore exclusive zones so
-        // the bar's reserved strip doesn't push the window down a second time.
+        // WITHOUT overlapping it — the window stays clear of the bar, so clicks
+        // on the bar always land outside it and dismiss the drawer. Ignore
+        // exclusive zones so the bar's reserved strip doesn't push the window
+        // down a second time.
         anchors {
             top: true
             right: true
@@ -67,7 +71,21 @@ Scope {
         color: "transparent"
         visible: root.open || win.openProgress > 0.001
         implicitWidth: Math.ceil(bodyWidth) + root.flareRadius + root.sideMargin
-        implicitHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
+        // Fixed height — the whole gap from the bar's bottom to the screen
+        // bottom — so the surface NEVER resizes as the body grows or shrinks.
+        // Resizing the layer surface to hug the body twitched the whole drawer
+        // (the reason NotificationOverlay never resizes either); instead the
+        // body reflows *within* this fixed surface and the mask below clips the
+        // interactive/opaque area to it, so a click past the body still falls
+        // outside the drawer and dismisses it.
+        implicitHeight: (root.screen ? root.screen.height : 1080) - Theme.barHeight
+
+        // Restrict input to the revealed body; the transparent remainder below
+        // passes clicks through and counts as outside, so the drawer dismisses.
+        mask: Region {
+            width: win.width
+            height: Math.ceil(win.openProgress * win.contentHeight)
+        }
 
         // Open/close reveal driven by a 0->1 progress, kept separate from size so
         // that resizing tracks implicitWidth/Height directly instead of a second
@@ -92,7 +110,9 @@ Scope {
             id: reveal
             anchors.top: parent.top
             width: parent.width
-            height: win.openProgress * parent.height
+            // Track the live content height, not the surface (held larger
+            // mid-resize), so the body reveals and shrinks smoothly.
+            height: win.openProgress * win.contentHeight
             clip: true
 
             Item {
@@ -101,7 +121,7 @@ Scope {
                 // while the clip's bottom edge sweeps down over it.
                 anchors.top: parent.top
                 width: win.width
-                height: win.height
+                height: win.contentHeight
 
                 Canvas {
                     id: surface

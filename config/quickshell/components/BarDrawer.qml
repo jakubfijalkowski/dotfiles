@@ -47,6 +47,13 @@ Scope {
         readonly property real bodyWidth: 2 * Math.ceil((contentSlot.childrenRect.width + 2 * root.padding) / 2)
         readonly property real bodyHeight: contentSlot.childrenRect.height + 2 * root.padding
 
+        // Exact height the drawer body needs right now — tracks the live
+        // content, incl. a section's expand/collapse animation, frame by frame.
+        // The painted shape, the reveal clip and the input mask use this so the
+        // body grows and shrinks smoothly, while the window itself stays a fixed
+        // size (see implicitHeight).
+        readonly property real contentHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
+
         anchor.item: root.anchorItem
         anchor.edges: Edges.Bottom
         anchor.gravity: Edges.Bottom
@@ -59,7 +66,24 @@ Scope {
         visible: root.open || openProgress > 0.001
         color: "transparent"
         implicitWidth: Math.ceil(bodyWidth) + 2 * (root.flareRadius + root.sideMargin)
-        implicitHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
+        // Fixed height so the window NEVER resizes as the body expands or
+        // collapses (resizing a Wayland surface to hug the body twitched the
+        // whole drawer — the reason NotificationOverlay never resizes either).
+        // The body reflows *within* this fixed surface and the mask below clips
+        // the interactive/opaque area to it, so a click past the body still
+        // falls outside the drawer and dismisses it. It can't be the full gap
+        // below the bar, though: an xdg-popup whose bottom would pass the screen
+        // edge gets slid up by the compositor, dragging its top over the bar, so
+        // keep a bar-height of clearance above the screen bottom.
+        implicitHeight: (Screens.primary ? Screens.primary.height : 1080) - 2 * Theme.barHeight
+
+        // Restrict input (and the focus grab's notion of "inside") to the
+        // revealed body; the transparent remainder below passes clicks through
+        // and counts as outside, so the drawer dismisses.
+        mask: Region {
+            width: popup.width
+            height: Math.ceil(popup.openProgress * popup.contentHeight)
+        }
 
         // Open/close reveal driven by a 0→1 progress, kept separate from the
         // size so that resizing (expanding a section) tracks implicitHeight
@@ -87,13 +111,15 @@ Scope {
             id: reveal
             anchors.top: parent.top
             width: parent.width
-            height: popup.openProgress * parent.height
+            // Track the live content height, not the surface (which may be held
+            // larger mid-resize), so the body reveals and shrinks smoothly.
+            height: popup.openProgress * popup.contentHeight
             clip: true
 
             Canvas {
                 id: surface
                 width: popup.width
-                height: popup.height
+                height: popup.contentHeight
 
                 onWidthChanged: requestPaint()
                 onHeightChanged: requestPaint()
