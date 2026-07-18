@@ -109,13 +109,13 @@ Singleton {
     }
 
     // Drawer shape + neon seam trim (BarDrawer / EdgeDrawer)
-    readonly property int drawerFlareRadius: 22   // concave fillet at the bar
-    readonly property int drawerBottomRadius: 16  // convex free corners
+    readonly property int drawerFlareRadius: 1    // concave fillet at the bar
+    readonly property int drawerBottomRadius: 8   // convex free corners
     readonly property int drawerSideMargin: 10    // blur breathing room, sides
     readonly property int drawerBottomMargin: 16  // blur breathing room, below
     readonly property real drawerSeamLine: 1.5    // crisp accent core height
-    readonly property real drawerSeamLineAlpha: 0.9
-    readonly property real drawerSeamGlow: 10     // soft glow bleed height
+    readonly property real drawerSeamLineAlpha: 0.6
+    readonly property real drawerSeamGlow: 4      // soft glow bleed height
     readonly property real drawerSeamGlowAlpha: 0.28
 
     // Calendar drawer (continuous Monday-first month strip)
