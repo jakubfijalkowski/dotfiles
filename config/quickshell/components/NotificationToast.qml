@@ -3,14 +3,11 @@ import Quickshell.Services.Notifications
 import QtQuick
 import qs
 
-// One notification toast. It slides in from the right, auto-dismisses after its
-// lifetime (paused while hovered), and on the way out collapses its own height
-// so every toast below slides up to fill the gap. Colour follows urgency, in
-// the bar's neon-outline language.
-//
-// Layout note: the delegate reserves `card height + gap` and clips to it. The
-// card slides horizontally inside that box (a wipe from the right edge), while
-// the box's height is what animates on close to drive the reflow.
+// One notification toast: slides in from the right, auto-dismisses after its
+// lifetime (paused while hovered), and on close collapses its height so toasts
+// below slide up. Colour follows urgency. The delegate reserves `card height +
+// gap` and clips; the card wipes in horizontally, the box height animates on
+// close to drive the reflow.
 Item {
     id: root
 
@@ -25,9 +22,9 @@ Item {
         const t = notif.expireTimeout;
         return t > 0 ? t : Notifs.defaultTimeout;
     }
-    // A HoverHandler rather than the MouseAreas' containsMouse: hover is
-    // exclusive between stacked MouseAreas, so hovering an action chip would
-    // un-hover the card and let the toast expire mid-aim.
+    // A HoverHandler, not the MouseAreas' containsMouse: hover is exclusive
+    // between stacked MouseAreas, so hovering a chip would un-hover the card and
+    // let it expire mid-aim.
     readonly property bool hovered: cardHover.hovered
 
     property bool shown: false
@@ -38,8 +35,7 @@ Item {
         ? notif.image
         : Icons.resolve([notif.appIcon, notif.desktopEntry, notif.appName], "")
 
-    // Sender actions other than the default (which lives on the card itself)
-    // render as chips below the body.
+    // Sender actions other than the default render as chips below the body.
     readonly property var extraActions:
         [...notif.actions].filter(a => a.identifier !== "default")
 
@@ -47,13 +43,10 @@ Item {
     height: closing ? 0 : card.height + Theme.notifGap
     clip: true
 
-    // Only the close collapse is animated — that's what makes the toasts below
-    // slide up. Entry is a pure horizontal slide (no vertical motion), so this
-    // Behavior is armed imperatively in close() to guarantee it's enabled
-    // before `closing` flips the height binding to 0. The ease is a smooth
-    // in-out (NOT the emphasized-decelerate used for entrances): a decelerate
-    // front-loads most of the travel into the first frame, which reads as the
-    // stack jumping rather than gliding as the gap closes.
+    // Only the close collapse animates (drives the reflow), armed imperatively
+    // in close() before `closing` flips the height to 0. Smooth in-out, not
+    // emphasized-decelerate — a decelerate front-loads the travel and reads as
+    // the stack jumping.
     Behavior on height {
         id: collapse
         enabled: false
@@ -73,9 +66,7 @@ Item {
         drop.start();
     }
 
-    // After the exit animation: tell the sender (expire vs dismiss reports the
-    // right close reason) and drop this toast from the display list, which
-    // destroys the delegate.
+    // After the exit: report expire vs dismiss to the sender, then drop the toast.
     Timer {
         id: drop
         interval: 260
@@ -97,8 +88,7 @@ Item {
         }
     }
 
-    // Dismiss-all (target null) or dismiss-last/-specific (target === this
-    // notification): animate out on request.
+    // Dismiss-all (null) or this specific notification: animate out.
     Connections {
         target: Notifs
         function onCloseRequested(target) {
@@ -107,8 +97,8 @@ Item {
         }
     }
 
-    // Auto-dismiss after the lifetime. Hovering holds the toast open (the timer
-    // stops and restarts fresh on leave). Never armed for no-expiry (critical).
+    // Auto-dismiss after the lifetime; hovering holds it open. Never armed for
+    // critical (no expiry).
     Timer {
         interval: root.lifetime
         running: root.shown && !root.closing && root.lifetime > 0 && !root.hovered
@@ -126,12 +116,9 @@ Item {
         border.width: 1
         border.color: Theme.alpha(root.accent, 0.6)
 
-        // Slide from the right + fade. Clipped by the delegate's `clip` to a
-        // wipe-in from the right edge. The direction/easing is keyed off
-        // `closing` (not `shown`): close() sets `closing` before `shown`, so
-        // it's already settled when `shown` fires this Behavior — keying off
-        // `shown` itself reads its stale pre-change value and picks the entry
-        // curve for the exit, making the card lurch instead of easing out.
+        // Slide from the right + fade (clipped to a wipe-in). Easing is keyed off
+        // `closing`, not `shown`: close() sets `closing` first, so keying off
+        // `shown` would read its stale value and pick the entry curve for the exit.
         x: root.shown ? 0 : width + 8
         opacity: root.shown ? 1 : 0
         Behavior on x {
@@ -154,8 +141,8 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onClicked: mouse => {
-                // Left-click triggers the notification's default action (if any),
-                // then dismisses; any other button just dismisses.
+                // Left-click invokes the default action then dismisses; other
+                // buttons just dismiss.
                 if (mouse.button === Qt.LeftButton) {
                     const def = root.notif.actions.find(a => a.identifier === "default");
                     if (def)
@@ -194,8 +181,7 @@ Item {
                     visible: status === Image.Ready
                 }
 
-                // Generic bell glyph whenever no icon resolves (no source, or a
-                // source that fails to load).
+                // Generic bell glyph when no icon resolves.
                 Text {
                     anchors.centerIn: parent
                     visible: iconImg.status !== Image.Ready
@@ -253,9 +239,8 @@ Item {
                     onLinkActivated: link => Qt.openUrlExternally(link)
                 }
 
-                // Non-default sender actions as chips in the urgency accent.
-                // (This sits above the card's MouseArea, so chip clicks never
-                // reach the default-action handler.)
+                // Non-default actions as chips; above the card MouseArea, so
+                // chip clicks don't trigger the default action.
                 Flow {
                     width: parent.width
                     spacing: 6

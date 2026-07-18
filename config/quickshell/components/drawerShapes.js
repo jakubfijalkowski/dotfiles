@@ -11,14 +11,10 @@ function css(c) {
          + ", " + Math.round(c.b * 255) + ", " + c.a + ")";
 }
 
-// Lay the accent seam along a horizontal edge from x0..x1 at y: a soft glow
-// bleeding down into the body plus a crisp core. The top edge is two
-// independently-blurred surfaces meeting, which leaves a faint mismatch
-// line; rather than hide it, own it — the intentional line dominates the
-// accidental one and the drawer reads as the pill's colour flowing out.
-// The caller must have clipped the context to the drawer shape first so the
-// trim can't spill past the fillets. `theme` is the Theme singleton (a
-// .pragma library file has no QML context of its own).
+// Lay the accent seam along a horizontal edge x0..x1 at y: a soft glow bleeding
+// into the body plus a crisp core. Caller must clip to the drawer shape first so
+// the trim can't spill past the fillets. `theme` is the Theme singleton (a
+// .pragma library has no QML context of its own).
 function paintSeam(ctx, accent, x0, x1, y, theme) {
     var argb = Math.round(accent.r * 255) + ", " + Math.round(accent.g * 255)
              + ", " + Math.round(accent.b * 255);

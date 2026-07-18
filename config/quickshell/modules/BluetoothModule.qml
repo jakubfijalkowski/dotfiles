@@ -5,9 +5,7 @@ import QtQuick
 import qs
 import qs.components
 
-// bluetooth: idle "" / disabled "󰂲" / connected "󰂱".
-// Clicking opens a popup listing known devices with connect/disconnect
-// controls (also toggleable via: qs ipc call bluetooth toggle).
+// Bluetooth pill: click opens the device drawer (or: qs ipc call bluetooth toggle).
 BarPill {
     id: root
 
@@ -21,7 +19,7 @@ BarPill {
         return connected ? "\u{F00B1}"              // mdi bluetooth-connect
                          : "\u{F294}";              // nf-fa-bluetooth
     }
-    // disabled/connected are MDI glyphs, idle comes from Symbols NF
+    // disabled/connected use MDI, idle uses Symbols NF
     fontFamily: adapter && (!adapter.enabled || connected)
         ? Theme.mdiFontFamily : Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
@@ -29,7 +27,6 @@ BarPill {
     neutral: !devicePopup.open && adapter && !connected
     highlighted: devicePopup.open
 
-    // tooltip-format-enumerate-connected: "{device_alias}\t{device_battery_percentage}%"
     tooltipText: {
         if (devicePopup.open) return "";
         if (connected) {

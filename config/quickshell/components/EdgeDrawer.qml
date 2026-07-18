@@ -4,31 +4,19 @@ import QtQuick
 import qs
 import "drawerShapes.js" as DrawerShapes
 
-// A drawer that flows out of the TOP-RIGHT CORNER — the counterpart to
-// BarDrawer, sharing its "dynamic-island" look but hinged on two edges instead
-// of one: its top edge meets the bar and its right edge meets the right screen
-// edge, so it reads as the bar and the screen edge flowing together into a
-// panel. The two free corners curve away through concave fillets (top-left:
-// bar -> left side; bottom-right: screen edge -> bottom) with a convex
-// bottom-left. No border — depth comes from the translucent fill under blur.
-// It opens like a shade: a top-anchored clip rolls its height open, so the
-// panel drops down out of the bar. Content-sized (width + height follow it).
-//
-// API mirrors BarDrawer (open / toggle() + default content). Pass
-// `screen` to pin it to the bar's monitor; a click anywhere outside the drawer
-// (including on the bar) dismisses it through the focus grab.
+// A drawer that flows out of the top-right corner — BarDrawer's counterpart,
+// hinged on two edges: its top edge meets the bar, its right edge meets the
+// screen edge. Content-sized, opens like a shade (a top-anchored clip rolls its
+// height open). API mirrors BarDrawer (open / toggle() + default content); pass
+// `screen` to pin it to the bar's monitor; a click outside dismisses it.
 Scope {
     id: root
 
     property var screen: null
     property bool open: false
-    // Fill colour — the bar's translucent crust, so the drawer reads as the bar
-    // flowing out (relies on the Hyprland blur reaching the popup via
-    // `blurpopups` to gain body).
+    // Fill: the bar's translucent surface (needs the Hyprland blur via `blurpopups`).
     property color surfaceColor: Theme.barBg
-    // Launching module's accent, laid along the seam where the drawer meets
-    // the bar (see onPaint), so the drawer reads as the pill's colour flowing
-    // out — matching BarDrawer.
+    // Launching module's accent, painted along the seam where the drawer meets the bar.
     required property color accent
     default property alias contentData: contentSlot.data
 
@@ -47,21 +35,15 @@ Scope {
         readonly property real bodyWidth: contentSlot.childrenRect.width + 2 * root.padding
         readonly property real bodyHeight: contentSlot.childrenRect.height + 2 * root.padding
 
-        // Exact height the drawer body needs right now — tracks the live
-        // content (e.g. a month with more week rows) frame by frame. The
-        // painted shape, reveal clip and input mask use this so the body
-        // grows/shrinks smoothly, while the window itself stays a fixed size
-        // (see implicitHeight).
+        // Live body height (tracks content); the shape, reveal clip and mask use
+        // it, while the window stays fixed (see implicitHeight).
         readonly property real contentHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
 
         screen: root.screen
-        // Pin to the top-right corner; the right edge is flush with the screen
-        // (no right margin). A top margin of one bar-height drops the window's
-        // top edge to the bar's bottom, so the drawer flows out of the bar
-        // WITHOUT overlapping it — the window stays clear of the bar, so clicks
-        // on the bar always land outside it and dismiss the drawer. Ignore
-        // exclusive zones so the bar's reserved strip doesn't push the window
-        // down a second time.
+        // Pin to the top-right corner, right edge flush with the screen. A
+        // bar-height top margin drops the top to the bar's bottom so it clears
+        // the bar. Ignore exclusive zones so the bar's strip doesn't push it
+        // down again.
         anchors {
             top: true
             right: true
@@ -71,26 +53,18 @@ Scope {
         color: "transparent"
         visible: root.open || win.openProgress > 0.001
         implicitWidth: Math.ceil(bodyWidth) + root.flareRadius + root.sideMargin
-        // Fixed height — the whole gap from the bar's bottom to the screen
-        // bottom — so the surface NEVER resizes as the body grows or shrinks.
-        // Resizing the layer surface to hug the body twitched the whole drawer
-        // (the reason NotificationOverlay never resizes either); instead the
-        // body reflows *within* this fixed surface and the mask below clips the
-        // interactive/opaque area to it, so a click past the body still falls
-        // outside the drawer and dismisses it.
+        // Fixed height (bar's bottom to the screen bottom) so the surface never
+        // resizes as the body grows (that twitches the drawer); the body reflows
+        // within it and the mask clips input.
         implicitHeight: (root.screen ? root.screen.height : 1080) - Theme.barHeight
 
-        // Restrict input to the revealed body; the transparent remainder below
-        // passes clicks through and counts as outside, so the drawer dismisses.
+        // Restrict input to the revealed body; clicks below pass through and count as outside.
         mask: Region {
             width: win.width
             height: Math.ceil(win.openProgress * win.contentHeight)
         }
 
-        // Open/close reveal driven by a 0->1 progress, kept separate from size so
-        // that resizing tracks implicitWidth/Height directly instead of a second
-        // animation chasing a moving target. Shade-style motion like BarDrawer:
-        // M3 emphasized decelerate in, accelerate out — no spring.
+        // Reveal driven by a 0→1 progress, separate from size so resizes track directly.
         property real openProgress: root.open ? 1 : 0
         Behavior on openProgress {
             NumberAnimation {
@@ -102,23 +76,19 @@ Scope {
             }
         }
 
-        // Reveal: a top-anchored clip whose height rolls open from 0 to full (and
-        // back on close), so the panel drops down out of the bar like a shade —
-        // no scale, no spring. Height = progress x full, so once open it equals
-        // the window height and resizes track it instantly.
+        // Top-anchored clip whose height rolls 0→full, so the panel drops out of
+        // the bar like a shade.
         Item {
             id: reveal
             anchors.top: parent.top
             width: parent.width
-            // Track the live content height, not the surface (held larger
-            // mid-resize), so the body reveals and shrinks smoothly.
+            // Track live content height, not the (possibly larger) surface.
             height: win.openProgress * win.contentHeight
             clip: true
 
             Item {
                 id: full
-                // Anchored to the fixed top edge so it stays put in window space
-                // while the clip's bottom edge sweeps down over it.
+                // Anchored to the fixed top edge so it stays put while the clip sweeps down.
                 anchors.top: parent.top
                 width: win.width
                 height: win.contentHeight
@@ -149,9 +119,7 @@ Scope {
                         const rightX = width;              // right edge, meets the screen
                         const bodyLeft = ms + rc;          // straight left body side
                         const bodyBottom = height - mb - rc;
-                        // The right edge runs rc past the body bottom before it
-                        // fillets in, mirroring how the top runs rc past the left
-                        // side before it fillets down.
+                        // Right edge runs rc past the body bottom before it fillets in.
                         const rightBottom = height - mb;
 
                         ctx.beginPath();
@@ -170,10 +138,7 @@ Scope {
                         ctx.fillStyle = DrawerShapes.css(root.surfaceColor);
                         ctx.fill();
 
-                        // Neon seam trim along the top edge where the drawer
-                        // meets the bar (see drawerShapes.js), clipped to the
-                        // shape so it can't spill past the fillets. The top
-                        // edge runs ms..rightX at topY.
+                        // Neon seam along the top edge (ms..rightX at topY), clipped to the shape.
                         ctx.clip();
                         DrawerShapes.paintSeam(ctx, root.accent, ms, rightX, topY, Theme);
                     }
@@ -181,8 +146,7 @@ Scope {
 
                 Item {
                     id: contentSlot
-                    // bodyLeft (= sideMargin + flareRadius) + padding; the window
-                    // already starts at the bar's bottom, so y is just the padding.
+                    // bodyLeft + padding; the window starts at the bar's bottom, so y is just padding.
                     x: root.sideMargin + root.flareRadius + root.padding
                     y: root.padding
                     width: childrenRect.width

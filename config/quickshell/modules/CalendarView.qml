@@ -1,21 +1,14 @@
 import QtQuick
 import qs
 
-// The calendar shown inside the clock's EdgeDrawer. A continuous, Monday-first
-// vertical strip of weeks: the last ~2 weeks of the previous month, all of the
-// focused month, and the first ~2 weeks of the next month. The focused month's
-// days are drawn in full colour and adjacent months dimmed; today (the real
-// current day) is highlighted in the accent colour, weekends carry a faint
-// tint, and each row shows its ISO-8601 week number on the left. Month blocks
-// are separated by a small gap (a week belongs to the month of its Thursday,
-// per ISO) so the three months read as distinct groups.
-//
-// Navigate months by scrolling anywhere over it or with the arrows beside the
-// month name; middle-click resets to the current month.
+// Continuous Monday-first strip of weeks — the focused month plus ~2 weeks of
+// each neighbour, dimmed. Today is accented, weekends tinted, each row shows its
+// ISO week number, and month blocks are gapped apart. Scroll or use the arrows
+// to change month; middle-click resets.
 Item {
     id: root
 
-    // Accent for the "today" highlight — the clock pill's colour.
+    // "today" highlight colour.
     property color accent: Theme.teal
     // Months away from the real current month (0 = current).
     property int monthOffset: 0
@@ -37,7 +30,6 @@ Item {
     function shiftMonth(delta: int) { monthOffset += delta; }
     function reset() { monthOffset = 0; }
 
-    // --- date helpers ---
     function addDays(d: var, n: int): var {
         return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
     }
@@ -66,8 +58,7 @@ Item {
         const curYear = ref.getFullYear();
         const firstOfMonth = new Date(curYear, curMonth, 1);
         const lastOfMonth = new Date(curYear, curMonth + 1, 0);
-        // Two full weeks before the focused month's first (Monday-aligned) week,
-        // through two full weeks past the Monday of its last week.
+        // Two weeks before the month's first week through two weeks past its last.
         const start = addDays(mondayOf(firstOfMonth), -14);
         const end = addDays(mondayOf(lastOfMonth), 14 + 6);
         const out = [];
@@ -83,11 +74,9 @@ Item {
                     isWeekend: i >= 5   // Mon-first: 5 = Sat, 6 = Sun
                 });
             }
-            // Group weeks around the focused month so its own first/last week —
-            // which may carry a few dimmed neighbour-month days — stays in its
-            // block: -1 before the month, 0 within it, +1 after. A change of group
-            // opens a gap. (Grouping by the ISO Thursday would misfile a boundary
-            // week whose Thursday lands in a neighbour month.)
+            // Group weeks around the focused month (-1 before, 0 within, +1
+            // after); a group change opens a gap. Grouping by the ISO Thursday
+            // would misfile a boundary week.
             const group = days.some(x => x.inMonth) ? 0
                         : (cur.getTime() < firstOfMonth.getTime() ? -1 : 1);
             out.push({ week: isoWeek(cur), days: days, groupStart: out.length > 0 && group !== prevGroup });
@@ -101,9 +90,7 @@ Item {
         return Theme.dateLocale.dayName(i + 1, Locale.ShortFormat).replace(/\.$/, "");
     }
 
-    // Scroll anywhere / middle-click to reset. Sits under the content, which is
-    // transparent to the mouse except for the arrow buttons (which forward
-    // wheel events too).
+    // Scroll anywhere / middle-click to reset; sits under the content.
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton
@@ -199,8 +186,7 @@ Item {
                 }
             }
 
-            // One row per week; a month's first week carries a top gap so the
-            // three months separate into blocks.
+            // One row per week; a month's first week carries a top gap.
             Repeater {
                 model: root.weeks
                 delegate: Item {

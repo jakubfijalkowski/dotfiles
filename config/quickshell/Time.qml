@@ -2,8 +2,7 @@ pragma Singleton
 import Quickshell
 import QtQuick
 
-// One shared wall clock for everything that shows the time or date (clock
-// pills, calendar), so the shell runs a single SystemClock.
+// The one shared SystemClock, for the clock pills and the calendar.
 Singleton {
     readonly property date now: clock.date
 

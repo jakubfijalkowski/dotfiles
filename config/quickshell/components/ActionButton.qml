@@ -1,9 +1,8 @@
 import QtQuick
 import qs
 
-// Tinted action button used at the bottom of drawer content ("Update all",
-// "Sound settings", …): an outline chip that brightens on hover. Width is
-// set by the caller.
+// Tinted outline button for drawer footers; brightens on hover, width set by
+// the caller.
 Rectangle {
     id: root
 

@@ -3,9 +3,8 @@ import QtQuick
 import qs
 import qs.components
 
-// clock#date: "{:L%d %B %y}". Left click (or: qs ipc call calendar toggle)
-// opens the calendar drawer; wheel shifts its month and middle click resets
-// it, matching the gestures inside the drawer itself.
+// Date pill: left-click opens the calendar drawer (or: qs ipc call calendar
+// toggle), wheel shifts the month, middle-click resets it.
 BarPill {
     id: root
 
@@ -25,14 +24,11 @@ BarPill {
         function toggle(): void { calendarDrawer.toggle(); }
     }
 
-    // Drops down from the top-right corner (flush with the bar + right edge),
-    // like BarDrawer, holding the full calendar view.
     EdgeDrawer {
         id: calendarDrawer
         screen: Screens.primary
         accent: root.accent
 
-        // Reset to the current month each time the drawer opens.
         onOpenChanged: if (open) calendarView.reset()
 
         CalendarView {

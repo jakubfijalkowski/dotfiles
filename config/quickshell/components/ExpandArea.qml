@@ -1,10 +1,7 @@
 import QtQuick
 
-// A vertical slide-open container: clips its content and quickly animates its
-// height between 0 and the content's height when `expanded` toggles. Children
-// are laid out top-to-bottom in an internal Column. Place it where the
-// surrounding layout tracks its height (e.g. a Column whose window sizes to
-// fit) so the reveal reads as one coherent slide.
+// Slide-open container: clips its content and animates height 0↔content when
+// `expanded` toggles. Children lay out in an internal Column.
 Item {
     id: area
 

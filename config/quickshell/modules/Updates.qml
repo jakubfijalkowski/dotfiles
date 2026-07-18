@@ -4,9 +4,8 @@ import QtQuick
 import qs
 import qs.components
 
-// custom/updates: ~/.local/bin/check-updates hourly, JSON {text, tooltip},
-// hidden when empty. Waybar refreshed this via SIGRTMIN+1 (signal: 1);
-// here use: qs ipc call updates refresh
+// Pending-updates pill: runs ~/.local/bin/check-updates hourly (JSON
+// {text, tooltip}), hidden when empty. Refresh via: qs ipc call updates refresh
 BarPill {
     id: root
 
@@ -16,10 +15,10 @@ BarPill {
     visible: status !== ""
     accent: Theme.yellow
     text: status
-    // the script emits "" (Arch logo, Symbols Nerd Font)
+    // script emits the Arch glyph (Symbols NF)
     fontFamily: Theme.iconFontFamily
     fontPixelSize: Theme.iconFontSize
-    // suppress the tooltip while the drawer shows the same info in full
+    // drawer already shows this in full
     tooltipText: updatesPopup.open ? "" : tip
     highlighted: updatesPopup.open
 

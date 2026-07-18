@@ -5,8 +5,7 @@ import QtQuick
 import qs
 import qs.components
 
-// wireplumber: "{icon} {volume}%", muted "", click mutes, right-click
-// opens pavucontrol, scroll steps 5%
+// Volume pill: click opens the audio drawer, right-click mutes, scroll steps 5%.
 BarPill {
     id: root
 
@@ -23,16 +22,12 @@ BarPill {
     PwObjectTracker { objects: sink ? [sink] : [] }
 
     visible: sink !== null
-    // #wireplumber { min-width: 28pt }
     minContentWidth: 37
-    // Muted shows lavender, except while the drawer is open — then the pill
-    // matches the drawer's flamingo seam.
+    // Muted is lavender, unless the drawer is open (then match its flamingo seam).
     accent: muted && !audioPopup.open ? Theme.lavender : Theme.flamingo
     highlighted: audioPopup.open
     contentWidth: content.implicitWidth
 
-    // The icon renders as a Symbols Nerd Font run, the text as Iosevka,
-    // mirroring pango's font itemization of "{icon} {volume}%".
     Row {
         id: content
         anchors.centerIn: parent
@@ -55,7 +50,6 @@ BarPill {
             font.pixelSize: Theme.fontSize
             color: root.fg
             textFormat: Text.PlainText
-            // format-muted has no volume text
             text: root.muted ? "" : " " + Math.round(root.volume * 100) + "%"
 
             Behavior on color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }

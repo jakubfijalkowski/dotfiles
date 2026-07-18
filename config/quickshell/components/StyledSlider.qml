@@ -2,9 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import qs
 
-// The shared slider look: a slim tinted track with a round knob outlined in
-// crust. Audio levels use the defaults; the mpris seek bar runs slightly
-// slimmer and hides its knob while seeking isn't possible.
+// Shared slider look: a slim tinted track with a crust-outlined knob.
 Slider {
     id: root
 

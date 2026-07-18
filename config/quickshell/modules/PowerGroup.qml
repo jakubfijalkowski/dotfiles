@@ -3,8 +3,7 @@ import QtQuick
 import qs
 import qs.components
 
-// group/group-power: drawer that expands leftwards on hover
-// (transition-left-to-right: false, 500ms), 13pt labels.
+// Power buttons that slide open leftward on hover.
 Item {
     id: root
 
@@ -23,7 +22,7 @@ Item {
         property string tooltip: ""
         required property var command
 
-        // Integer width so pills to the left keep whole-pixel positions
+        // Integer width keeps pills to the left on whole pixels
         implicitWidth: Math.round(buttonLabel.implicitWidth + 2 * Theme.pillPaddingH)
         implicitHeight: Theme.pillHeight
 
@@ -31,7 +30,6 @@ Item {
             id: buttonLabel
             anchors.centerIn: parent
             font.family: Theme.mdiFontFamily
-            // #group-power label { font-size: 13pt } (17.33px in pango)
             font.pixelSize: Theme.powerIconFontSize
             color: Theme.text
             textFormat: Text.PlainText
@@ -54,7 +52,6 @@ Item {
     Row {
         id: groupRow
         anchors.verticalCenter: parent.verticalCenter
-        // small gap between the drawer and the power button
         spacing: 3
 
         Item {

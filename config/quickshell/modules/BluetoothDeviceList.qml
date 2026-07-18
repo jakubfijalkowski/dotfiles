@@ -4,14 +4,12 @@ import QtQuick
 import qs
 import qs.components
 
-// Content of the bluetooth popup: header with adapter toggle, device
-// cards with connect/disconnect controls, and a settings footer.
+// Bluetooth drawer: adapter toggle, device cards with connect/disconnect, and a
+// settings footer.
 Column {
     id: root
 
-    // Emitted by the parent when the popup opens (replays card entrances)
     signal opened()
-    // Asks the parent popup to close (e.g. after launching settings)
     signal closeRequested()
 
     readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
@@ -183,8 +181,8 @@ Column {
     }
 
     Repeater {
-        // ScriptModel diffs by object identity, so cards persist (and
-        // entrance animations don't replay) when the list re-sorts.
+        // ScriptModel diffs by identity, so cards persist (no entrance replay)
+        // when the list re-sorts.
         model: ScriptModel { values: root.devices }
 
         Rectangle {
@@ -227,7 +225,6 @@ Column {
             Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
             Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
 
-            // Staggered entrance when the popup opens
             transform: Translate { id: cardShift; y: 0 }
 
             Connections {
@@ -405,7 +402,6 @@ Column {
 
     Item { width: 1; height: 2 }
 
-    // Footer: open the full manager
     ActionButton {
         width: root.listWidth
         label: "Bluetooth settings"

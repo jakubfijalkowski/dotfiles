@@ -5,10 +5,9 @@ import QtQuick
 import qs
 import qs.components
 
-// mpris: a bare pill showing the active player's track. Left click opens a
-// controls drawer, right click toggles play/pause, middle click skips ahead.
-// The pill stays visible while paused (it no longer falls back to a stopped,
-// empty player), and can be driven via: qs ipc call mpris toggle|playpause|…
+// Bare pill showing the active player's track: left-click opens the controls
+// drawer, right-click toggles play/pause, middle-click skips. Also:
+// qs ipc call mpris toggle|playpause|next|previous.
 BarPill {
     id: root
 
@@ -18,10 +17,8 @@ BarPill {
 
     readonly property var allPlayers: Mpris.players.values
 
-    // How "worth showing" a player is: prefer one that's playing, then one
-    // that's merely paused, then one that at least carries a track title.
-    // A stopped, title-less player (e.g. an idle browser tab) ranks 0 and is
-    // never auto-picked — which is what used to blank the pill on pause.
+    // How "worth showing" a player is: playing > paused > has a title. A
+    // stopped, title-less player ranks 0 and is never auto-picked.
     function playerRank(p) {
         if (!p) return -1;
         if (p.isPlaying) return 3;
@@ -33,8 +30,7 @@ BarPill {
     // Players offered in the drawer's picker: everything with real content.
     readonly property var activePlayers: allPlayers.filter(p => root.playerRank(p) >= 1)
 
-    // dbusName of the player the user pinned in the drawer; "" means follow
-    // whatever is most active.
+    // dbusName of the pinned player; "" follows the most active.
     property string selectedId: ""
 
     readonly property MprisPlayer player: {
@@ -62,8 +58,7 @@ BarPill {
     visible: player !== null
     contentWidth: content.implicitWidth
 
-    // Icon (Symbols/MDI run) + track text (Iosevka run), mirroring how
-    // Volume composes its pill so the track can elide at a sane max width.
+    // Icon + track text, so the track can elide at a sane max width.
     Row {
         id: content
         anchors.centerIn: parent

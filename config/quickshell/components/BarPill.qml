@@ -1,25 +1,23 @@
 import QtQuick
 import qs
 
-// A single bar module: rounded pill with centered text. Modules declare
-// their accent color; the active Theme variant decides how it's drawn
-// (solid fill, tonal container, glass, gradient or outline).
+// A bar module pill: rounded, centered text, accent-colored via Theme.
 Rectangle {
     id: root
 
     property alias text: label.text
     property alias fontFamily: label.font.family
     property alias fontPixelSize: label.font.pixelSize
-    // The module's color; `neutral` pills use surface tones instead
+    // Module color; neutral pills use surface tones instead
     property color accent: Theme.text
     property bool neutral: false
-    // Bare modules (mpris) render text only, without a pill surface
+    // Bare pills render text only, without a surface
     property bool bare: false
     property real minContentWidth: 0
-    // modules with composite content (e.g. icon + text runs) override this
+    // Modules with composite content (icon + text runs) override this
     property real contentWidth: label.implicitWidth
     property string tooltipText: ""
-    // Active-state overlay, e.g. while the module's popup is open
+    // Active overlay, e.g. while the popup is open
     property bool highlighted: false
 
     // Effective colors, exposed for popups that bleed the pill color
@@ -34,16 +32,15 @@ Rectangle {
     radius: Theme.pillRadius
     border.width: !bare && Theme.pillBorder(accent, neutral).a > 0 ? 1 : 0
     border.color: bare ? "transparent" : Theme.pillBorder(accent, neutral)
-    // Even integer width keeps a module's popup centered on it exactly, since
-    // xdg popups are positioned in whole pixels.
+    // Even integer width keeps the popup centered exactly (xdg popups are
+    // placed in whole pixels).
     implicitWidth: 2 * Math.round((Math.max(contentWidth, minContentWidth) + 2 * Theme.pillPaddingH) / 2)
     implicitHeight: Theme.pillHeight
 
     Behavior on color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
     Behavior on border.color { ColorAnimation { duration: Theme.transitionDuration; easing.type: Easing.InOutQuad } }
 
-    // Hover / active overlay: a faint lift on hover, stronger while the
-    // module's popup is open.
+    // Faint hover lift, stronger while the popup is open.
     Rectangle {
         anchors.fill: parent
         radius: parent.radius

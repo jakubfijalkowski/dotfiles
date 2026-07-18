@@ -5,7 +5,6 @@ import QtQuick
 import qs
 import qs.components
 
-// tray: icon-size 16, spacing 8
 Item {
     id: root
 
@@ -29,13 +28,11 @@ Item {
                 implicitWidth: 16
                 implicitHeight: 16
                 radius: Theme.pillRadius
-                // #tray > .needs-attention { background: @yellow }
                 color: modelData.status === Status.NeedsAttention ? Theme.yellow : "transparent"
 
                 IconImage {
                     anchors.fill: parent
                     source: trayItem.modelData.icon
-                    // #tray > .passive { -gtk-icon-effect: dim }
                     opacity: trayItem.modelData.status === Status.Passive ? 0.5 : 1
                 }
 

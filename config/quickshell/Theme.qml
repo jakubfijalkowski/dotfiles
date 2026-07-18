@@ -14,8 +14,7 @@ Singleton {
     readonly property color pink: "#f5c2e7"
     readonly property color mauve: "#cba6f7"
     readonly property color red: "#f38ba8"
-    // Catppuccin Latte red — deliberately harsher than Mocha red, for
-    // hard-error states (failed units, missing adapter).
+    // Catppuccin Latte red — harsher than Mocha red, for hard-error states.
     readonly property color reallyRed: "#d20f39"
     readonly property color maroon: "#eba0ac"
     readonly property color peach: "#fab387"
@@ -41,18 +40,16 @@ Singleton {
 
     function alpha(c: color, a: real): color { return Qt.rgba(c.r, c.g, c.b, a) }
 
-    // Fonts — the single source of truth. Text renders in Iosevka; icon
-    // glyphs are pinned per module to the font waybar's fallback list
-    // (Material Design Icons, Iosevka, Symbols Nerd Font) resolves to.
+    // Fonts — the single source of truth. Text is Iosevka; icon glyphs are
+    // pinned per origin (MDI / Symbols Nerd Font).
     readonly property string fontFamily: "Iosevka"
     readonly property string iconFontFamily: "Symbols Nerd Font"
     readonly property string mdiFontFamily: "Material Design Icons"
-    readonly property int fontSize: 14        // px; matches waybar's 11pt metrics
-    readonly property int iconFontSize: 15    // px; icons keep the full 11pt size
-    readonly property int powerIconFontSize: 17  // px; #group-power label is 13pt
+    readonly property int fontSize: 14        // px
+    readonly property int iconFontSize: 15    // px
+    readonly property int powerIconFontSize: 17  // px
 
-    // Type scale for text inside drawers/popups. Icon glyph sizes stay local
-    // to their control (they're tied to the chip/button dimensions).
+    // Type scale for drawer/popup text. Icon glyph sizes stay local to their control.
     readonly property int popupTitleSize: 15
     readonly property int popupBodySize: 12
     readonly property int popupCaptionSize: 11
@@ -64,7 +61,6 @@ Singleton {
     readonly property int pillPaddingH: 13
     readonly property int moduleSpacing: 5
 
-    // transition: all 0.3s ease-in-out
     readonly property int transitionDuration: 300
 
     // Bar surface — translucent so a Hyprland blur layer shows through
@@ -90,8 +86,7 @@ Singleton {
     readonly property color wsActiveBorder: alpha(lavender, 0.75)
     readonly property real wsRadius: 6
 
-    // Popup / tooltip surfaces — match the bar: same translucent crust so
-    // both share one look under the Hyprland blur layer, set off by a border.
+    // Popup / tooltip surfaces — same translucent crust as the bar, set off by a border.
     readonly property color popupBg: barBg
     readonly property color popupBorder: surface1
     readonly property real popupRadius: 12
@@ -102,8 +97,7 @@ Singleton {
     readonly property color cardBorder: alpha(overlay0, 0.55)
     readonly property real cardRadius: 8
 
-    // Small tinted chips inside popups (icon badges, toggles, tags): the
-    // pills' outline language, one notch smaller.
+    // Small tinted chips inside popups (badges, toggles, tags).
     function chipBg(tint: color, active: bool): color {
         return active ? alpha(tint, 0.1) : alpha(surface0, 0.35);
     }
@@ -139,16 +133,13 @@ Singleton {
     function calTodayBg(accent: color): color { return alpha(accent, 0.20); }
     function calTodayBorder(accent: color): color { return alpha(accent, 0.85); }
 
-    // Notification toasts — transient popups stacked in the top-right corner
-    // just below the bar (see NotificationOverlay / NotificationToast). No
-    // persistence: a toast shows for its lifetime, then it's gone.
+    // Notification toasts — transient popups stacked top-right below the bar.
     readonly property int notifWidth: 380
     readonly property int notifGap: 8          // between stacked toasts
     readonly property int notifEdgeGap: 8      // inset from the bar / screen edge
     readonly property int notifPadding: 13
     readonly property int notifIconSize: 30
-    // Accent per freedesktop urgency (Low=0, Normal=1, Critical=2), so the toast
-    // carries its urgency in the same neon-outline language as the pills.
+    // Accent per freedesktop urgency (Low=0, Normal=1, Critical=2).
     function notifAccent(urgency: int): color {
         switch (urgency) {
             case 2: return red;       // Critical
@@ -157,7 +148,7 @@ Singleton {
         }
     }
 
-    // The clock follows LC_TIME like waybar's locale-aware formats
+    // The clock follows LC_TIME.
     readonly property var dateLocale: {
         const lc = Quickshell.env("LC_TIME") || Quickshell.env("LC_ALL") || Quickshell.env("LANG") || "";
         return lc ? Qt.locale(lc.split(".")[0]) : Qt.locale();

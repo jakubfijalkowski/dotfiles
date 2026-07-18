@@ -3,14 +3,13 @@ import Quickshell.Hyprland
 import QtQuick
 import qs
 
-// hyprland/workspaces: "{id}: {window icons}" pills, all outputs. Each window
-// is shown as its real themed desktop icon, resolved from the window class.
+// Workspace pills across all outputs ("{id}: {window icons}"), each window
+// shown as its themed desktop icon resolved from the window class.
 Item {
     id: root
 
-    // Icon glyph shown when a window class has no themed icon at all.
+    // Fallback when a window class has no themed icon.
     readonly property string fallbackGlyph: "\u{F059}"
-    // Rendered edge of each app icon (the pill's inner height leaves room).
     readonly property int iconSize: 17
 
     function windowsFor(ws): var {
@@ -21,10 +20,9 @@ Item {
     implicitWidth: row.implicitWidth
     implicitHeight: Theme.pillHeight
 
-    // Toplevel IPC data (window class) is not always fetched eagerly;
-    // refresh it on startup and whenever the window *set* changes. Title
-    // changes (windowtitlev2) are deliberately ignored — they fire constantly
-    // and can't alter a window's class.
+    // Window class isn't fetched eagerly — refresh on startup and whenever the
+    // window set changes. Title changes are ignored (they fire constantly and
+    // can't alter a class).
     Component.onCompleted: Hyprland.refreshToplevels()
 
     Connections {
@@ -46,9 +44,8 @@ Item {
         spacing: Theme.moduleSpacing
 
         Repeater {
-            // ScriptModel diffs by object identity, so workspace pills (and
-            // their icon rows) persist when the list changes instead of every
-            // delegate being rebuilt.
+            // ScriptModel diffs by identity, so pills persist across list
+            // changes instead of every delegate rebuilding.
             model: ScriptModel {
                 values: [...Hyprland.workspaces.values]
                     .filter(ws => ws.id > 0)
@@ -117,7 +114,7 @@ Item {
                                 visible: status === Image.Ready
                             }
 
-                            // Generic glyph when no themed icon resolves at all.
+                            // Fallback glyph when no themed icon resolves.
                             Text {
                                 anchors.centerIn: parent
                                 visible: iconImg.status !== Image.Ready

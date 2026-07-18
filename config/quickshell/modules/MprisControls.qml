@@ -5,27 +5,22 @@ import QtQuick.Effects
 import qs
 import qs.components
 
-// Content of the mpris drawer: album art, track metadata, a seek bar and a
-// transport row (shuffle · prev · play/pause · next · repeat). When more than
-// one player is active a chip row lets you pick which one to control.
+// Mpris drawer: album art, track metadata, seek bar and transport row. A chip
+// row picks the player when more than one is active.
 Column {
     id: root
 
-    // The player currently being controlled (may be null).
+    // Player being controlled (may be null).
     property var player: null
     // Players worth listing in the picker.
     property var players: []
-    // Set by the parent drawer: true while it's open. Gates the position
-    // poll so the shell doesn't tick twice a second while music plays with
-    // the drawer closed.
+    // True while the drawer is open; gates the position poll.
     property bool active: false
     onActiveChanged: if (active) syncPosition()
 
-    // Asks the module to pin a player (by dbusName); "" follows the most active.
+    // Pin a player by dbusName; "" follows the most active.
     signal selectRequested(string id)
-    // Asks the parent drawer to close.
     signal closeRequested()
-    // Replayed by the drawer on open — restart the card's entrance.
     signal opened()
     onOpened: entrance.restart()
 
@@ -33,8 +28,8 @@ Column {
     readonly property int listWidth: 320
     readonly property int artSize: 200
 
-    // Position is not pushed by MPRIS; poll it while playing so the seek bar
-    // and time label track the track. Kept local so a user drag isn't fought.
+    // Position isn't pushed by MPRIS; poll it while playing. Kept local so a
+    // user drag isn't fought.
     property real positionNow: 0
     function syncPosition() { if (player) positionNow = player.position; }
     onPlayerChanged: syncPosition()
@@ -56,10 +51,8 @@ Column {
         onTriggered: root.syncPosition()
     }
 
-    // ---- Reusable pieces -------------------------------------------------
-
-    // A round transport control. `toggle` controls give an active tint;
-    // plain ones only light up on hover.
+    // A round transport control; toggles get an active tint, plain ones only
+    // light on hover.
     component TButton: Rectangle {
         id: tb
         property string glyph: ""
@@ -99,8 +92,7 @@ Column {
         }
     }
 
-    // ---- Player picker (only with more than one active player) -----------
-
+    // Player picker (only with more than one active player)
     Flow {
         width: root.listWidth
         spacing: 6
@@ -159,8 +151,6 @@ Column {
             }
         }
     }
-
-    // ---- Now-playing card ------------------------------------------------
 
     Rectangle {
         id: card

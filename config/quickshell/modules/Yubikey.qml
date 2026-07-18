@@ -4,8 +4,8 @@ import QtQuick
 import qs
 import qs.components
 
-// custom/yubikey: streams JSON lines from ~/.local/bin/yubikey-touch-status,
-// hidden when the line is empty; restarted 60s after it exits.
+// Streams JSON lines from ~/.local/bin/yubikey-touch-status; hidden when empty,
+// restarted 60s after the process exits.
 BarPill {
     id: root
 
@@ -14,7 +14,7 @@ BarPill {
     visible: status !== ""
     accent: Theme.peach
     text: status
-    // the script emits "\u{F030B}" (key icon, Material Design Icons)
+    // script emits a key glyph (MDI)
     fontFamily: Theme.mdiFontFamily
     fontPixelSize: Theme.iconFontSize
 

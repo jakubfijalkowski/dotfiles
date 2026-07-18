@@ -5,16 +5,13 @@ import QtQuick.Controls
 import qs
 import qs.components
 
-// Content of the updates drawer: a header with the count, a scrollable list
-// of pending updates (name + old -> new version, AUR entries tagged), and
-// footer buttons to upgrade everything or just the official repos. The list
-// is fetched lazily when the drawer opens.
+// Updates drawer: count header, a scrollable list of pending updates (name +
+// old→new version, AUR tagged), and footer buttons to upgrade all or just the
+// official repos. Fetched lazily on open.
 Column {
     id: root
 
-    // Emitted by the parent drawer when it opens.
     signal opened()
-    // Asks the parent drawer to close.
     signal closeRequested()
 
     readonly property int listWidth: 420
@@ -26,17 +23,15 @@ Column {
     property bool loading: false
     property int aurCount: 0
 
-    // Fetching hits the network (checkupdates syncs a private pacman DB copy,
-    // `yay -Qua` queries the AUR), so a fresh-enough result is reused instead
-    // of refetching on every drawer open.
+    // Fetching hits the network, so reuse a fresh-enough result instead of
+    // refetching on every open.
     readonly property int refreshTtlMs: 5 * 60 * 1000
     property double lastFetched: 0
 
     ListModel { id: updatesModel }
 
-    // checkupdates = repo diffs, `yay -Qua` = AUR diffs; both print
-    // "name oldver -> newver" (AUR adds a trailing "[age]" we ignore). A
-    // sentinel line separates the two so we can tag AUR packages.
+    // checkupdates = repo diffs, yay -Qua = AUR diffs; both print
+    // "name old -> new". A sentinel line separates them so AUR entries can be tagged.
     Process {
         id: listProc
         command: ["sh", "-c", "checkupdates 2>/dev/null; echo '@@AUR@@'; yay -Qua 2>/dev/null"]
@@ -66,7 +61,7 @@ Column {
             if (m)
                 rows.push({ name: m[1], oldVer: m[2], newVer: m[3], aur: aur });
         }
-        // AUR first (they warrant a look before upgrading), then alphabetical.
+        // AUR first, then alphabetical.
         rows.sort((a, b) => (b.aur - a.aur) || a.name.localeCompare(b.name));
         updatesModel.clear();
         for (const r of rows)
@@ -159,7 +154,6 @@ Column {
     // Scrollable list — capped at maxRows, the rest scrolls.
     ListView {
         id: list
-        // Whether the content overflows and needs the scrollbar.
         readonly property bool scrollActive: contentHeight > height + 0.5
         // Gutter reserved on the right so the scrollbar sits beside the rows.
         readonly property int gutter: 14
@@ -286,7 +280,6 @@ Column {
         }
     }
 
-    // Footer: upgrade everything, or only the official repositories.
     Row {
         width: root.listWidth
         spacing: 6

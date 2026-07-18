@@ -3,7 +3,7 @@ import QtQuick
 import qs
 import qs.modules
 
-// Top bar on the primary monitor (Screens), replicating the waybar layout.
+// Top bar on the primary monitor.
 PanelWindow {
     id: bar
 

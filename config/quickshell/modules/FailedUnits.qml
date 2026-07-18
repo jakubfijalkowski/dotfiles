@@ -3,7 +3,7 @@ import QtQuick
 import qs
 import qs.components
 
-// systemd-failed-units: "✗ {nr_failed}" over system + user, hide-on-ok
+// Count of failed systemd units (system + user); hidden when none.
 BarPill {
     id: root
 

@@ -43,8 +43,7 @@ Scope {
             border.width: 1
             radius: Math.min(Theme.popupRadius, 10)
 
-            // Quick fade-in once the window maps (hide is instant — the
-            // window unmaps before a fade could show).
+            // Fade in once the window maps; hide is instant (the window unmaps first).
             opacity: popup.visible ? 1 : 0
             Behavior on opacity {
                 NumberAnimation {

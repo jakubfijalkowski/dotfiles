@@ -3,19 +3,10 @@ import QtQuick
 import qs
 import qs.components
 
-// Transient toast stack: a layer surface pinned to the top-right corner, just
-// below the bar. Every live notification (Notifs.model) gets a NotificationToast
-// stacked top-down — oldest on top, newest at the bottom — so when the top one
-// times out first the rest slide up.
-//
-// The surface is a FIXED size — it spans the whole height below the bar and
-// never resizes as toasts come and go; they reflow *within* it. Resizing the
-// layer surface per toast (even as one discrete snap) makes the whole stack
-// twitch on screen, so we simply never resize it. Only the actual toast area
-// takes pointer input (mask), so the empty space below passes clicks through;
-// the window is mapped only while at least one toast is showing. It shares the
-// bar's `quickshell` namespace, so the Hyprland blur / no-anim layerrules reach
-// it (blur skips the transparent area via ignorealpha).
+// Transient toast stack: a fixed-size layer surface pinned top-right below the
+// bar. Toasts stack top-down (oldest on top) and reflow within the surface — it
+// never resizes, which would twitch the stack. Only the toast area takes input
+// (mask); shares the bar's `quickshell` namespace for the blur layerrules.
 PanelWindow {
     id: overlay
 
@@ -34,8 +25,7 @@ PanelWindow {
     implicitHeight: Math.max(200, (screen ? screen.height : 1080) - (Theme.barHeight + Theme.notifEdgeGap))
     visible: Notifs.count > 0
 
-    // Only the stacked toasts are interactive; the empty lower area is
-    // click-through (tracks the stack's height as toasts come, go and reflow).
+    // Only the stacked toasts take input; the empty area below is click-through.
     mask: Region {
         width: Theme.notifWidth
         height: Math.ceil(stack.childrenRect.height)

@@ -4,22 +4,17 @@ import QtQuick
 import qs
 import qs.components
 
-// Content of the audio drawer: output + input volume with device selectors,
-// and a collapsible per-application mixer. Values come from PipeWire; the
-// default device is switched via `wpctl set-default`.
+// Audio drawer: output/input volume with device selectors and a collapsible
+// per-app mixer. Values from PipeWire; default device switched via
+// `wpctl set-default`.
 Column {
     id: root
 
-    // Set by the parent drawer: true while it's open. Gates the PipeWire
-    // node tracking so the shell doesn't keep every audio node's properties
-    // synced while the drawer is closed (the Volume pill tracks the default
-    // sink on its own).
+    // True while the drawer is open; gates PipeWire node tracking so closed
+    // drawers don't sync every node.
     property bool active: false
 
-    // Asks the parent drawer to close.
     signal closeRequested()
-    // Emitted by the parent drawer when it opens — collapse every section so
-    // the drawer always starts compact regardless of last session's state.
     signal opened()
     onOpened: {
         outCol.expanded = false;
@@ -36,9 +31,8 @@ Column {
         return n && n.properties ? (n.properties["media.class"] ?? "") : "";
     }
 
-    // `n.audio` is truthy for audio nodes even before they're bound, but
-    // `media.class` only populates once tracked — so track everything audio up
-    // front and filter devices by the always-available isSink/isStream flags.
+    // `n.audio` is set before binding; `media.class` only populates once tracked
+    // — so track all audio nodes and filter by isSink/isStream.
     readonly property var audioNodes: Pipewire.nodes.values.filter(n => n.audio)
     readonly property var outputs: audioNodes.filter(n => n.isSink && !n.isStream)
     readonly property var inputs: audioNodes.filter(n => !n.isSink && !n.isStream)
@@ -53,16 +47,12 @@ Column {
         return n.description || n.nickname || n.name || "—";
     }
 
-    // Resolve a stream node to a themed application icon path, or "" if none
-    // is found (the entry then falls back to a monogram tile).
     function resolveIcon(node) {
         const p = node.properties ?? ({});
         return Icons.resolve([p["application.icon-name"], p["application.name"], node.name]);
     }
 
     spacing: 8
-
-    // ---- Reusable pieces -------------------------------------------------
 
     component IconToggle: Rectangle {
         id: ic
@@ -103,8 +93,7 @@ Column {
         property color tint: Theme.flamingo
         property bool current: false
 
-        // Match the inner column, not the full card, so the hover highlight
-        // stays inside the card's border.
+        // Match the inner column so the hover highlight stays inside the card border.
         width: parent ? parent.width : root.listWidth
         height: 28
         radius: Theme.cardRadius
@@ -145,8 +134,6 @@ Column {
             onClicked: Quickshell.execDetached(["wpctl", "set-default", String(opt.node.id)])
         }
     }
-
-    // ---- Output ----------------------------------------------------------
 
     Rectangle {
         width: root.listWidth
@@ -198,7 +185,6 @@ Column {
                 }
             }
 
-            // Device selector header
             Rectangle {
                 width: parent.width
                 height: 26
@@ -251,8 +237,6 @@ Column {
             }
         }
     }
-
-    // ---- Input -----------------------------------------------------------
 
     Rectangle {
         width: root.listWidth
@@ -357,8 +341,6 @@ Column {
         }
     }
 
-    // ---- Per-app mixer (collapsible) ------------------------------------
-
     Rectangle {
         width: root.listWidth
         height: appCol.implicitHeight + 16
@@ -454,7 +436,6 @@ Column {
                             return (p && (p["application.name"] || p["node.name"])) || modelData.name || "App";
                         }
 
-                        // Bigger left/right margins than the header, plus an app icon.
                         Row {
                             id: appInner
                             anchors.left: parent.left
@@ -541,8 +522,6 @@ Column {
             }
         }
     }
-
-    // ---- Footer ----------------------------------------------------------
 
     ActionButton {
         width: root.listWidth

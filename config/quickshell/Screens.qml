@@ -1,8 +1,7 @@
 pragma Singleton
 import Quickshell
 
-// The monitor the shell lives on. Every window (bar, toast overlay, edge
-// drawers) resolves its screen through here so the choice has one home.
+// The monitor the shell lives on; every window resolves its screen through here.
 Singleton {
     readonly property string primaryName: "DP-1"
 
