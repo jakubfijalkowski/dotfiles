@@ -38,8 +38,6 @@ Scope {
     readonly property int bottomRadius: Theme.drawerBottomRadius
     readonly property int sideMargin: Theme.drawerSideMargin
     readonly property int bottomMargin: Theme.drawerBottomMargin
-    // Top edge sits at the bar's bottom, so the drawer flows from the bar.
-    readonly property int topEdge: Theme.barHeight
 
     function toggle() { open = !open }
 
@@ -51,18 +49,25 @@ Scope {
 
         screen: root.screen
         // Pin to the top-right corner; the right edge is flush with the screen
-        // (no right margin), the top with the bar. Ignore exclusive zones so the
-        // window anchors to the true screen top (topEdge then lands the shape at
-        // the bar's bottom) rather than being pushed below the bar's zone.
+        // (no right margin). A top margin of one bar-height drops the window's
+        // top edge to the bar's bottom, so the drawer flows out of the bar
+        // WITHOUT overlapping it. That overlap is what a naive full-height window
+        // gets wrong: HyprlandFocusGrab holds the whole window *geometry* (not its
+        // input region — masking it out doesn't help), so any window covering the
+        // bar swallows clicks on the bar above the drawer and never dismisses.
+        // Kept outside the bar, a click there lands outside the grab and closes
+        // the drawer, exactly like BarDrawer's popup. Ignore exclusive zones so
+        // the bar's reserved strip doesn't push the window down a second time.
         anchors {
             top: true
             right: true
         }
+        margins.top: Theme.barHeight
         exclusionMode: ExclusionMode.Ignore
         color: "transparent"
         visible: root.open || win.openProgress > 0.001
         implicitWidth: Math.ceil(bodyWidth) + root.flareRadius + root.sideMargin
-        implicitHeight: root.topEdge + Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
+        implicitHeight: Math.ceil(bodyHeight) + root.flareRadius + root.bottomMargin
 
         // Open/close reveal driven by a 0->1 progress, kept separate from size so
         // that resizing tracks implicitWidth/Height directly instead of a second
@@ -120,7 +125,7 @@ Scope {
                         const rc = root.flareRadius, rb = root.bottomRadius;
                         const k = DrawerShapes.K;
 
-                        const topY = root.topEdge;         // top edge, meets the bar
+                        const topY = 0;                    // window top now sits at the bar's bottom
                         const rightX = width;              // right edge, meets the screen
                         const bodyLeft = ms + rc;          // straight left body side
                         const bodyBottom = height - mb - rc;
@@ -156,9 +161,10 @@ Scope {
 
                 Item {
                     id: contentSlot
-                    // bodyLeft (= sideMargin + flareRadius) + padding; y clears the bar.
+                    // bodyLeft (= sideMargin + flareRadius) + padding; the window
+                    // already starts at the bar's bottom, so y is just the padding.
                     x: root.sideMargin + root.flareRadius + root.padding
-                    y: root.topEdge + root.padding
+                    y: root.padding
                     width: childrenRect.width
                     height: childrenRect.height
                 }
