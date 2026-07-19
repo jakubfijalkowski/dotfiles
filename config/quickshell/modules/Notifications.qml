@@ -2,32 +2,51 @@ import QtQuick
 import qs
 import qs.components
 
-// Notification pill: left-click toggles do-not-disturb, right-click dismisses
-// all toasts (or: qs ipc call notifs {toggleDnd,dismissAll}).
+// Only surfaces while do-not-disturb is on; click to re-enable notifications
+// (or: qs ipc call notifs toggleDnd). Hidden entirely otherwise — it grows
+// open on show and collapses on the exact time-reverse of that grow.
 BarPill {
     id: root
 
-    readonly property bool dnd: Notifs.dnd
-    readonly property int count: Notifs.count
+    readonly property bool shown: Notifs.dnd
 
-    text: dnd ? "\u{F0A93}"              // bell-off
-        : count > 0 ? "\u{F116B}"        // bell with badge
-        : "\u{F009C}"                    // bell-outline
+    clip: true
+    visible: width > 0
+    width: 0
+
+    text: "\u{F0A93}"                   // bell-off
     fontFamily: Theme.mdiFontFamily
     fontPixelSize: Theme.iconFontSize
-    accent: dnd ? Theme.peach : Theme.mauve
-    neutral: !dnd && count === 0
+    accent: Theme.peach
 
-    tooltipText: dnd
-        ? "Do not disturb — notifications hidden\nClick to re-enable"
-        : count > 0
-            ? count + (count === 1 ? " notification" : " notifications") + "\nRight-click to dismiss all"
-            : "Notifications on\nClick for do-not-disturb"
+    tooltipText: "Do not disturb — notifications hidden\nClick to re-enable"
 
-    onClicked: mouse => {
-        if (mouse.button === Qt.LeftButton)
-            Notifs.toggleDnd();
-        else if (mouse.button === Qt.RightButton)
-            Notifs.dismissAll();
+    onClicked: Notifs.toggleDnd()
+
+    states: State {
+        name: "shown"
+        when: root.shown
+        PropertyChanges { target: root; width: root.implicitWidth }
     }
+
+    transitions: [
+        // Smooth decelerate grow…
+        Transition {
+            to: "shown"
+            NumberAnimation {
+                property: "width"
+                duration: Theme.transitionDuration
+                easing.type: Easing.OutCubic
+            }
+        },
+        // …and its exact time-reverse (accelerate) collapsing away.
+        Transition {
+            from: "shown"
+            NumberAnimation {
+                property: "width"
+                duration: Theme.transitionDuration
+                easing.type: Easing.InCubic
+            }
+        }
+    ]
 }
