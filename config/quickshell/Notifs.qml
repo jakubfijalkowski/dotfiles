@@ -1,5 +1,6 @@
 pragma Singleton
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
@@ -9,7 +10,7 @@ import qs
 // control-center, nothing persisted to disk); alongside them a small in-memory
 // ring of the most recent notifications is kept so the power drawer can page
 // back through what just arrived. IPC:
-// qs ipc call notifs {toggleDnd,dnd <on|off>,dismissAll,dismissLast}.
+// qs ipc call notifs {toggleDnd,dnd <on|off>,dismissAll,dismissLast,activateLast}.
 Singleton {
     id: root
 
@@ -42,6 +43,33 @@ Singleton {
     function dismissLast(): void {
         if (toasts.count > 0)
             root.closeRequested(toasts.get(toasts.count - 1).notification);
+    }
+
+    // Invoke a notification's default action — the same as clicking its toast.
+    function activate(notif): void {
+        if (!notif)
+            return;
+        const def = [...notif.actions].find(a => a.identifier === "default");
+        if (def) {
+            def.invoke();
+            followFocus.restart();
+        }
+        root.closeRequested(notif);
+    }
+    function activateLast(): void {
+        if (toasts.count > 0)
+            root.activate(toasts.get(toasts.count - 1).notification);
+    }
+
+    // Follow the raised window to its workspace. The sender raises it async, so
+    // the urgent flag lands just after the action — hence the delay. Hyprland is
+    // Lua-configured (dispatch runs as `hl.dispatch(<req>)`), so the request is a
+    // Lua dispatcher expression, not a "focusurgentorlast" string.
+    Timer {
+        id: followFocus
+        interval: 100
+        onTriggered: Hyprland.dispatch(
+            "function() local w = hl.get_urgent_window(); if w then hl.dispatch(hl.dsp.focus({ window = 'address:' .. w.address })) end end")
     }
     // Drop a toast from the list (idempotent). Matches on the stable `id`:
     // ListModel.get() returns a fresh wrapper, so `===` never hits.
@@ -104,5 +132,6 @@ Singleton {
         }
         function dismissAll(): void { root.dismissAll(); }
         function dismissLast(): void { root.dismissLast(); }
+        function activateLast(): void { root.activateLast(); }
     }
 }

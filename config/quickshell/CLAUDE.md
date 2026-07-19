@@ -38,6 +38,13 @@ picks up the fix on the next save. The autostart process runs as
 
 ## Rules to preserve
 
+- **Comment the why, never the what.** A comment earns its place only by
+  saying something the code can't — a constraint, a gotcha, the reason behind
+  a non-obvious choice. Keep them terse (a line or two, dense). Don't restate
+  the mechanics the next line already shows, and don't add preamble; if a
+  comment only narrates what the code does, delete it. The surviving comments
+  after the `Strip unnecessary comments` commit set the bar — match that
+  density, not a paragraph per function.
 - **All styling flows through `Theme.qml`.** Modules declare an `accent`
   color (plus `neutral` for their inactive state) and `BarPill`/`Theme`
   decide how it renders. Never hardcode colors or metrics in modules.

@@ -141,14 +141,11 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onClicked: mouse => {
-                // Left-click invokes the default action then dismisses; other
-                // buttons just dismiss.
-                if (mouse.button === Qt.LeftButton) {
-                    const def = root.notif.actions.find(a => a.identifier === "default");
-                    if (def)
-                        def.invoke();
-                }
-                root.close(false);
+                // Left-click runs the default action; other buttons just dismiss.
+                if (mouse.button === Qt.LeftButton)
+                    Notifs.activate(root.notif);
+                else
+                    root.close(false);
             }
         }
 

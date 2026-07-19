@@ -91,6 +91,11 @@ hl.bind(
   hl.dsp.exec_cmd("qs ipc call notifs dismissAll"),
   { description = "Dismiss all notifications" }
 )
+hl.bind(
+  mainMod .. " + CTRL + COMMA",
+  hl.dsp.exec_cmd("qs ipc call notifs activateLast"),
+  { description = "Invoke last notification's action" }
+)
 
 -- Movements
 hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "l" }), { description = "Move focus left" })
