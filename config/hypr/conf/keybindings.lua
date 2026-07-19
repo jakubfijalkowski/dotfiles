@@ -78,16 +78,16 @@ hl.bind(
 -- Notifications (handled by the QuickShell notification server)
 hl.bind(
   mainMod .. " + COMMA",
-  hl.dsp.exec_cmd("qs ipc call notifs toggleDnd"),
-  { description = "Toggle do-not-disturb" }
-)
-hl.bind(
-  mainMod .. " + ALT + COMMA",
   hl.dsp.exec_cmd("qs ipc call notifs dismissLast"),
   { description = "Dismiss last notification" }
 )
 hl.bind(
   mainMod .. " + SHIFT + COMMA",
+  hl.dsp.exec_cmd("qs ipc call notifs toggleDnd"),
+  { description = "Toggle do-not-disturb" }
+)
+hl.bind(
+  mainMod .. " + ALT + COMMA",
   hl.dsp.exec_cmd("qs ipc call notifs dismissAll"),
   { description = "Dismiss all notifications" }
 )
