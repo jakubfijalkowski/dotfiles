@@ -199,7 +199,7 @@ Item {
 
                 Text {
                     id: appName
-                    width: parent.width - 16   // leave room for the hover close ×
+                    width: parent.width - 20   // leave room for the hover close ×
                     elide: Text.ElideRight
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontSize - 2
@@ -297,7 +297,7 @@ Item {
                 top: parent.top
                 right: parent.right
                 topMargin: 6
-                rightMargin: 8
+                rightMargin: 12
             }
             text: "×"
             font.family: Theme.fontFamily

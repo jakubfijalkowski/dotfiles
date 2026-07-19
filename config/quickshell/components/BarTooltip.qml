@@ -31,11 +31,12 @@ Scope {
         anchor.gravity: Edges.Bottom
         color: "transparent"
         implicitWidth: Math.ceil(body.implicitWidth) + 2
-        implicitHeight: Math.ceil(body.implicitHeight) + 2
+        implicitHeight: Math.ceil(body.implicitHeight) + 2 + Theme.tooltipTopGap
 
         Rectangle {
             id: body
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
             implicitWidth: label.implicitWidth + 26
             implicitHeight: label.implicitHeight + 14
             color: Theme.popupBg

@@ -90,6 +90,7 @@ Singleton {
     readonly property color popupBg: barBg
     readonly property color popupBorder: surface1
     readonly property real popupRadius: 12
+    readonly property int tooltipTopGap: 6   // clearance between the bar and the tooltip body
 
     // Cards inside popups
     readonly property color cardBg: alpha(surface0, 0.25)

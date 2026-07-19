@@ -119,6 +119,11 @@ picks up the fix on the next save. The autostart process runs as
   4. **Undo** — `qs ipc call audio toggle` again to close it. Leave no popup
      open behind you. (Tooltips and other hover-only states have no IPC
      toggle — reverse those by whatever means opened them.)
+- **No mouse manipulation from here.** Claude cannot move the cursor, hover,
+  click, or otherwise drive the pointer — anything that only surfaces on hover
+  (tooltips, the toast close ×, hover chips) can't be captured headless. When a
+  change can only be verified by mousing over something, stop and ping the
+  operator to drive it and confirm, rather than guessing from the code.
 - Blur is configured in Hyprland, not here. The bar is a layer surface with
   namespace `quickshell`; its popups/tooltips are xdg-popups of that same
   layer (not their own surfaces), so `blur` alone won't reach them:
