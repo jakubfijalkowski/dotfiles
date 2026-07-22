@@ -104,7 +104,8 @@ picks up the fix on the next save. The autostart process runs as
   exposes a `toggle` on its module's target —
   `qs ipc call bluetooth toggle`, `qs ipc call updates toggle`,
   `qs ipc call audio toggle`, `qs ipc call mpris toggle`,
-  `qs ipc call calendar toggle`, `qs ipc call power toggle` — plus
+  `qs ipc call calendar toggle`, `qs ipc call power toggle`,
+  `qs ipc call tray menu <index>` (the nth tray icon's menu drawer) — plus
   `qs ipc call bluetooth connect <name>|disconnect <name>` and
   `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
   update-count refreshes). Notifications expose
