@@ -4,5 +4,8 @@ Type = Package
 Target = *
 
 [Action]
+Description = Refreshing the QuickShell update count...
 When = PostTransaction
-Exec = /usr/bin/sh -c "pkill -fu fiolek -RTMIN+1 waybar"
+# --pid targets the instance directly: without it qs also needs HOME and a
+# matching WAYLAND_DISPLAY, neither of which exists in a root hook.
+Exec = /usr/bin/runuser -u fiolek -- /usr/bin/sh -c 'p=$(/usr/bin/pgrep -u fiolek -nx quickshell) || exit 0; XDG_RUNTIME_DIR=/run/user/$(id -u) exec /usr/bin/qs ipc --pid $p call updates refresh'

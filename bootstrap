@@ -151,7 +151,6 @@ function configure_user() {
   service "user" "hypridle.service"
   service "user" "ssh-add-keys.service"
   service "user" "ssh-agent.service"
-  service "user" "waybar.service"
   service "user" "yubikey-touch-detector.service"
 
   elephant service enable
