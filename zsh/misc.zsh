@@ -9,6 +9,7 @@ alias dotnet="nocorrect dotnet"
 alias az="nocorrect az"
 
 alias gso="git switchto"
+alias gbsu="git track"
 
 alias t="terraform"
 alias tp="terraform plan"
