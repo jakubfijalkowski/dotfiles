@@ -1,5 +1,4 @@
 import Quickshell
-import Quickshell.Services.Notifications
 import QtQuick
 import qs
 
@@ -14,11 +13,7 @@ Item {
     required property var notif        // the Notification object
 
     readonly property color accent: Theme.notifAccent(notif.urgency)
-    // Critical stays until dismissed; others honour the sender's expiry (ms) or
-    // fall back to the configured default.
     readonly property int lifetime: {
-        if (notif.urgency === NotificationUrgency.Critical)
-            return 0;
         const t = notif.expireTimeout;
         return t > 0 ? t : Notifs.defaultTimeout;
     }
@@ -97,8 +92,7 @@ Item {
         }
     }
 
-    // Auto-dismiss after the lifetime; hovering holds it open. Never armed for
-    // critical (no expiry).
+    // Auto-dismiss after the lifetime; hovering holds it open.
     Timer {
         interval: root.lifetime
         running: root.shown && !root.closing && root.lifetime > 0 && !root.hovered

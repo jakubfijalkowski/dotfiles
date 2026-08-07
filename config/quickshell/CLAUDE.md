@@ -76,11 +76,13 @@ picks up the fix on the next save. The autostart process runs as
   toast. The overlay is a **fixed-size** masked layer surface that never
   resizes as toasts come and go: they reflow *within* it (resizing the surface
   per toast visibly jitters the stack). A toast slides in from the right,
-  auto-dismisses after its lifetime (`Theme`-configured default, or the
-  sender's; critical stays), and on close collapses its own height so the rest
-  slide up. Colour follows urgency via `Theme.notifAccent`. Left-click on the
-  card invokes the sender's *default* action; any other actions render as
-  accent chips below the body. Alongside the toasts, `Notifs` also keeps a
+  auto-dismisses after its lifetime (the sender's expiry, else the
+  `Notifs`-configured default), and on close collapses its own height so the
+  rest slide up. **Every toast expires, urgency included** — Chrome maps a web
+  notification's `requireInteraction` to `urgency=critical`, so exempting
+  critical left half the stack immortal; urgency shows in colour only, via
+  `Theme.notifAccent`. Left-click on the card invokes the sender's *default*
+  action; any other actions render as accent chips below the body. Alongside the toasts, `Notifs` also keeps a
   bounded in-memory `historyModel` ring (field copies of the last ~20, newest
   first — the live objects are freed once untracked) that the power drawer's
   "Recent" pager reads; it is not persisted and clears on reload.
