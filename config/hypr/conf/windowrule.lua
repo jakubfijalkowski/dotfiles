@@ -156,13 +156,6 @@ hl.window_rule({
 
 -- Slack
 hl.window_rule({
-  name = "slack-screenshare",
-  match = { class = "^([sS]lack)$" },
-
-  no_screen_share = true,
-})
-
-hl.window_rule({
   name = "slack",
   match = { initial_class = "^([sS]lack)$" },
 
