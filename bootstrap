@@ -139,7 +139,7 @@ function configure_user() {
   # Scripts - link individually to ~/.local/bin
   link "$dotfiles_dir/scripts/check-updates" "$HOME/.local/bin/check-updates"
   link "$dotfiles_dir/scripts/unblock-docker-bridge" "$HOME/.local/bin/unblock-docker-bridge"
-  link "$dotfiles_dir/scripts/yubikey-touch-status" "$HOME/.local/bin/yubikey-touch-status"
+  link "$dotfiles_dir/scripts/yubikey-touch-requester" "$HOME/.local/bin/yubikey-touch-requester"
 
   section "Importing GPG key"
   chmod 0700 ~/.gnupg

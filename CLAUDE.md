@@ -40,7 +40,7 @@ a whole directory (`~/.config/quickshell` → `config/quickshell`,
 |---|---|---|
 | `config/` | `~/.config/` | quickshell, hypr, nvim (each with its own CLAUDE.md), plus bat, ghostty, walker, wpaperd, satty, fontconfig, systemd, uwsm, Code |
 | `zsh/`, `zshrc` | `~/.zsh/`, `~/.zshrc` | `zshrc` sources the `zsh/*.zsh` modules; `~/.local/zshrc` holds per-machine overrides (untracked) |
-| `scripts/` | `~/.local/bin/` | `check-updates`, `yubikey-touch-status`, `unblock-docker-bridge` — referenced by the bar and keybinds |
+| `scripts/` | `~/.local/bin/` | `check-updates`, `yubikey-touch-requester`, `unblock-docker-bridge` — referenced by the bar and keybinds |
 | `etc/` | `/etc/` | system files (pacman, systemd-networkd, sddm, pam, udev, iwd) — editing these needs **root**, and they are not hot-reloaded |
 | `packages/` | — | pacman/AUR package manifests: `base` (explicit repo pkgs), `aur`, `amd`. Kept in sync with what's installed |
 | `gitconfig`, `gnupg/`, `fdignore` | `~/.gitconfig`, `~/.gnupg/`, … | misc dotfiles |

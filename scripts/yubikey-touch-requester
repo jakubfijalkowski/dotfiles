@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+"""Name whatever is waiting on a YubiKey touch, for the QuickShell bar.
+
+Usage: yubikey-touch-requester KIND...   (u2f, hmac, gpg: as reported by
+yubikey-touch-detector). Prints one JSON line: {"text": short label,
+"chains": [[{pid, name, args}, ...parents up to init], ...]}, one chain per
+requester; both are empty when nobody is found.
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+
+# Kernel comm is capped at 15 chars
+DETECTOR = "yubikey-touch-d"
+AUTH_FRONTENDS = {"sudo", "su", "doas", "pkexec"}
+SHELLS = {"sh", "bash", "zsh", "fish", "dash"}
+SSH_OPTS_WITH_ARG = set("BbcDEeFIiJLlmOoPpQRSWw")
+UID = os.getuid()
+
+
+def read(path):
+    try:
+        with open(path, "rb") as f:
+            return f.read().decode(errors="replace")
+    except OSError:
+        return ""
+
+
+def comm(pid):
+    return read(f"/proc/{pid}/comm").strip()
+
+
+def argv(pid):
+    return read(f"/proc/{pid}/cmdline").split("\0")[:-1]
+
+
+def name(pid):
+    short = comm(pid)
+    full = os.path.basename(next(iter(argv(pid)), ""))
+    return full if len(short) == 15 and full.startswith(short) else short
+
+
+def ppid(pid):
+    match = re.search(r"^PPid:\s+(\d+)", read(f"/proc/{pid}/status"), re.M)
+    return int(match[1]) if match else 0
+
+
+def pids():
+    return [int(p) for p in os.listdir("/proc") if p.isdigit()]
+
+
+def yubikey_hidraws():
+    return {
+        f"/dev/{node}"
+        for node in os.listdir("/sys/class/hidraw")
+        if "yubikey" in read(f"/sys/class/hidraw/{node}/device/uevent").lower()
+    }
+
+
+def link(path):
+    try:
+        return os.readlink(path)
+    except OSError:
+        return ""
+
+
+def holds(pid, nodes):
+    try:
+        with os.scandir(f"/proc/{pid}/fd") as fds:
+            return any(link(fd.path) in nodes for fd in fds)
+    except OSError:
+        return False
+
+
+def holders(nodes):
+    return [pid for pid in pids() if holds(pid, nodes) and comm(pid) != DETECTOR]
+
+
+def elevated():
+    # pam_u2f inside sudo holds the device, but setuid fds are unreadable;
+    # loginuid still ties the process to this session.
+    return [
+        pid for pid in pids()
+        if comm(pid) in AUTH_FRONTENDS and read(f"/proc/{pid}/loginuid") == str(UID)
+    ]
+
+
+def clients(paths):
+    """Processes connected to the given listening unix sockets."""
+    out = subprocess.run(["ss", "-xpH"], capture_output=True, text=True).stdout
+    peers, owners = [], {}
+    for line in out.splitlines():
+        fields = line.split(None, 8)
+        if len(fields) < 8 or fields[1] != "ESTAB":
+            continue
+        if fields[4] in paths:
+            peers.append(fields[7])
+        if len(fields) == 9:
+            owners[fields[5]] = [int(p) for p in re.findall(r"pid=(\d+)", fields[8])]
+    return [pid for peer in peers for pid in owners.get(peer, [])]
+
+
+def gpg_sockets():
+    out = subprocess.run(["gpgconf", "--list-dirs"], capture_output=True, text=True).stdout
+    return {
+        value for key, _, value in (line.partition(":") for line in out.splitlines())
+        if key in ("agent-socket", "agent-extra-socket", "agent-ssh-socket")
+    }
+
+
+def ssh_agent_socket():
+    return os.environ.get("SSH_AUTH_SOCK") or f"/run/user/{UID}/ssh-agent.socket"
+
+
+def ancestry(pid, depth):
+    while pid > 0 and depth > 0:
+        yield pid
+        pid, depth = ppid(pid), depth - 1
+
+
+def git_command(args):
+    rest = iter(args[1:])
+    for arg in rest:
+        if arg in ("-C", "-c"):
+            next(rest, None)
+        elif not arg.startswith("-"):
+            return f"git {arg}"
+    return "git"
+
+
+def ssh_host(args):
+    rest = iter(args[1:])
+    for arg in rest:
+        if arg == "--":
+            arg = next(rest, "")
+        elif arg.startswith("-"):
+            for i, flag in enumerate(arg[1:], 2):
+                if flag in SSH_OPTS_WITH_ARG:
+                    if i == len(arg):
+                        next(rest, None)
+                    break
+            continue
+        return arg.rpartition("@")[2]
+    return ""
+
+
+def describe(pid):
+    # git push/commit reach the key through ssh or gpg, sometimes via sh -c
+    for ancestor in ancestry(pid, 3):
+        if comm(ancestor) == "git":
+            return git_command(argv(ancestor))
+    own = comm(pid)
+    if own == "ssh":
+        host = ssh_host(argv(pid))
+        return f"ssh {host}" if host else own
+    if own in ("gpg", "gpg2"):
+        parent = ppid(pid)
+        if comm(parent) and comm(parent) not in SHELLS:
+            return name(parent)
+    return name(pid)
+
+
+def requesters(kinds):
+    found = []
+    if kinds & {"u2f", "hmac"}:
+        for pid in holders(yubikey_hidraws()) or elevated():
+            if comm(pid) != "ssh-sk-helper":
+                found.append(pid)
+                continue
+            # The helper is a child of ssh-agent (ask its clients) or of the
+            # ssh/ssh-keygen that loaded the key itself.
+            parent = ppid(pid)
+            agent_clients = clients({ssh_agent_socket()}) if comm(parent) == "ssh-agent" else []
+            found += [p for p in agent_clients if comm(p) != DETECTOR] or [parent]
+    if "gpg" in kinds:
+        found += clients(gpg_sockets())
+    return list(dict.fromkeys(pid for pid in found if comm(pid) not in ("", DETECTOR)))
+
+
+def chain(pid):
+    # Command lines are capped: browsers' run to kilobytes of flags
+    return [{"pid": p, "name": name(p), "args": " ".join(argv(p))[:400]} for p in ancestry(pid, 64)]
+
+
+if __name__ == "__main__":
+    found = requesters(set(sys.argv[1:]))
+    labels = dict.fromkeys(label for label in map(describe, found) if label)
+    print(json.dumps({"text": ", ".join(labels), "chains": [chain(pid) for pid in found]}))

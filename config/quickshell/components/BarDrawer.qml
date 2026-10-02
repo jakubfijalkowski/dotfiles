@@ -13,6 +13,9 @@ Scope {
 
     required property Item anchorItem
     property bool open: false
+    // Still true while the close animation runs, for owners that must keep
+    // the anchor and content around until the drawer is gone.
+    readonly property bool shown: popup.visible
     // Fill: the bar's translucent surface (needs the Hyprland blur via `blurpopups`).
     property color surfaceColor: Theme.barBg
     // Launching module's accent, painted along the seam where the drawer meets the bar.

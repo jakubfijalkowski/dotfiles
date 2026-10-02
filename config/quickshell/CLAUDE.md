@@ -98,7 +98,9 @@ picks up the fix on the next save. The autostart process runs as
   the calendar drawer (wheel over the pill or the calendar shifts months,
   middle click resets to the current month), locale-aware date via `LC_TIME`,
   and the custom scripts in `~/.local/bin` (`check-updates`,
-  `yubikey-touch-status`).
+  `yubikey-touch-requester`). The YubiKey pill reads
+  `yubikey-touch-detector`'s socket directly; the script only names who
+  asked for the touch and snapshots their process chains for the drawer.
 
 ## Managing
 
@@ -107,6 +109,7 @@ picks up the fix on the next save. The autostart process runs as
   `qs ipc call bluetooth toggle`, `qs ipc call updates toggle`,
   `qs ipc call audio toggle`, `qs ipc call mpris toggle`,
   `qs ipc call calendar toggle`, `qs ipc call power toggle`,
+  `qs ipc call yubikey toggle` (only while a touch request is showing),
   `qs ipc call tray menu <index>` (the nth tray icon's menu drawer) — plus
   `qs ipc call bluetooth connect <name>|disconnect <name>` and
   `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
