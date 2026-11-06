@@ -1,5 +1,3 @@
-local helpers = require("helpers")
-
 -- Status line plugin
 require("lualine").setup({
   options = {
@@ -23,7 +21,8 @@ require("lualine").setup({
       },
     },
     lualine_c = { "filename" },
-    lualine_x = { "diagnostics" },
+    -- Attached LSP clients with a spinner while they report progress.
+    lualine_x = { "lsp_status", "diagnostics" },
     lualine_y = { "encoding", "fileformat", "filetype" },
     lualine_z = { "progress", "location" },
   },
@@ -45,7 +44,7 @@ require("gitsigns").setup({
   on_attach = function(bufnr)
     local gs = require("gitsigns")
     local function map(mode, lhs, rhs, desc)
-      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
+      vim.keymap.set(mode, lhs, rhs, { buf = bufnr, silent = true, desc = desc })
     end
 
     -- Navigation: ]c / [c jump between hunks, falling back to Vim's builtin
@@ -124,10 +123,39 @@ require("nvim-tree").setup({
   },
 })
 
--- Undotree
-vim.g.undotree_WindowLayout = 3
-vim.g.undotree_SetFocusWhenToggle = 1
-vim.o.undodir = helpers.LocalDataFolder("undos")
+-- Start screen (mini.starter, replaces vim-startify): numbered recent files for
+-- the cwd and globally. Like startify's change_to_dir, opening a recent file
+-- also `:lcd`s into its directory.
+local starter = require("mini.starter")
+local function lcd_on_open(section)
+  return function()
+    return vim.tbl_map(function(item)
+      local open = item.action
+      if type(open) == "function" then
+        item.action = function()
+          open()
+          vim.cmd.lcd(vim.fn.expand("%:p:h"))
+        end
+      end
+      return item
+    end, section())
+  end
+end
+starter.setup({
+  items = {
+    lcd_on_open(starter.sections.recent_files(10, true)),
+    lcd_on_open(starter.sections.recent_files(10, false)),
+    starter.sections.builtin_actions(),
+  },
+  content_hooks = {
+    starter.gen_hook.adding_bullet(),
+    starter.gen_hook.indexing("all", { "Builtin actions" }),
+    starter.gen_hook.aligning("center", "center"),
+  },
+})
+
+-- Undotree: Neovim's built-in :Undotree (opt-in package), toggled by <F10>.
+vim.cmd.packadd("nvim.undotree")
 vim.o.undofile = true
 
 -- which-key: popup hints for pending keymaps. Individual maps carry their own

@@ -6,32 +6,21 @@ vim.keymap.set("", "<C-L>", "<C-W>l", { desc = "Go to right window" })
 vim.keymap.set("", "zl", "zL", { desc = "Scroll half screen right" })
 vim.keymap.set("", "zh", "zH", { desc = "Scroll half screen left" })
 
+-- <C-L> no longer clears search highlighting (it moves windows), so <Esc> does.
+vim.keymap.set("n", "<Esc>", "<Cmd>nohlsearch<CR><Esc>", { desc = "Clear search highlight" })
+
 -- Buffer mgmt
-vim.keymap.set("n", "<S-Up>", ":resize +1<CR>", { silent = true, desc = "Increase window height" })
-vim.keymap.set(
-  "n",
-  "<S-Down>",
-  ":resize -1<CR>",
-  { silent = true, desc = "Decrease window height" }
-)
-vim.keymap.set(
-  "n",
-  "<S-Left>",
-  ":vertical :resize -1<CR>",
-  { silent = true, desc = "Decrease window width" }
-)
-vim.keymap.set(
-  "n",
-  "<S-Right>",
-  ":vertical :resize +1<CR>",
-  { silent = true, desc = "Increase window width" }
-)
+vim.keymap.set("n", "<S-Up>", "<Cmd>resize +1<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<S-Down>", "<Cmd>resize -1<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<S-Left>", "<Cmd>vertical resize -1<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<S-Right>", "<Cmd>vertical resize +1<CR>", { desc = "Increase window width" })
 
-vim.keymap.set("n", "<C-p>", ":bprev<CR>", { silent = true, desc = "Previous buffer" })
-vim.keymap.set("n", "<C-n>", ":bnext<CR>", { silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "<C-p>", "<Cmd>bprev<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "<C-n>", "<Cmd>bnext<CR>", { desc = "Next buffer" })
 
+-- Delete the buffer but keep the window layout (mini.bufremove).
 vim.keymap.set("n", "<Leader>bd", function()
-  require("bufdelete").bufdelete(0)
+  require("mini.bufremove").delete(0)
 end, { desc = "Delete buffer" })
 
 -- Commenting: native gc/gcc (see :help commenting). These shims preserve
@@ -84,31 +73,29 @@ vim.keymap.set(
 vim.keymap.set("n", "<Leader>fwd", telescopeBuiltin.diagnostics, { desc = "Workspace diagnostics" })
 
 -- LSP / diagnostics
--- (rename <F2>, code action <F5>, quick-fix <Leader>qf are buffer-local in lsp.lua)
+-- (rename <F2>, code action <F5>, code lens <F4>, quick-fix <Leader>qf are
+-- buffer-local in lsp.lua). `K` is Neovim's default: LSP hover when a server is
+-- attached, otherwise 'keywordprg' (:help in Vim/help files, man in shells).
 vim.keymap.set("n", "[g", function()
   vim.diagnostic.jump({ count = -1 })
-end, { silent = true, desc = "Previous diagnostic" })
+end, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]g", function()
   vim.diagnostic.jump({ count = 1 })
-end, { silent = true, desc = "Next diagnostic" })
+end, { desc = "Next diagnostic" })
 
 vim.keymap.set({ "n", "v" }, "<Leader>=", function()
   require("conform").format({ async = false, lsp_format = "fallback" })
-end, { silent = true, desc = "Format buffer" })
-
-vim.keymap.set("n", "K", function()
-  local ft = vim.bo.filetype
-  if ft == "vim" or ft == "help" then
-    vim.cmd("help " .. vim.fn.expand("<cword>"))
-  else
-    vim.lsp.buf.hover()
-  end
-end, { silent = true, desc = "Hover / help" })
+end, { desc = "Format buffer" })
 
 -- NVim Tree
 local nvimTree = require("nvim-tree.api")
 vim.keymap.set("n", "<F9>", nvimTree.tree.focus, { desc = "Focus file tree" })
-vim.keymap.set("n", "gr", nvimTree.tree.find_file, { desc = "Reveal file in tree" })
+-- Not `gr`: that prefix belongs to Neovim's built-in LSP maps (grn, gra, grr, ...).
+vim.keymap.set("n", "<Leader>e", function()
+  nvimTree.tree.find_file({ open = true, focus = true })
+end, { desc = "Reveal file in tree" })
 
--- Undotree
-vim.keymap.set("n", "<F10>", vim.cmd.UndotreeToggle, { desc = "Toggle undotree" })
+-- Undotree (built-in, see layout.lua): toggles a tree window on the left.
+vim.keymap.set("n", "<F10>", function()
+  require("undotree").open({ command = "topleft 30vnew" })
+end, { desc = "Toggle undotree" })

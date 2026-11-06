@@ -5,31 +5,43 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
   { "ellisonleao/gruvbox.nvim", lazy = false },
 
+  -- mini.nvim modules (setup in layout.lua / editor.lua): starter, surround,
+  -- align, bufremove. One actively maintained repo replacing vim-startify,
+  -- vim-surround + vim-repeat, tabular and bufdelete.nvim.
+  { "nvim-mini/mini.nvim", version = "*" },
+
   { "lewis6991/gitsigns.nvim" },
   { "folke/flash.nvim" },
   { "folke/lazydev.nvim" },
   { "folke/which-key.nvim" },
-  { "godlygeek/tabular" },
-  { "mbbill/undotree" },
   { "lukas-reineke/indent-blankline.nvim", main = "ibl" },
   { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-telescope/telescope-ui-select.nvim" },
   { "nvim-tree/nvim-web-devicons" },
-  { "tpope/vim-repeat" },
-  { "tpope/vim-surround" },
   { "nvim-tree/nvim-tree.lua" },
-  { "mhinz/vim-startify" },
-  { "famiu/bufdelete.nvim" },
-  { "rcarriga/nvim-notify" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate", branch = "main" },
 
   { "neovim/nvim-lspconfig" },
   { "mason-org/mason.nvim" },
   { "mason-org/mason-lspconfig.nvim" },
-  { "saghen/blink.cmp", version = "*" },
-  { "mrcjkb/rustaceanvim", version = "^6", lazy = false },
+  { "b0o/SchemaStore.nvim" },
+  -- blink.cmp v2 is unreleased: track `main` (pinned by lazy-lock.json) and
+  -- build the Rust fuzzy matcher locally; prebuilt binaries only ship for tags.
+  {
+    "saghen/blink.cmp",
+    branch = "main",
+    version = false,
+    dependencies = { "saghen/blink.lib" },
+    build = function()
+      require("blink.cmp").build():pwait()
+    end,
+  },
+  { "mrcjkb/rustaceanvim", version = "^9", lazy = false },
   { "stevearc/conform.nvim" },
+}, {
+  -- No plugin here needs luarocks; skip the hererocks setup and its health error.
+  rocks = { enabled = false },
 })
 
 require("globals")

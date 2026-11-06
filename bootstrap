@@ -102,9 +102,7 @@ function configure_user() {
   link "config/fontconfig/fonts.conf"
 
   # Neovim
-  link "config/nvim/init.lua"
-  link "config/nvim/coc-settings.json"
-  link "config/nvim/lua"
+  link "config/nvim"
 
   # Wayland/Hyprland setup
   link "config/hypr/hyprland.lua"

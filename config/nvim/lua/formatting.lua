@@ -1,7 +1,7 @@
 require("conform").setup({
   formatters_by_ft = {
-    -- Requires the stylua binary: run `:MasonInstall stylua` once, or install it
-    -- via your system package manager (conform finds it on $PATH).
+    -- stylua is installed by mason (see lsp.lua) and found on mason's $PATH. It
+    -- reads config/nvim/.stylua.toml because ~/.config/nvim links the whole dir.
     lua = { "stylua" },
     -- Every other filetype falls back to LSP formatting (rust-analyzer,
     -- terraform-ls, yaml-language-server, ...).
