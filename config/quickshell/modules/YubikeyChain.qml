@@ -1,5 +1,6 @@
 import QtQuick
 import qs
+import qs.components
 
 // YubiKey drawer: who asked for the touch, as each requester's parent chain
 // (requester first, up to init). Snapshotted when the request started, since
@@ -15,52 +16,12 @@ Column {
 
     spacing: 6
 
-    Item {
+    DrawerHeader {
         width: root.listWidth
-        height: 34
-
-        Rectangle {
-            id: headerBadge
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            width: 30
-            height: 30
-            radius: 9
-            color: Theme.chipBg(Theme.peach, true)
-            border.width: 1
-            border.color: Theme.chipBorder(Theme.peach, true)
-
-            Text {
-                anchors.centerIn: parent
-                font.family: Theme.mdiFontFamily
-                font.pixelSize: 15
-                color: Theme.peach
-                // mdi-key (matches the bar pill glyph)
-                text: "\u{F030B}"
-            }
-        }
-
-        Column {
-            anchors.left: headerBadge.right
-            anchors.leftMargin: 10
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 1
-
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.DemiBold
-                color: Theme.text
-                text: "YubiKey"
-            }
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.popupCaptionSize
-                color: Theme.subtext0
-                text: "Waiting for touch · " + root.kinds.map(k => root.kindNames[k] ?? k).join(", ")
-            }
-        }
+        glyph: "\u{F030B}"   // key, as on the bar pill
+        tint: Theme.peach
+        title: "YubiKey"
+        subtitle: "Waiting for touch · " + root.kinds.map(k => root.kindNames[k] ?? k).join(", ")
     }
 
     Text {
@@ -75,22 +36,17 @@ Column {
     Repeater {
         model: root.chains
 
-        Rectangle {
+        Card {
             id: card
             required property var modelData
 
             width: root.listWidth
-            height: chainColumn.implicitHeight + 12
-            radius: Theme.cardRadius
-            color: Theme.cardBg
-            border.width: 1
-            border.color: Theme.cardBorder
+            padding: 10
+            verticalPadding: 6
 
             Column {
                 id: chainColumn
-                x: 10
-                y: 6
-                width: parent.width - 20
+                width: parent.width
 
                 Repeater {
                     model: card.modelData

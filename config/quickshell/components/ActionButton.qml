@@ -17,7 +17,7 @@ Rectangle {
     border.width: 1
     border.color: Theme.alpha(tint, 0.6)
 
-    Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+    Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
     Row {
         anchors.centerIn: parent

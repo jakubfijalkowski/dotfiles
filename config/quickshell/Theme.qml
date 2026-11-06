@@ -61,7 +61,19 @@ Singleton {
     readonly property int pillPaddingH: 13
     readonly property int moduleSpacing: 5
 
-    readonly property int transitionDuration: 300
+    // Motion — Material 3 expressive. Curves are in `easing.bezierCurve` form
+    // (two control points + the end point).
+    readonly property var curveDecel: [0.05, 0.7, 0.1, 1.0, 1, 1]     // emphasized decelerate: entries
+    readonly property var curveAccel: [0.3, 0.0, 0.8, 0.15, 1, 1]     // emphasized accelerate: exits
+    readonly property var curveFade: [0.34, 0.80, 0.34, 1.00, 1, 1]   // soft decelerate: fade-ins
+    readonly property var curveSpring: [0.42, 1.67, 0.21, 0.90, 1, 1] // overshoot: spatial moves
+    readonly property int transitionDuration: 300   // pill colour state
+    readonly property int stateDuration: 200        // on/off state inside drawers
+    readonly property int hoverDuration: 150        // hover tints
+    readonly property int springDuration: 350
+    readonly property int pulseDuration: 800        // half an attention pulse (in or out)
+    readonly property int drawerOpenDuration: 300
+    readonly property int drawerCloseDuration: 220
 
     // Bar surface — translucent so a Hyprland blur layer shows through
     readonly property color barBg: alpha(crust, 0.40)
@@ -97,6 +109,8 @@ Singleton {
     readonly property color cardHoverBg: alpha(surface1, 0.45)
     readonly property color cardBorder: alpha(overlay0, 0.55)
     readonly property real cardRadius: 8
+    readonly property color divider: alpha(overlay0, 0.25)
+    readonly property color meterTrack: alpha(surface2, 0.45)
 
     // Small tinted chips inside popups (badges, toggles, tags).
     function chipBg(tint: color, active: bool): color {
@@ -140,6 +154,9 @@ Singleton {
     readonly property int notifEdgeGap: 8      // inset from the bar / screen edge
     readonly property int notifPadding: 13
     readonly property int notifIconSize: 30
+    // Older toasts are expired early past this many, so a burst can't run the
+    // stack off the screen.
+    readonly property int notifMaxVisible: 5
     // Accent per freedesktop urgency (Low=0, Normal=1, Critical=2).
     function notifAccent(urgency: int): color {
         switch (urgency) {

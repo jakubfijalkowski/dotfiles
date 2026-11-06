@@ -25,6 +25,15 @@ Item {
     property bool shown: false
     property bool closing: false
     property bool expired: false
+    // The sender (or an invoked action) already closed it — nothing to report back.
+    property bool gone: false
+
+    // A closed notification is freed right away; hold it until the exit
+    // animation is over, so the toast can still slide out.
+    RetainableLock {
+        object: root.notif
+        locked: true
+    }
 
     readonly property string iconSource: notif.image !== ""
         ? notif.image
@@ -61,41 +70,44 @@ Item {
         drop.start();
     }
 
-    // After the exit: report expire vs dismiss to the sender, then drop the toast.
+    // After the exit: report expire vs dismiss to the sender, then drop the
+    // toast (which releases the lock).
     Timer {
         id: drop
         interval: 260
         onTriggered: {
-            if (root.expired)
-                root.notif.expire();
-            else
-                root.notif.dismiss();
+            if (!root.gone) {
+                if (root.expired)
+                    root.notif.expire();
+                else
+                    root.notif.dismiss();
+            }
             Notifs.forget(root.notif);
         }
     }
 
-    // Sender closed it out from under us while it's still showing — drop it.
     Connections {
         target: root.notif
         function onClosed(reason) {
-            if (!root.closing)
-                Notifs.forget(root.notif);
+            root.gone = true;
+            root.close(false);
         }
     }
 
     // Dismiss-all (null) or this specific notification: animate out.
     Connections {
         target: Notifs
-        function onCloseRequested(target) {
+        function onCloseRequested(target, expire) {
             if (!target || target.id === root.notif.id)
-                root.close(false);
+                root.close(expire);
         }
     }
 
-    // Auto-dismiss after the lifetime; hovering holds it open.
+    // Auto-dismiss after the lifetime; hovering (or a corner drawer hiding the
+    // stack) holds it open.
     Timer {
         interval: root.lifetime
-        running: root.shown && !root.closing && root.lifetime > 0 && !root.hovered
+        running: root.shown && !root.closing && root.lifetime > 0 && !root.hovered && !Notifs.held
         onTriggered: root.close(true)
     }
 
@@ -119,9 +131,7 @@ Item {
             NumberAnimation {
                 duration: root.closing ? 260 : 320
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: root.closing
-                    ? [0.3, 0.0, 0.8, 0.15, 1, 1]   // emphasized accelerate out
-                    : [0.05, 0.7, 0.1, 1.0, 1, 1]   // emphasized decelerate in
+                easing.bezierCurve: root.closing ? Theme.curveAccel : Theme.curveDecel
             }
         }
         Behavior on opacity {
@@ -253,7 +263,7 @@ Item {
                             border.width: 1
                             border.color: Theme.chipBorder(root.accent, true)
 
-                            Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.InOutQuad } }
+                            Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
                             Text {
                                 id: actionLabel
@@ -270,10 +280,7 @@ Item {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    actionChip.modelData.invoke();
-                                    root.close(false);
-                                }
+                                onClicked: Notifs.invoke(root.notif, actionChip.modelData)
                             }
                         }
                     }
@@ -295,7 +302,7 @@ Item {
             font.pixelSize: Theme.fontSize + 4
             color: closeMouse.containsMouse ? Theme.text : Theme.overlay1
             opacity: root.hovered ? 1 : 0
-            Behavior on opacity { NumberAnimation { duration: 120 } }
+            Behavior on opacity { NumberAnimation { duration: Theme.hoverDuration } }
 
             MouseArea {
                 id: closeMouse

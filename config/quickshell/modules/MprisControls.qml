@@ -71,7 +71,7 @@ Column {
              : tbMouse.containsMouse && enabled ? Theme.cardHoverBg
              : "transparent"
 
-        Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+        Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
         Text {
             anchors.centerIn: parent
@@ -80,7 +80,7 @@ Column {
             color: tb.active ? tb.tint : (tb.enabled ? Theme.text : Theme.overlay0)
             text: tb.glyph
 
-            Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+            Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
         }
 
         MouseArea {
@@ -115,8 +115,8 @@ Column {
                 border.width: 1
                 border.color: current ? Theme.chipBorder(root.accent, true) : Theme.cardBorder
 
-                Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
-                Behavior on border.color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+                Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
+                Behavior on border.color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
                 Row {
                     id: chipRow
@@ -152,14 +152,10 @@ Column {
         }
     }
 
-    Rectangle {
+    Card {
         id: card
         width: root.listWidth
-        height: cardCol.implicitHeight + 20
-        radius: Theme.cardRadius
-        color: Theme.cardBg
-        border.width: 1
-        border.color: Theme.cardBorder
+        padding: 10
 
         // Subtle entrance: lift + fade the whole card when the drawer opens.
         opacity: 0
@@ -173,17 +169,14 @@ Column {
                 NumberAnimation {
                     target: cardShift; property: "y"; to: 0; duration: 320
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: [0.42, 1.67, 0.21, 0.90, 1, 1]
+                    easing.bezierCurve: Theme.curveSpring
                 }
             }
         }
 
         Column {
             id: cardCol
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 10
+            width: parent.width
             spacing: 12
 
             // Album art — large and centered
@@ -361,7 +354,7 @@ Column {
                     border.color: Theme.alpha(root.accent, 0.7)
                     opacity: (root.player?.canTogglePlaying ?? false) ? 1 : 0.35
 
-                    Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+                    Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
                     Text {
                         anchors.centerIn: parent

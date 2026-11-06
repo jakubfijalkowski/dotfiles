@@ -55,8 +55,8 @@ Column {
         border.width: 1
         border.color: Theme.chipBorder(Theme.blue, checked)
 
-        Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-        Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+        Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
+        Behavior on border.color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
         Rectangle {
             width: 14
@@ -68,12 +68,12 @@ Column {
 
             Behavior on x {
                 NumberAnimation {
-                    duration: 350
+                    duration: Theme.springDuration
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: [0.42, 1.67, 0.21, 0.90, 1, 1]
+                    easing.bezierCurve: Theme.curveSpring
                 }
             }
-            Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+            Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
         }
 
         MouseArea {
@@ -83,72 +83,23 @@ Column {
         }
     }
 
-    // Header: icon badge, title + status line, adapter power toggle
-    Item {
+    DrawerHeader {
         width: root.listWidth
         height: 40
-
-        Rectangle {
-            id: headerBadge
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            width: 30
-            height: 30
-            radius: 9
-            color: Theme.chipBg(Theme.blue, root.adapterOn)
-            border.width: 1
-            border.color: Theme.chipBorder(Theme.blue, root.adapterOn)
-
-            Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-            Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-
-            Text {
-                anchors.centerIn: parent
-                font.family: Theme.mdiFontFamily
-                font.pixelSize: 17
-                color: Theme.chipFg(Theme.blue, root.adapterOn)
-                // nf-md-bluetooth
-                text: "\u{F00AF}"
-
-                Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-            }
-        }
-
-        Column {
-            anchors.left: headerBadge.right
-            anchors.leftMargin: 10
-            anchors.right: powerToggle.left
-            anchors.rightMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 1
-
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.DemiBold
-                color: Theme.text
-                text: "Bluetooth"
-            }
-
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.popupCaptionSize
-                color: Theme.subtext0
-                text: {
-                    if (!root.adapterOn) return "Off";
-                    if (root.devices.length === 0) return "No known devices";
-                    let s = root.devices.length + (root.devices.length === 1 ? " device" : " devices");
-                    if (root.connectedCount > 0) s += " · " + root.connectedCount + " connected";
-                    return s;
-                }
-            }
+        glyph: "\u{F00AF}"   // bluetooth
+        glyphSize: 17
+        tint: Theme.blue
+        active: root.adapterOn
+        title: "Bluetooth"
+        subtitle: {
+            if (!root.adapterOn) return "Off";
+            if (root.devices.length === 0) return "No known devices";
+            let s = root.devices.length + (root.devices.length === 1 ? " device" : " devices");
+            if (root.connectedCount > 0) s += " · " + root.connectedCount + " connected";
+            return s;
         }
 
         Toggle {
-            id: powerToggle
-            anchors.right: parent.right
-            anchors.rightMargin: 2
-            anchors.verticalCenter: parent.verticalCenter
             checked: root.adapterOn
             onToggled: if (root.adapter) root.adapter.enabled = !root.adapter.enabled
         }
@@ -217,13 +168,13 @@ Column {
 
             Behavior on height {
                 NumberAnimation {
-                    duration: 350
+                    duration: Theme.springDuration
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: [0.42, 1.67, 0.21, 0.90, 1, 1]
+                    easing.bezierCurve: Theme.curveSpring
                 }
             }
-            Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-            Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+            Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
+            Behavior on border.color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
             transform: Translate { id: cardShift; y: 0 }
 
@@ -244,15 +195,15 @@ Column {
                         to: 1
                         duration: 200
                         easing.type: Easing.BezierSpline
-                        easing.bezierCurve: [0.34, 0.80, 0.34, 1.00, 1, 1]
+                        easing.bezierCurve: Theme.curveFade
                     }
                     NumberAnimation {
                         target: cardShift
                         property: "y"
                         to: 0
-                        duration: 350
+                        duration: Theme.springDuration
                         easing.type: Easing.BezierSpline
-                        easing.bezierCurve: [0.42, 1.67, 0.21, 0.90, 1, 1]
+                        easing.bezierCurve: Theme.curveSpring
                     }
                 }
             }
@@ -288,8 +239,8 @@ Column {
                 border.color: Theme.chipBorder(deviceCard.isConnected ? Theme.green : Theme.blue,
                                                deviceCard.isConnected || hinting)
 
-                Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-                Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+                Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
+                Behavior on border.color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
                 Text {
                     anchors.centerIn: parent
@@ -299,7 +250,7 @@ Column {
                                         deviceCard.isConnected || iconChip.hinting)
                     text: root.deviceIcon(deviceCard.modelData.icon)
 
-                    Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+                    Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
                 }
             }
 
@@ -376,8 +327,8 @@ Column {
                     border.width: 1
                     border.color: Theme.chipBorder(Theme.red, disconnectMouse.containsMouse)
 
-                    Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
-                    Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+                    Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
+                    Behavior on border.color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
                     Text {
                         anchors.centerIn: parent
@@ -409,7 +360,7 @@ Column {
         // nf-md-cog
         glyph: "\u{F0493}"
         onActivated: {
-            Quickshell.execDetached(["blueman-manager"]);
+            Apps.launch(["blueman-manager"]);
             root.closeRequested();
         }
     }

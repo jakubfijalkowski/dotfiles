@@ -66,7 +66,7 @@ Column {
                 radius: 6
                 color: rowMouse.containsMouse ? Theme.cardHoverBg : "transparent"
 
-                Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+                Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
                 Row {
                     id: lead

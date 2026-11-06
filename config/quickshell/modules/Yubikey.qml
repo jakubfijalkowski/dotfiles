@@ -6,7 +6,7 @@ import qs.components
 
 // Touch-request pill, fed straight from yubikey-touch-detector's socket;
 // ~/.local/bin/yubikey-touch-requester names who asked. Click opens the
-// requesters' process chains. Hidden when idle.
+// requesters' process chains. Hidden when idle; breathes while waiting.
 BarPill {
     id: root
 
@@ -62,6 +62,26 @@ BarPill {
         requester = "";
         chains = [];
         requestKinds = [];
+    }
+
+    // Pulses while the key blinks, so it reads as a prompt rather than a status.
+    Rectangle {
+        id: pulse
+        property real breath: 0
+
+        anchors.fill: parent
+        radius: parent.radius
+        color: Theme.alpha(root.accent, 0.22)
+        border.width: 1
+        border.color: root.accent
+        opacity: root.kinds.length > 0 ? breath : 0
+
+        SequentialAnimation on breath {
+            running: root.kinds.length > 0
+            loops: Animation.Infinite
+            NumberAnimation { from: 0; to: 1; duration: Theme.pulseDuration; easing.type: Easing.InOutSine }
+            NumberAnimation { from: 1; to: 0; duration: Theme.pulseDuration; easing.type: Easing.InOutSine }
+        }
     }
 
     Row {

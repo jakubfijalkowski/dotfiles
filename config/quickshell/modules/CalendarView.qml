@@ -114,7 +114,7 @@ Item {
                 height: 26
                 verticalAlignment: Text.AlignVCenter
                 color: prevMa.containsMouse ? root.accent : Theme.subtext0
-                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on color { ColorAnimation { duration: Theme.hoverDuration } }
                 MouseArea {
                     id: prevMa
                     anchors.fill: parent
@@ -144,7 +144,7 @@ Item {
                 height: 26
                 verticalAlignment: Text.AlignVCenter
                 color: nextMa.containsMouse ? root.accent : Theme.subtext0
-                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on color { ColorAnimation { duration: Theme.hoverDuration } }
                 MouseArea {
                     id: nextMa
                     anchors.fill: parent

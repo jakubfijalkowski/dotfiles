@@ -71,7 +71,7 @@ Item {
                 implicitWidth: Math.max(content.implicitWidth, 13) + 14
                 implicitHeight: Theme.pillHeight - 3
 
-                Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+                Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
                 Row {
                     id: content
@@ -88,7 +88,7 @@ Item {
                         textFormat: Text.PlainText
                         text: button.modelData.id + ":"
 
-                        Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
+                        Behavior on color { ColorAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
                     }
 
                     Repeater {

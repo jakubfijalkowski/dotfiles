@@ -47,7 +47,7 @@ Rectangle {
         color: Theme.alpha(Theme.text,
             root.highlighted ? 0.12 : mouseArea.containsMouse ? 0.05 : 0)
 
-        Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+        Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
     }
 
     Text {

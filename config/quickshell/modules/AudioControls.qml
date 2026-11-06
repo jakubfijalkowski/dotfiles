@@ -4,9 +4,8 @@ import QtQuick
 import qs
 import qs.components
 
-// Audio drawer: output/input volume with device selectors and a collapsible
-// per-app mixer. Values from PipeWire; default device switched via
-// `wpctl set-default`.
+// Audio drawer: output/input volume with device selectors (AudioDeviceCard)
+// and a collapsible per-app mixer. Values from PipeWire.
 Column {
     id: root
 
@@ -17,8 +16,8 @@ Column {
     signal closeRequested()
     signal opened()
     onOpened: {
-        outCol.expanded = false;
-        inCol.expanded = false;
+        outCard.expanded = false;
+        inCard.expanded = false;
         appCol.expanded = false;
     }
 
@@ -42,11 +41,6 @@ Column {
         objects: root.active ? root.audioNodes : []
     }
 
-    function nodeLabel(n) {
-        if (!n) return "—";
-        return n.description || n.nickname || n.name || "—";
-    }
-
     function resolveIcon(node) {
         const p = node.properties ?? ({});
         return Icons.resolve([p["application.icon-name"], p["application.name"], node.name]);
@@ -54,357 +48,46 @@ Column {
 
     spacing: 8
 
-    component IconToggle: Rectangle {
-        id: ic
-        property string glyph: ""
-        property color tint: Theme.flamingo
-        property bool active: true
-        signal activated()
-
-        width: 30
-        height: 30
-        radius: 9
-        color: Theme.chipBg(tint, active)
-        border.width: 1
-        border.color: Theme.chipBorder(tint, active)
-
-        Behavior on color { ColorAnimation { duration: 160; easing.type: Easing.InOutQuad } }
-        Behavior on border.color { ColorAnimation { duration: 160; easing.type: Easing.InOutQuad } }
-
-        Text {
-            anchors.centerIn: parent
-            font.family: Theme.mdiFontFamily
-            font.pixelSize: 17
-            color: Theme.chipFg(ic.tint, ic.active)
-            text: ic.glyph
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: ic.activated()
-        }
-    }
-
-    // A device row inside an expanded selector.
-    component DeviceOption: Rectangle {
-        id: opt
-        required property var node
-        property color tint: Theme.flamingo
-        property bool current: false
-
-        // Match the inner column so the hover highlight stays inside the card border.
-        width: parent ? parent.width : root.listWidth
-        height: 28
-        radius: Theme.cardRadius
-        color: optMouse.containsMouse ? Theme.cardHoverBg : "transparent"
-
-        Behavior on color { ColorAnimation { duration: 140; easing.type: Easing.InOutQuad } }
-
-        Text {
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            anchors.right: optCheck.left
-            anchors.rightMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.popupBodySize
-            color: opt.current ? opt.tint : Theme.subtext1
-            elide: Text.ElideRight
-            text: root.nodeLabel(opt.node)
-        }
-        Text {
-            id: optCheck
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-            anchors.verticalCenter: parent.verticalCenter
-            visible: opt.current
-            font.family: Theme.mdiFontFamily
-            font.pixelSize: 14
-            color: opt.tint
-            // nf-md-check
-            text: "\u{F012C}"
-        }
-
-        MouseArea {
-            id: optMouse
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: Quickshell.execDetached(["wpctl", "set-default", String(opt.node.id)])
-        }
-    }
-
-    Rectangle {
+    AudioDeviceCard {
+        id: outCard
         width: root.listWidth
-        height: outCol.implicitHeight + 16
-        radius: Theme.cardRadius
-        color: Theme.cardBg
-        border.width: 1
-        border.color: Theme.cardBorder
-
-        Column {
-            id: outCol
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 8
-            spacing: 6
-
-            property bool expanded: false
-
-            Row {
-                width: parent.width
-                spacing: 8
-
-                IconToggle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    tint: Theme.flamingo
-                    active: !(root.sink?.audio?.muted ?? true)
-                    glyph: (root.sink?.audio?.muted ?? true) ? "\u{F0581}" : "\u{F057E}" // volume-off / volume-high
-                    onActivated: if (root.sink?.audio) root.sink.audio.muted = !root.sink.audio.muted
-                }
-
-                StyledSlider {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - 30 - 44 - 2 * parent.spacing
-                    tint: Theme.flamingo
-                    enabled: root.sink?.audio ?? false
-                    value: root.sink?.audio?.volume ?? 0
-                    onMoved: if (root.sink?.audio) root.sink.audio.volume = value
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 44
-                    horizontalAlignment: Text.AlignRight
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.popupBodySize
-                    color: Theme.subtext1
-                    text: Math.round((root.sink?.audio?.volume ?? 0) * 100) + "%"
-                }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 26
-                radius: Theme.cardRadius
-                color: outHdrMouse.containsMouse ? Theme.cardHoverBg : "transparent"
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 8
-                    anchors.right: outChevron.left
-                    anchors.rightMargin: 6
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.popupCaptionSize
-                    color: Theme.subtext0
-                    elide: Text.ElideRight
-                    text: "Output · " + root.nodeLabel(root.sink)
-                }
-                Text {
-                    id: outChevron
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.mdiFontFamily
-                    font.pixelSize: 15
-                    color: Theme.subtext0
-                    text: outCol.expanded ? "\u{F0143}" : "\u{F0140}" // chevron-up / down
-                }
-
-                MouseArea {
-                    id: outHdrMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: outCol.expanded = !outCol.expanded
-                }
-            }
-
-            ExpandArea {
-                expanded: outCol.expanded
-                Repeater {
-                    model: root.outputs
-                    DeviceOption {
-                        required property var modelData
-                        node: modelData
-                        tint: Theme.flamingo
-                        current: modelData.id === (root.sink?.id ?? -1)
-                    }
-                }
-            }
-        }
+        node: root.sink
+        nodes: root.outputs
+        kind: "Output"
+        tint: Theme.flamingo
+        glyphOn: "\u{F057E}"   // volume-high
+        glyphOff: "\u{F0581}"  // volume-off
     }
 
-    Rectangle {
+    AudioDeviceCard {
+        id: inCard
         width: root.listWidth
-        height: inCol.implicitHeight + 16
-        radius: Theme.cardRadius
-        color: Theme.cardBg
-        border.width: 1
-        border.color: Theme.cardBorder
-
-        Column {
-            id: inCol
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 8
-            spacing: 6
-
-            property bool expanded: false
-
-            Row {
-                width: parent.width
-                spacing: 8
-
-                IconToggle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    tint: Theme.sapphire
-                    active: !(root.source?.audio?.muted ?? true)
-                    glyph: (root.source?.audio?.muted ?? true) ? "\u{F036D}" : "\u{F036C}" // mic-off / mic
-                    onActivated: if (root.source?.audio) root.source.audio.muted = !root.source.audio.muted
-                }
-
-                StyledSlider {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - 30 - 44 - 2 * parent.spacing
-                    tint: Theme.sapphire
-                    enabled: root.source?.audio ?? false
-                    value: root.source?.audio?.volume ?? 0
-                    onMoved: if (root.source?.audio) root.source.audio.volume = value
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 44
-                    horizontalAlignment: Text.AlignRight
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.popupBodySize
-                    color: Theme.subtext1
-                    text: Math.round((root.source?.audio?.volume ?? 0) * 100) + "%"
-                }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 26
-                radius: Theme.cardRadius
-                color: inHdrMouse.containsMouse ? Theme.cardHoverBg : "transparent"
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 8
-                    anchors.right: inChevron.left
-                    anchors.rightMargin: 6
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.popupCaptionSize
-                    color: Theme.subtext0
-                    elide: Text.ElideRight
-                    text: "Input · " + root.nodeLabel(root.source)
-                }
-                Text {
-                    id: inChevron
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.mdiFontFamily
-                    font.pixelSize: 15
-                    color: Theme.subtext0
-                    text: inCol.expanded ? "\u{F0143}" : "\u{F0140}"
-                }
-
-                MouseArea {
-                    id: inHdrMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: inCol.expanded = !inCol.expanded
-                }
-            }
-
-            ExpandArea {
-                expanded: inCol.expanded
-                Repeater {
-                    model: root.inputs
-                    DeviceOption {
-                        required property var modelData
-                        node: modelData
-                        tint: Theme.sapphire
-                        current: modelData.id === (root.source?.id ?? -1)
-                    }
-                }
-            }
-        }
+        node: root.source
+        nodes: root.inputs
+        kind: "Input"
+        tint: Theme.sapphire
+        glyphOn: "\u{F036C}"   // mic
+        glyphOff: "\u{F036D}"  // mic-off
     }
 
-    Rectangle {
+    Card {
         width: root.listWidth
-        height: appCol.implicitHeight + 16
-        radius: Theme.cardRadius
-        color: Theme.cardBg
-        border.width: 1
-        border.color: Theme.cardBorder
+        padding: 8
 
         Column {
             id: appCol
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 8
+            width: parent.width
             spacing: 8
 
             property bool expanded: false
 
-            Rectangle {
-                width: parent.width
-                height: 26
-                radius: Theme.cardRadius
-                color: appHdrMouse.containsMouse ? Theme.cardHoverBg : "transparent"
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.mdiFontFamily
-                    font.pixelSize: 15
-                    color: Theme.mauve
-                    // nf-md-application_cog / tune
-                    text: "\u{F062E}"
-                }
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 32
-                    anchors.right: appChevron.left
-                    anchors.rightMargin: 6
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.popupBodySize
-                    font.weight: Font.DemiBold
-                    color: Theme.text
-                    text: "Applications · " + root.streams.length
-                }
-                Text {
-                    id: appChevron
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.family: Theme.mdiFontFamily
-                    font.pixelSize: 15
-                    color: Theme.subtext0
-                    text: appCol.expanded ? "\u{F0143}" : "\u{F0140}"
-                }
-
-                MouseArea {
-                    id: appHdrMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: appCol.expanded = !appCol.expanded
-                }
+            ExpandHeader {
+                glyph: "\u{F062E}"   // tune
+                glyphColor: Theme.mauve
+                strong: true
+                text: "Applications · " + root.streams.length
+                expanded: appCol.expanded
+                onToggled: appCol.expanded = !appCol.expanded
             }
 
             ExpandArea {
@@ -530,7 +213,7 @@ Column {
         // nf-md-cog
         glyph: "\u{F0493}"
         onActivated: {
-            Quickshell.execDetached(["uwsm", "app", "pavucontrol"]);
+            Apps.launch(["pavucontrol"]);
             root.closeRequested();
         }
     }

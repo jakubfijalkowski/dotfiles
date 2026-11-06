@@ -73,67 +73,22 @@ Column {
 
     spacing: 6
 
-    // Header: Arch badge, title + count, refresh spinner
-    Item {
+    DrawerHeader {
         width: root.listWidth
-        height: 34
-
-        Rectangle {
-            id: headerBadge
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            width: 30
-            height: 30
-            radius: 9
-            color: Theme.chipBg(Theme.yellow, true)
-            border.width: 1
-            border.color: Theme.chipBorder(Theme.yellow, true)
-
-            Text {
-                anchors.centerIn: parent
-                font.family: Theme.iconFontFamily
-                font.pixelSize: 15
-                color: Theme.yellow
-                // nf-linux-archlinux (matches the bar pill glyph)
-                text: "\u{F303}"
-            }
-        }
-
-        Column {
-            anchors.left: headerBadge.right
-            anchors.leftMargin: 10
-            anchors.right: headerSpinner.left
-            anchors.rightMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 1
-
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.DemiBold
-                color: Theme.text
-                text: "Updates"
-            }
-            Text {
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.popupCaptionSize
-                color: Theme.subtext0
-                text: {
-                    if (updatesModel.count === 0)
-                        return root.loading ? "Checking…" : "Up to date";
-                    let s = updatesModel.count + " available";
-                    if (root.aurCount > 0)
-                        s += " · " + root.aurCount + " from AUR";
-                    return s;
-                }
-            }
+        glyph: "\u{F303}"   // nf-linux-archlinux, as on the bar pill
+        glyphFamily: Theme.iconFontFamily
+        tint: Theme.yellow
+        title: "Updates"
+        subtitle: {
+            if (updatesModel.count === 0)
+                return root.loading ? "Checking…" : "Up to date";
+            let s = updatesModel.count + " available";
+            if (root.aurCount > 0)
+                s += " · " + root.aurCount + " from AUR";
+            return s;
         }
 
         Spinner {
-            id: headerSpinner
-            anchors.right: parent.right
-            anchors.rightMargin: 4
-            anchors.verticalCenter: parent.verticalCenter
             visible: root.loading && updatesModel.count > 0
             color: Theme.yellow
         }
@@ -194,7 +149,7 @@ Column {
             border.width: 1
             border.color: Theme.cardBorder
 
-            Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+            Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
             // Name + optional AUR tag; the name elides so the tag stays visible.
             Row {
@@ -291,7 +246,7 @@ Column {
             // nf-md-download
             glyph: "\u{F0552}"
             onActivated: {
-                Quickshell.execDetached(["xdg-terminal-exec", "--", "yay", "-Syu", "--devel"]);
+                Apps.launch(["xdg-terminal-exec", "--", "yay", "-Syu", "--devel"]);
                 root.closeRequested();
             }
         }
@@ -303,7 +258,7 @@ Column {
             // nf-md-package_variant
             glyph: "\u{F03D9}"
             onActivated: {
-                Quickshell.execDetached(["xdg-terminal-exec", "--", "sudo", "pacman", "-Syu"]);
+                Apps.launch(["xdg-terminal-exec", "--", "sudo", "pacman", "-Syu"]);
                 root.closeRequested();
             }
         }

@@ -29,11 +29,17 @@ picks up the fix on the next save. The autostart process runs as
 - `Time.qml` — singleton: the one shared `SystemClock` (clock pills, calendar)
 - `Screens.qml` — singleton: which monitor the shell lives on; every window
   resolves its `screen` through `Screens.primary`
+- `Apps.qml` — singleton: launching apps (`launch` / `launchEntry`, through
+  `uwsm-app`) and finding/focusing their windows (`findWindow` / `focus`,
+  loose name ↔ appId matching; `followNextActivation` jumps to the window a
+  notification action raises)
 - `components/` — building blocks: `BarPill` (a module pill), `BarDrawer` /
-  `EdgeDrawer` (shade drawers that flow out of the bar; shared seam painting
-  lives in `drawerShapes.js`), `BarTooltip`, `NotificationToast`,
-  `ActionButton` (tinted footer button), `StyledSlider` (the shared slider
-  look), `ExpandArea`, `Spinner`
+  `EdgeDrawer` (shade drawers that flow out of the bar — thin window wrappers
+  around the shared `DrawerSurface`; outlines + seam painting live in
+  `drawerShapes.js`), `BarTooltip`, `NotificationToast`, `Card`,
+  `DrawerHeader` (badge + title + status line), `ExpandHeader` (chevron row
+  toggling an `ExpandArea`), `ActionButton` (tinted footer button),
+  `StyledSlider` (the shared slider look), `ExpandArea`, `Spinner`
 - `modules/` — one file per bar module (workspaces, clock, volume, …)
 
 ## Rules to preserve
@@ -47,7 +53,13 @@ picks up the fix on the next save. The autostart process runs as
   density, not a paragraph per function.
 - **All styling flows through `Theme.qml`.** Modules declare an `accent`
   color (plus `neutral` for their inactive state) and `BarPill`/`Theme`
-  decide how it renders. Never hardcode colors or metrics in modules.
+  decide how it renders. Never hardcode colors or metrics in modules. Reuse
+  `Card` / `DrawerHeader` / `ExpandHeader` in drawers rather than restyling
+  the same rectangle inline.
+- **Launch apps through `Apps.launch`** (or `Apps.launchEntry`), never a bare
+  `Quickshell.execDetached` — it goes via `uwsm-app`, so the app gets its own
+  systemd scope instead of living in the shell's. Plain commands (`wpctl`,
+  `systemctl`, session actions) still use `execDetached`.
 - **Fonts live only in `Theme.qml`.** Text is Iosevka; icon glyphs are pinned
   per origin: Material Design Icons for supplementary-plane codepoints
   (U+F0000+), Symbols Nerd Font for BMP private-use ones.
@@ -78,7 +90,12 @@ picks up the fix on the next save. The autostart process runs as
   per toast visibly jitters the stack). A toast slides in from the right,
   auto-dismisses after its lifetime (the sender's expiry, else the
   `Notifs`-configured default), and on close collapses its own height so the
-  rest slide up. **Every toast expires, urgency included** — Chrome maps a web
+  rest slide up. Each toast holds a `RetainableLock` on its notification: a
+  closed one (sender close, or a non-resident action invoke) is freed at
+  once, and the lock keeps it alive until the exit animation ends. Past
+  `Theme.notifMaxVisible` the oldest expire early; while a corner `EdgeDrawer`
+  is out the stack hides and its timers pause (`Notifs.hold`), since both
+  share the top-right corner. **Every toast expires, urgency included** — Chrome maps a web
   notification's `requireInteraction` to `urgency=critical`, so exempting
   critical left half the stack immortal; urgency shows in colour only, via
   `Theme.notifAccent`. Left-click on the card invokes the sender's *default*
@@ -91,9 +108,14 @@ picks up the fix on the next save. The autostart process runs as
   / `DropShadow` resample the whole surface and fatten the 1px border. The
   transparent margins around the drawer body are only breathing room for the
   seam glow and the blur, not shadow space.
-- **Motion uses the Material 3 expressive curves** already present in the
-  code (springy `[0.42, 1.67, 0.21, 0.90]` for spatial moves, ~200ms
-  decelerate for fades, quick accelerate for exits). Match them.
+- **Motion uses the Material 3 expressive tokens in `Theme`**:
+  `curveSpring` for spatial moves, `curveDecel` / `curveAccel` for entries /
+  exits, `curveFade` for fade-ins, and the `*Duration` tokens (hover, state,
+  spring, drawer open/close). Use the tokens, not literal curves.
+- **Never add a new inline `component` to a file that is already loaded.**
+  On hot reload this Quickshell/Qt (6.12) fails with "`X` is not a type"
+  even for an empty one; editing or removing existing inline components is
+  fine. Put the new component in its own file (as `AudioDeviceCard.qml`).
 - Behaviors that must keep working: module actions (clicks, wheel scrolling),
   the calendar drawer (wheel over the pill or the calendar shifts months,
   middle click resets to the current month), locale-aware date via `LC_TIME`,
@@ -110,13 +132,16 @@ picks up the fix on the next save. The autostart process runs as
   `qs ipc call audio toggle`, `qs ipc call mpris toggle`,
   `qs ipc call calendar toggle`, `qs ipc call power toggle`,
   `qs ipc call yubikey toggle` (only while a touch request is showing),
+  `qs ipc call units toggle` (only while a unit has failed),
   `qs ipc call tray menu <index>` (the nth tray icon's menu drawer) — plus
-  `qs ipc call bluetooth connect <name>|disconnect <name>` and
-  `qs ipc call updates refresh` (wire `refresh` to a pacman hook for instant
-  update-count refreshes). Notifications expose
-  `qs ipc call notifs dismissAll|dismissLast|toggleDnd` and
-  `qs ipc call notifs dnd <on|off>` — `dismissAll` / `toggleDnd` are bound to
-  keys in Hyprland (`conf/keybindings.lua`).
+  `qs ipc call bluetooth connect <name>|disconnect <name>`,
+  `qs ipc call mpris playpause|next|previous`, `qs ipc call units refresh`
+  and `qs ipc call updates refresh` (wired to a pacman hook,
+  `etc/pacman.d/hooks/99-refresh_updates.hook`, for instant update-count
+  refreshes). Notifications expose
+  `qs ipc call notifs dismissAll|dismissLast|activateLast|toggleDnd` and
+  `qs ipc call notifs dnd <on|off>` — all but `dnd` are bound to keys in
+  Hyprland (`conf/keybindings.lua`).
 - **Testing interactive changes is a do → screenshot → undo cycle** — never
   just eyeball the code. Save the file (it hot-reloads; give it a second),
   drive the state you want to inspect, capture it, then reverse the action so

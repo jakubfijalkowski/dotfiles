@@ -1,6 +1,5 @@
 pragma Singleton
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
@@ -32,17 +31,29 @@ Singleton {
     ListModel { id: history }
     readonly property ListModel historyModel: history
     readonly property int maxHistory: 20
-    // Bumped on every incoming notification so views can jump back to newest.
+    // Bumped on every arrival; views paging the history jump back to newest.
     property int received: 0
 
     // Ask toast(s) to animate out — a specific Notification, or all when null.
-    signal closeRequested(var target)
+    // `expire` reports the close to the sender as a timeout, not a dismissal.
+    signal closeRequested(var target, bool expire)
+
+    // Corner drawers share the toasts' corner: while any holds, the stack
+    // hides and its timers pause.
+    property var holders: []
+    readonly property bool held: holders.length > 0
+    function hold(owner, on: bool): void {
+        const rest = holders.filter(h => h !== owner);
+        if (on)
+            rest.push(owner);
+        holders = rest;
+    }
 
     function toggleDnd(): void { root.dnd = !root.dnd; }
-    function dismissAll(): void { root.closeRequested(null); }
+    function dismissAll(): void { root.closeRequested(null, false); }
     function dismissLast(): void {
         if (toasts.count > 0)
-            root.closeRequested(toasts.get(toasts.count - 1).notification);
+            root.closeRequested(toasts.get(toasts.count - 1).notification, false);
     }
 
     // Invoke a notification's default action — the same as clicking its toast.
@@ -50,27 +61,25 @@ Singleton {
         if (!notif)
             return;
         const def = [...notif.actions].find(a => a.identifier === "default");
-        if (def) {
-            def.invoke();
-            followFocus.restart();
-        }
-        root.closeRequested(notif);
+        if (def)
+            root.invoke(notif, def);
+        else
+            root.closeRequested(notif, false);
     }
     function activateLast(): void {
         if (toasts.count > 0)
             root.activate(toasts.get(toasts.count - 1).notification);
     }
 
-    // Follow the raised window to its workspace. The sender raises it async, so
-    // the urgent flag lands just after the action — hence the delay. Hyprland is
-    // Lua-configured (dispatch runs as `hl.dispatch(<req>)`), so the request is a
-    // Lua dispatcher expression, not a "focusurgentorlast" string.
-    Timer {
-        id: followFocus
-        interval: 100
-        onTriggered: Hyprland.dispatch(
-            "function() local w = hl.get_urgent_window(); if w then hl.dispatch(hl.dsp.focus({ window = 'address:' .. w.address })) end end")
+    // Run one of the sender's actions and follow the window it raises. The
+    // toast starts closing first, so when a non-resident notification closes
+    // itself on invoke, the exit is already under way.
+    function invoke(notif, action): void {
+        root.closeRequested(notif, false);
+        Apps.followNextActivation();
+        action.invoke();
     }
+
     // Drop a toast from the list (idempotent). Matches on the stable `id`:
     // ListModel.get() returns a fresh wrapper, so `===` never hits.
     function forget(notif): void {
@@ -105,7 +114,9 @@ Singleton {
                 summary: notif.summary,
                 body: notif.body,
                 urgency: notif.urgency,
-                iconSource: notif.image !== ""
+                // Inline image data is served from the live object and dies
+                // with it; only file/URL images outlive the notification.
+                iconSource: notif.image !== "" && !notif.image.startsWith("image://")
                     ? notif.image
                     : Icons.resolve([notif.appIcon, notif.desktopEntry, notif.appName], ""),
                 // Epoch seconds (fits an int role; ms would overflow).
@@ -121,6 +132,10 @@ Singleton {
                 return;
             notif.tracked = true;
             toasts.append({ notification: notif, nid: notif.id });
+            // Over the cap, expire the oldest. Toasts still animating out count
+            // too, so a burst doesn't close more than it must.
+            for (let i = 0; i < toasts.count - Theme.notifMaxVisible; i++)
+                root.closeRequested(toasts.get(i).notification, true);
         }
     }
 

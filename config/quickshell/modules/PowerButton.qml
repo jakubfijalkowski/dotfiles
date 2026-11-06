@@ -39,7 +39,7 @@ Item {
         blur: 1.0
         blurMax: 14
         opacity: root.lit ? (root.active ? 0.95 : 0.65) : 0
-        Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.InOutQuad } }
+        Behavior on opacity { NumberAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
     }
 
     Text {

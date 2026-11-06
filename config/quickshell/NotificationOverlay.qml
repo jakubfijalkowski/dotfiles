@@ -26,9 +26,10 @@ PanelWindow {
     visible: Notifs.count > 0
 
     // Only the stacked toasts take input; the empty area below is click-through.
+    // Nothing does while a corner drawer holds the stack hidden.
     mask: Region {
         width: Theme.notifWidth
-        height: Math.ceil(stack.childrenRect.height)
+        height: Notifs.held ? 0 : Math.ceil(stack.childrenRect.height)
     }
 
     Column {
@@ -36,6 +37,9 @@ PanelWindow {
         anchors.top: parent.top
         anchors.right: parent.right
         width: parent.width
+        opacity: Notifs.held ? 0 : 1
+
+        Behavior on opacity { NumberAnimation { duration: Theme.stateDuration; easing.type: Easing.InOutQuad } }
 
         Repeater {
             model: Notifs.model

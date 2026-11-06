@@ -36,25 +36,6 @@ Column {
         color: Theme.overlay1
     }
 
-    component Card: Rectangle {
-        default property alias content: cardBody.data
-        width: root.menuWidth
-        radius: Theme.cardRadius
-        color: Theme.cardBg
-        border.width: 1
-        border.color: Theme.cardBorder
-        implicitHeight: cardBody.childrenRect.height + 2 * cardBody.anchors.margins
-
-        Item {
-            id: cardBody
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 12
-            height: childrenRect.height
-        }
-    }
-
     // Session actions
     component PowerTile: Rectangle {
         id: tile
@@ -62,16 +43,29 @@ Column {
         property string label: ""
         property color tint: root.accent
         required property var command
+        // Destructive actions take a second click, so a stray one can't end the session.
+        property bool confirm: false
+        property bool armed: false
 
         width: (root.menuWidth - 3 * actionRow.spacing) / 4
         height: 62
         radius: Theme.cardRadius
-        color: tileMouse.containsMouse ? Theme.alpha(tint, 0.16) : Theme.alpha(tint, 0.06)
+        color: Theme.alpha(tint, armed ? 0.24 : tileMouse.containsMouse ? 0.16 : 0.06)
         border.width: 1
-        border.color: Theme.alpha(tint, tileMouse.containsMouse ? 0.75 : 0.45)
+        border.color: Theme.alpha(tint, armed || tileMouse.containsMouse ? 0.75 : 0.45)
 
-        Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
-        Behavior on border.color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
+        Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
+        Behavior on border.color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
+
+        Timer {
+            id: disarm
+            interval: 3000
+            onTriggered: tile.armed = false
+        }
+        Connections {
+            target: root
+            function onActiveChanged() { tile.armed = false; }
+        }
 
         Column {
             anchors.centerIn: parent
@@ -89,8 +83,8 @@ Column {
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.popupCaptionSize
-                color: Theme.text
-                text: tile.label
+                color: tile.armed ? tile.tint : Theme.text
+                text: tile.armed ? "Confirm" : tile.label
                 textFormat: Text.PlainText
             }
         }
@@ -101,6 +95,11 @@ Column {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
+                if (tile.confirm && !tile.armed) {
+                    tile.armed = true;
+                    disarm.restart();
+                    return;
+                }
                 Quickshell.execDetached(tile.command);
                 root.closeRequested();
             }
@@ -112,10 +111,13 @@ Column {
         width: root.menuWidth
         spacing: 8
 
-        PowerTile { glyph: "\u{F0341}"; label: "Lock";     tint: Theme.blue;  command: ["hyprlock"] }
-        PowerTile { glyph: "\u{F0343}"; label: "Logout";   tint: Theme.mauve; command: ["hyprctl", "dispatch", "exit"] }
-        PowerTile { glyph: "\u{F0709}"; label: "Reboot";   tint: Theme.peach; command: ["reboot"] }
-        PowerTile { glyph: "\u{F0425}"; label: "Shutdown"; tint: Theme.red;   command: ["shutdown", "now"] }
+        // Lock via logind, so hypridle's lock_cmd guards against a second hyprlock.
+        PowerTile { glyph: "\u{F0341}"; label: "Lock";     tint: Theme.blue;  command: ["loginctl", "lock-session"] }
+        // The session runs under uwsm, which tears down the compositor and the
+        // graphical units in order.
+        PowerTile { glyph: "\u{F0343}"; label: "Logout";   tint: Theme.mauve; confirm: true; command: ["uwsm", "stop"] }
+        PowerTile { glyph: "\u{F0709}"; label: "Reboot";   tint: Theme.peach; confirm: true; command: ["systemctl", "reboot"] }
+        PowerTile { glyph: "\u{F0425}"; label: "Shutdown"; tint: Theme.red;   confirm: true; command: ["systemctl", "poweroff"] }
     }
 
     // System usage — CPU (avg across cores) + RAM
@@ -124,43 +126,52 @@ Column {
     property real memTotalGiB: 0
     readonly property real memPct: memTotalGiB > 0 ? memUsedGiB / memTotalGiB * 100 : 0
 
-    // Sample CPU over a 0.3s window (so a value is ready on the first tick) and
-    // read the memory totals in the same shot.
-    Process {
-        id: statProc
-        command: ["sh", "-c",
-            "a=$(awk '/^cpu / {print $2+$3+$4+$5+$6+$7+$8+$9, $5+$6}' /proc/stat); " +
-            "sleep 0.3; " +
-            "b=$(awk '/^cpu / {print $2+$3+$4+$5+$6+$7+$8+$9, $5+$6}' /proc/stat); " +
-            "echo \"$a $b\"; grep -E '^MemTotal|^MemAvailable' /proc/meminfo"]
-        stdout: StdioCollector { onStreamFinished: root.parseStats(text) }
+    // CPU usage is the busy share of the jiffies elapsed between two reads of
+    // /proc/stat.
+    property var cpuPrev: null
+
+    FileView {
+        id: procStat
+        path: "/proc/stat"
+        onLoaded: root.parseCpu(text())
+    }
+    FileView {
+        id: procMeminfo
+        path: "/proc/meminfo"
+        onLoaded: root.parseMem(text())
     }
 
-    function parseStats(text: string) {
-        const lines = text.trim().split("\n");
-        const p = lines[0].trim().split(/\s+/).map(Number);
-        const totalD = p[2] - p[0], idleD = p[3] - p[1];
-        if (totalD > 0)
-            cpuPct = Math.max(0, Math.min(100, (1 - idleD / totalD) * 100));
-        let total = 0, avail = 0;
-        for (let i = 1; i < lines.length; i++) {
-            const m = /^(\w+):\s+(\d+)/.exec(lines[i]);
-            if (!m) continue;
-            if (m[1] === "MemTotal") total = Number(m[2]);
-            else if (m[1] === "MemAvailable") avail = Number(m[2]);
-        }
+    function parseCpu(text: string) {
+        const f = text.slice(0, text.indexOf("\n")).trim().split(/\s+/).slice(1, 9).map(Number);
+        const total = f.reduce((a, b) => a + b, 0);
+        const idle = f[3] + f[4];   // idle + iowait
+        const prev = cpuPrev;
+        cpuPrev = { total: total, idle: idle };
+        if (prev && total > prev.total)
+            cpuPct = Math.max(0, Math.min(100, (1 - (idle - prev.idle) / (total - prev.total)) * 100));
+    }
+
+    function parseMem(text: string) {
+        const kib = key => Number((new RegExp("^" + key + ":\\s+(\\d+)", "m").exec(text) || [0, 0])[1]);
+        const total = kib("MemTotal");
         if (total > 0) {
             memTotalGiB = total / 1048576;
-            memUsedGiB = (total - avail) / 1048576;
+            memUsedGiB = (total - kib("MemAvailable")) / 1048576;
         }
     }
 
+    onActiveChanged: if (!active) { cpuPrev = null; cpuPct = -1; }
+
     Timer {
-        interval: 3000
+        // Quick second sample on open, so CPU shows a figure right away.
+        interval: root.cpuPct < 0 ? 300 : 3000
         repeat: true
         triggeredOnStart: true
         running: root.active
-        onTriggered: if (!statProc.running) statProc.running = true
+        onTriggered: {
+            procStat.reload();
+            procMeminfo.reload();
+        }
     }
 
     component StatMeter: Column {
@@ -215,7 +226,7 @@ Column {
             width: parent.width
             height: 6
             radius: 3
-            color: Theme.alpha(Theme.surface2, 0.45)
+            color: Theme.meterTrack
 
             Rectangle {
                 width: parent.width * Math.max(0, Math.min(1, pct / 100))
@@ -235,6 +246,8 @@ Column {
         SectionLabel { text: "System" }
 
         Card {
+            width: root.menuWidth
+
             Column {
                 width: parent.width
                 spacing: 12
@@ -261,6 +274,12 @@ Column {
 
     // Recent notifications — page through the history ring with ‹ ›
     property int notifIndex: 0
+    // A new arrival shifts every index; jump back to it rather than let the
+    // card swap to a different notification under the cursor.
+    Connections {
+        target: Notifs
+        function onReceivedChanged() { root.notifIndex = 0; }
+    }
     readonly property int notifCount: Notifs.historyModel.count
     readonly property var current: {
         Notifs.received;   // re-evaluate when a new notification arrives
@@ -279,15 +298,16 @@ Column {
         return Math.floor(h / 24) + "d ago";
     }
 
-    // Clicking a history card opens the app that sent it (the object's live
-    // actions are gone once it stops being tracked, so we relaunch instead).
+    // Clicking a history card brings up the app that sent it — its window if
+    // one is open, else a fresh launch (the notification's own actions are
+    // gone once it stops being tracked).
     function openCurrentNotif() {
         const n = root.current;
-        if (n) {
+        if (n && !Apps.focus([n.desktopEntry, n.appName])) {
             const key = n.desktopEntry || n.appName || "";
             const entry = key ? DesktopEntries.heuristicLookup(key) : null;
             if (entry)
-                entry.execute();
+                Apps.launchEntry(entry);
         }
         root.closeRequested();
     }
@@ -303,7 +323,7 @@ Column {
         opacity: enabled ? 1 : 0.3
         color: arrowMouse.containsMouse && enabled ? Theme.cardHoverBg : "transparent"
 
-        Behavior on color { ColorAnimation { duration: 120; easing.type: Easing.InOutQuad } }
+        Behavior on color { ColorAnimation { duration: Theme.hoverDuration; easing.type: Easing.InOutQuad } }
 
         Text {
             anchors.centerIn: parent
@@ -350,10 +370,9 @@ Column {
         Card {
             id: notifCard
             readonly property var notif: root.current
+            width: root.menuWidth
             // Lift on hover so it reads as clickable (opens the sending app).
             color: notif && notifClick.containsMouse ? Theme.cardHoverBg : Theme.cardBg
-
-            Behavior on color { ColorAnimation { duration: 150; easing.type: Easing.InOutQuad } }
 
             Item {
                 width: parent.width
@@ -498,14 +517,19 @@ Column {
     property string wxHumidity: ""
     property string wxWind: ""
     property int wxCode: 113
-    // Upcoming 3-hourly slots: [{ label, temp, code, rain }] (wttr's resolution).
+    // Upcoming 3-hourly slots: [{ label, temp, code, rain, night }] (wttr's resolution).
     property var wxHourly: []
+    // Sunrise/sunset per forecast day (today first), in minutes after midnight;
+    // NaN on polar days, which wttr reports as "No sunrise"/"No sunset".
+    property var wxSun: []
+    // Time of the last good fetch. A failed one leaves it alone, so the next
+    // open retries while the last good reading stays on screen.
     property double wxFetched: 0
     readonly property int wxTtlMs: 15 * 60 * 1000
 
     Process {
         id: wxProc
-        command: ["curl", "-s", "--max-time", "12", "https://wttr.in/?format=j1"]
+        command: ["curl", "-sf", "--max-time", "12", "https://wttr.in/?format=j1"]
         stdout: StdioCollector { onStreamFinished: root.parseWeather(text) }
         onRunningChanged: root.wxLoading = running
     }
@@ -519,8 +543,26 @@ Column {
         wxProc.running = true;
     }
 
+    // "06:40 AM" → minutes after midnight.
+    function parseClock(s: string): real {
+        const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(s || "");
+        if (!m)
+            return NaN;
+        return (parseInt(m[1]) % 12 + (m[3].toUpperCase() === "PM" ? 12 : 0)) * 60 + parseInt(m[2]);
+    }
+    function fmtClock(minutes: real): string {
+        const pad = n => (n < 10 ? "0" : "") + n;
+        return pad(Math.floor(minutes / 60)) + ":" + pad(Math.round(minutes % 60));
+    }
+    // Dark outside? Falls back to 6–20 h without sun times for that day.
+    function isNight(day: int, minutes: real): bool {
+        const sun = wxSun[day];
+        if (!sun || isNaN(sun.rise) || isNaN(sun.set))
+            return minutes < 6 * 60 || minutes >= 20 * 60;
+        return minutes < sun.rise || minutes >= sun.set;
+    }
+
     function parseWeather(text: string) {
-        wxFetched = Date.now();
         try {
             const j = JSON.parse(text);
             const c = j.current_condition[0];
@@ -533,10 +575,15 @@ Column {
             const area = j.nearest_area && j.nearest_area[0];
             wxLocation = (area && area.areaName && area.areaName[0]) ? area.areaName[0].value : "";
 
+            const days = j.weather || [];
+            wxSun = days.map(d => {
+                const a = (d.astronomy && d.astronomy[0]) || {};
+                return { rise: parseClock(a.sunrise), set: parseClock(a.sunset) };
+            });
+
             // Upcoming 3-hourly slots, starting from the current hour. wttr gives
             // 8 slots/day (times "0".."2100"); walk days until we have six.
             const nowH = Time.now.getHours();
-            const days = j.weather || [];
             const slots = [];
             for (let di = 0; di < days.length && slots.length < 6; di++) {
                 const hrs = days[di].hourly || [];
@@ -550,23 +597,24 @@ Column {
                         hour: hour,
                         temp: h.tempC + "°",
                         code: parseInt(h.weatherCode),
-                        rain: parseInt(h.chanceofrain)
+                        rain: parseInt(h.chanceofrain),
+                        night: isNight(di, hour * 60)
                     });
                 }
             }
             wxHourly = slots;
             wxError = false;
+            wxFetched = Date.now();
         } catch (e) {
             wxError = true;
         }
     }
 
     // WWO weather code → MDI weather glyph, grouped into a handful of families.
-    // `hour` (optional 0–23) swaps a clear sky for a moon overnight.
-    function weatherGlyph(code, hour) {
-        const night = hour !== undefined && hour >= 0 && (hour < 6 || hour >= 20);
+    // A clear sky shows a moon at night.
+    function weatherGlyph(code: int, night: bool): string {
         if (code === 113) return night ? "\u{F0594}" : "\u{F0599}";   // moon / sunny
-        if (code === 116) return "\u{F0595}";                         // partly cloudy
+        if (code === 116) return night ? "\u{F0F31}" : "\u{F0595}";  // partly cloudy
         if (code === 119 || code === 122) return "\u{F0590}";         // cloudy / overcast
         if ([143, 248, 260].indexOf(code) >= 0) return "\u{F0591}";   // mist / fog
         if ([200, 386, 389, 392, 395].indexOf(code) >= 0) return "\u{F0593}"; // thunder
@@ -580,9 +628,29 @@ Column {
         width: root.menuWidth
         spacing: 8
 
-        SectionLabel { text: "Weather" }
+        Item {
+            width: parent.width
+            height: 14
+
+            SectionLabel {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Weather"
+            }
+            Text {
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.wxError && root.wxTemp !== ""
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.popupMicroSize
+                color: Theme.overlay1
+                text: "Offline · as of " + Qt.formatDateTime(new Date(root.wxFetched), "HH:mm")
+            }
+        }
 
         Card {
+            width: root.menuWidth
+
             Column {
                 width: parent.width
                 spacing: 12
@@ -593,11 +661,12 @@ Column {
                     width: parent.width
                     height: 62
 
-                    // Loading (before the first result) / error placeholders.
+                    // Loading / error placeholders, only until a first reading lands —
+                    // after that a failed refresh keeps showing the last one.
                     Row {
                         anchors.centerIn: parent
                         spacing: 8
-                        visible: (root.wxLoading && root.wxTemp === "") || root.wxError
+                        visible: root.wxTemp === "" && (root.wxLoading || root.wxError)
 
                         Spinner {
                             anchors.verticalCenter: parent.verticalCenter
@@ -615,7 +684,7 @@ Column {
 
                     Row {
                         anchors.fill: parent
-                        visible: root.wxTemp !== "" && !root.wxError
+                        visible: root.wxTemp !== ""
                         spacing: 14
 
                         Text {
@@ -623,7 +692,8 @@ Column {
                             font.family: Theme.mdiFontFamily
                             font.pixelSize: 46
                             color: Theme.sky
-                            text: root.weatherGlyph(root.wxCode, Time.now.getHours())
+                            text: root.weatherGlyph(root.wxCode,
+                                root.isNight(0, Time.now.getHours() * 60 + Time.now.getMinutes()))
                             textFormat: Text.PlainText
                         }
 
@@ -658,13 +728,57 @@ Column {
                                 }
                             }
 
-                            Text {
+                            Item {
                                 width: parent.width
-                                elide: Text.ElideRight
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.popupCaptionSize
-                                color: Theme.subtext1
-                                text: root.wxDesc
+                                height: descText.height
+
+                                Text {
+                                    id: descText
+                                    anchors.left: parent.left
+                                    width: parent.width - (sunTimes.visible ? sunTimes.width + 8 : 0)
+                                    elide: Text.ElideRight
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: Theme.popupCaptionSize
+                                    color: Theme.subtext1
+                                    text: root.wxDesc
+                                }
+
+                                Row {
+                                    id: sunTimes
+                                    readonly property var today: root.wxSun[0] ?? null
+                                    anchors.right: parent.right
+                                    anchors.verticalCenter: descText.verticalCenter
+                                    visible: today !== null && !isNaN(today.rise) && !isNaN(today.set)
+                                    spacing: 8
+
+                                    Repeater {
+                                        model: sunTimes.visible ? [
+                                            { g: "\u{F059C}", v: root.fmtClock(sunTimes.today.rise) },  // weather-sunset-up
+                                            { g: "\u{F059B}", v: root.fmtClock(sunTimes.today.set) }    // weather-sunset-down
+                                        ] : []
+
+                                        Row {
+                                            required property var modelData
+                                            spacing: 3
+
+                                            Text {
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                font.family: Theme.mdiFontFamily
+                                                font.pixelSize: 12
+                                                color: Theme.yellow
+                                                text: modelData.g
+                                                textFormat: Text.PlainText
+                                            }
+                                            Text {
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                font.family: Theme.fontFamily
+                                                font.pixelSize: Theme.popupMicroSize
+                                                color: Theme.subtext0
+                                                text: modelData.v
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                             Row {
@@ -707,15 +821,15 @@ Column {
                 Rectangle {
                     width: parent.width
                     height: 1
-                    color: Theme.alpha(Theme.overlay0, 0.25)
-                    visible: root.wxHourly.length > 0 && !root.wxError
+                    color: Theme.divider
+                    visible: root.wxHourly.length > 0
                 }
 
                 // Upcoming 3-hourly strip: time · icon · temp · rain chance
                 Item {
                     width: parent.width
                     height: hourRow.implicitHeight
-                    visible: root.wxHourly.length > 0 && !root.wxError
+                    visible: root.wxHourly.length > 0
 
                     Row {
                         id: hourRow
@@ -746,7 +860,7 @@ Column {
                                     font.family: Theme.mdiFontFamily
                                     font.pixelSize: 20
                                     color: Theme.sky
-                                    text: root.weatherGlyph(cell.modelData.code, cell.modelData.hour)
+                                    text: root.weatherGlyph(cell.modelData.code, cell.modelData.night)
                                     textFormat: Text.PlainText
                                 }
                                 Text {
