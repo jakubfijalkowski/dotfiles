@@ -84,11 +84,6 @@ hl.config({
       size = 10,
       passes = 3,
     },
-
-    -- Windows wobble while being moved or resized.
-    wobble = {
-      enabled = true,
-    },
   },
 
   animations = {
