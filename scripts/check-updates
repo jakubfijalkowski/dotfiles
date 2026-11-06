@@ -1,9 +1,14 @@
 #!/usr/bin/env zsh
 
-checkupdates >/dev/null
-updates=$(yay -Quq | wc -l)
-if [ "$updates" != "0" ]; then
-    echo '{"text":"\uf303","tooltip":"'$updates' available"}'
+# Count what checkupdates prints: it syncs a private copy of the package
+# databases, so the system ones (which yay -Qu would read) may be stale.
+repo=$(checkupdates 2>/dev/null | grep -c .)
+aur=$(yay -Qua 2>/dev/null | grep -c .)
+updates=$(( repo + aur ))
+if (( updates > 0 )); then
+    tooltip="$updates available"
+    (( aur > 0 )) && tooltip+=" ($aur from AUR)"
+    echo '{"text":"","tooltip":"'$tooltip'"}'
 else
     echo ""
 fi
