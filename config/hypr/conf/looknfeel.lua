@@ -89,6 +89,10 @@ hl.config({
   animations = {
     enabled = true,
   },
+
+  xwayland = {
+    force_zero_scaling = true,
+  },
 })
 
 -- Default curves, see https://wiki.hypr.land/configuring/core/animations/#curves
