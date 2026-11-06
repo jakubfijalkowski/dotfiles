@@ -1,5 +1,5 @@
 -- Hyprland configuration (Lua).
--- See https://wiki.hypr.land/Configuring/Start/
+-- See https://wiki.hypr.land/configuring/
 --
 -- The configuration is split into multiple files under conf/ and pulled in
 -- with require().

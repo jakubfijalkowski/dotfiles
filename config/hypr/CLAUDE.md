@@ -16,7 +16,7 @@ whenever you touch something:
    file and the stubs ever disagree, the stubs win. `.luarc.json` wires
    lua-language-server to these stubs.
 2. **Hyprland behaviour, options, dispatchers, and rules** come from the wiki:
-   <https://wiki.hypr.land/Configuring/>. Consult it before changing any
+   <https://wiki.hypr.land/configuring/>. Consult it before changing any
    semantics.
 
 ## This is the Lua config, not hyprlang
