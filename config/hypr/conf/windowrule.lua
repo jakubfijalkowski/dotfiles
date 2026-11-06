@@ -1,7 +1,8 @@
 -- Layer rules
 
--- QuickShell bar and its popups (bluetooth list, tooltips) are xdg-popups of
--- the same layer, so blur_popups is needed in addition to blur to reach them.
+-- QuickShell bar and its popups (the drawers under its pills, tooltips) are
+-- xdg-popups of the same layer, so blur_popups is needed in addition to blur
+-- to reach them.
 hl.layer_rule({
   name = "quickshell-blur",
   match = { namespace = "quickshell" },
