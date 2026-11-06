@@ -179,7 +179,7 @@ function configure_root() {
   # Display manager (SDDM)
   copy "etc/sddm.conf.d/theme.conf"
   copy "etc/sddm.conf.d/wayland.conf"
-  copy "etc/sddm.conf.d/hyprland.conf" "/opt/hyprsddm/hyprland.conf"
+  copy "etc/sddm.conf.d/hyprland.lua" "/opt/hyprsddm/hyprland.lua"
 
   section "System services"
   systemctl daemon-reload
