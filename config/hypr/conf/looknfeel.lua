@@ -83,23 +83,12 @@ hl.config({
       enabled = true,
       size = 10,
       passes = 3,
-      -- Glass-like lens on top of the blur (refracting edges, light tint).
-      variant = "acrylic",
-      -- Scale blur by pixel opacity, so translucent edges get a lighter blur.
-      -- Needs render.use_shader_blur_blend (below).
-      proportional = true,
     },
 
     -- Windows wobble while being moved or resized.
     wobble = {
       enabled = true,
     },
-  },
-
-  render = {
-    -- Experimental shader-based blur blending; required by blur.proportional.
-    -- The wiki notes it glitches on rotated screens, which neither monitor is.
-    use_shader_blur_blend = true,
   },
 
   animations = {
