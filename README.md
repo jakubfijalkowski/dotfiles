@@ -8,7 +8,7 @@ keyboard.
 
 Notable software used by this config:
 
- 1. [Hyprland](config/hypr/hyprland.conf) - the compositor, configured in Lua
+ 1. [Hyprland](config/hypr/hyprland.lua) - the compositor, configured in Lua
     (not hyprlang) via [`conf/`](config/hypr/conf), plus hyprlock/hypridle.
  2. [QuickShell](config/quickshell) - the status bar, drawers and notification
     toasts (QML).

@@ -107,7 +107,7 @@ function configure_user() {
   link "config/nvim/lua"
 
   # Wayland/Hyprland setup
-  link "config/hypr/hyprland.conf"
+  link "config/hypr/hyprland.lua"
   link "config/hypr/hyprlock.conf"
   link "config/hypr/hypridle.conf"
   link "config/hypr/xdph.conf"
